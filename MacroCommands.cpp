@@ -12920,6 +12920,10 @@ int CMacCmd::ImagingStateProperties()
       mWinApp->LookupActiveCamera(param->camIndex) + 1,
       area < 0 ? param->magIndex : param->ldParams.magIndex);
     SetOneReportedValue(param->name, 6);
+
+    // Camera length index, 0 unless the state is in diffraction, where the mag index
+    // reported above is 0.  Added at the end so existing scripts are unaffected
+    SetOneReportedValue(area < 0 ? param->camLenIndex : param->ldParams.camLenIndex, 7);
   }
   return 0;
 }

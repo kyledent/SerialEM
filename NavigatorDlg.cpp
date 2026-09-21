@@ -8918,6 +8918,13 @@ void CNavigatorDlg::OpenAndWriteFile(bool autosave)
         if (AdocSetKeyValue("StateParam", sectInd, "State", (LPCTSTR)str)) {
           adocErr++;
         } else {
+
+          // Diffraction parameters, written only for a state stored in diffraction
+          if (stateP->camLenIndex > 0) {
+            mWinApp->mParamIO->WriteStateToString(2, stateP, str);
+            if (AdocSetKeyValue("StateParam", sectInd, "State4", (LPCTSTR)("0 " + str)))
+              adocErr++;
+          }
           mWinApp->mParamIO->WriteStateToString(1, stateP, str);
           if (AdocSetKeyValue("StateParam", sectInd, "State3", (LPCTSTR)("0 " + str))) {
             adocErr++;
@@ -9046,6 +9053,13 @@ void CNavigatorDlg::OpenAndWriteFile(bool autosave)
         if (AdocWriteKeyValue(fp, "State", (LPCTSTR)str)) {
           adocErr++;
         } else {
+
+          // Diffraction parameters, written only for a state stored in diffraction
+          if (stateP->camLenIndex > 0) {
+            mWinApp->mParamIO->WriteStateToString(2, stateP, str);
+            if (AdocWriteKeyValue(fp, "State4", (LPCTSTR)("0 " + str)))
+              adocErr++;
+          }
           mWinApp->mParamIO->WriteStateToString(1, stateP, str);
           if (AdocWriteKeyValue(fp, "State3", (LPCTSTR)("0 " + str))) {
             adocErr++;
@@ -9618,6 +9632,22 @@ int CNavigatorDlg::LoadNavFile(bool checkAutosave, bool mergeFile, CString *inFi
               state->condenserAp = B3DNINT(vals[2]);
               state->JeolC1Ap = B3DNINT(vals[3]);
               state->flags = B3DNINT(vals[4]);
+            }
+            if (retval > 0)
+              retval = 0;
+          }
+
+          // Diffraction parameters; absent for imaging states and for older files
+          if (!retval) {
+            ind2 = 0;
+            ADOC_OPTIONAL(AdocGetDoubleArray("StateParam", ind1, "State4", vals, &ind2,
+              60));
+            if (!retval && ind2 > 5) {
+              state->camLenIndex = B3DNINT(vals[1]);
+              state->diffFocus = vals[2];
+              state->darkFieldMode = B3DNINT(vals[3]);
+              state->dfTiltX = vals[4];
+              state->dfTiltY = vals[5];
             }
             if (retval > 0)
               retval = 0;

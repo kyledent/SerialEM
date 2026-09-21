@@ -2554,6 +2554,19 @@ void CNavHelper::StoreCurrentStateInParam(StateParams *param, int lowdose,
     }
   } else {
     param->magIndex = mScope->GetMagIndex();
+
+    // A zero mag index means diffraction, the same flag low dose params use; record the
+    // camera length and diffraction focus so the state can be restored into diffraction
+    if (!param->magIndex) {
+      param->camLenIndex = mScope->GetCamLenIndex();
+      param->diffFocus = mScope->GetDiffractionFocus();
+      if (!mScope->GetDarkFieldTilt(param->darkFieldMode, param->dfTiltX, param->dfTiltY))
+        param->darkFieldMode = -1;
+    } else {
+      param->camLenIndex = 0;
+      param->diffFocus = -999.;
+      param->darkFieldMode = -1;
+    }
     param->intensity = mScope->GetIntensity();
     param->spotSize = mScope->GetSpotSize();
     param->probeMode = mScope->ReadProbeMode();
@@ -2784,7 +2797,19 @@ void CNavHelper::SetStateFromParam(StateParams *param, ControlSet *conSet, int b
   } else {
     mWinApp->mLowDoseDlg.SetLowDoseMode(false, hideLDoff > 0);
     if (!skipScope) {
-      mScope->SetMagIndex(param->magIndex);
+
+      // A zero mag index means the state was stored in diffraction, so go to the camera
+      // length instead of setting a mag that has no meaning there.  States saved before
+      // diffraction was stored have no camera length and are restored as imaging states
+      if (!param->magIndex && param->camLenIndex > 0) {
+        mScope->SetCamLenIndex(param->camLenIndex);
+        if (param->diffFocus > -990.)
+          mScope->SetDiffractionFocus(param->diffFocus);
+        if (param->darkFieldMode >= 0)
+          mScope->SetDarkFieldTilt(param->darkFieldMode, param->dfTiltX, param->dfTiltY);
+      } else {
+        mScope->SetMagIndex(param->magIndex);
+      }
       if (param->probeMode >= 0)
         mScope->SetProbeMode(param->probeMode, true);
 
@@ -3827,9 +3852,16 @@ void CNavHelper::MakeStateOutputLine(StateParams *state, CString &mess)
   if (mCamera->HasDoseModulator() && EDM > 0)
     mess2.Format("  EDM %.1f%%", EDM);
 
+  // A zero mag index with a camera length means diffraction, shown as the low dose
+  // panel shows it rather than as a meaningless magnification
+  CString magStr = UtilFormattedMag(mag, 2);
+  int camLen = state->lowDose ? state->ldParams.camLenIndex : state->camLenIndex;
+  if (!magInd && camLen > 0)
+    magStr.Format("DIFF CL %d", camLen);
+
   // Write basic line
-  mess.Format("%s  cam %d  %s  spot %d%s  %s %.2f%s", ldStr, 
-    active, UtilFormattedMag(mag, 2), spot, probeOrAlpha, mScope->GetC2Name(), 
+  mess.Format("%s  cam %d  %s  spot %d%s  %s %.2f%s", ldStr,
+    active, (LPCTSTR)magStr, spot, probeOrAlpha, mScope->GetC2Name(),
     mScope->GetC2Percent(spot, intensity, probe),
     mScope->GetC2Units(), (LPCTSTR)mess2, (LPCTSTR)slit);
 

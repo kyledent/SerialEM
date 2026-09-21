@@ -398,6 +398,10 @@ struct StateParams {
     condenserAp = -1;
     JeolC1Ap = -1;
     flags = 0;
+    camLenIndex = 0;
+    diffFocus = -999.;
+    darkFieldMode = -1;
+    dfTiltX = dfTiltY = 0.;
   }
   LowDoseParams ldParams;  // Low dose Record parameters if this is a low dose state
   int lowDose;            // Flag that it is a low dose state
@@ -446,6 +450,11 @@ struct StateParams {
   int condenserAp;         // Main or only condenser aperture
   int JeolC1Ap;            // C1 aperture on JEOL when use both
   unsigned int flags;      // STATEFLAG_ values
+  // Diffraction mode, non-low dose states; magIndex 0 is the mode flag as in low dose
+  int camLenIndex;         // Camera length index when magIndex is 0
+  double diffFocus;        // Diffraction focus, -999 if not stored
+  int darkFieldMode;       // Dark field mode, 0 if off, -1 if not stored
+  double dfTiltX, dfTiltY; // Absolute dark field tilt
 };
 
 struct FilterParams {

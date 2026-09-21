@@ -1338,6 +1338,20 @@ int CParameterIO::ReadSettings(CString strFileName, bool readingSys)
           // ADD NEW ITEMS TO NAV READING
         }
 
+      } else if (NAME_IS("StateParams4")) {
+        index = itemInt[1];
+        if (index < 0 || index >= stateArray->GetSize()) {
+          AfxMessageBox("Index out of range in StateParams4 line in settings file "
+            + strFileName + " :\n" + strLine, MB_EXCLAME);
+        } else {
+          stateP = stateArray->GetAt(index);
+          stateP->camLenIndex = itemInt[2];
+          stateP->diffFocus = itemDbl[3];
+          stateP->darkFieldMode = itemInt[4];
+          stateP->dfTiltX = itemDbl[5];
+          stateP->dfTiltY = itemDbl[6];
+        }
+
       } else if (NAME_IS("StateName")) {
         index = itemInt[1];
         if (index < 0 || index >= stateArray->GetSize()) {
@@ -2467,6 +2481,15 @@ void CParameterIO::WriteSettings(CString strFileName)
           stateP->focusYoffset);
         mFile->WriteString(oneState);
       }
+
+      // Diffraction parameters are written only for a state stored in diffraction, so
+      // settings files are unchanged for everyone not using them
+      if (stateP->camLenIndex > 0) {
+        WriteStateToString(2, stateP, oneState);
+        macCopy.Format("%d ", i);
+        oneState = "StateParams4 " + macCopy + oneState + "\n";
+        mFile->WriteString(oneState);
+      }
     }
 
     // Save low dose params, including those in states
@@ -2786,9 +2809,12 @@ void CParameterIO::WriteStateToString(int which, StateParams *stateP, CString &s
       stateP->readModeSrch, stateP->readModeMont, stateP->beamAlpha,
       stateP->targetDefocus, stateP->ldDefocusOffset, stateP->ldShiftOffsetX,
       stateP->ldShiftOffsetY, stateP->montMapConSet ? 1 : 0, stateP->EDMPercent);
-  } else {
+  } else if (which == 1) {
     str.Format(" %d %d %d %d", stateP->objectiveAp, stateP->condenserAp, stateP->JeolC1Ap,
       stateP->flags);
+  } else {
+    str.Format(" %d %f %d %f %f", stateP->camLenIndex, stateP->diffFocus,
+      stateP->darkFieldMode, stateP->dfTiltX, stateP->dfTiltY);
   }
 }
 
