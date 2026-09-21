@@ -12936,6 +12936,94 @@ int CMacCmd::OpenImagingStateDialog(void)
   return 0;
 }
 
+// AddImagingState
+int CMacCmd::AddImagingState(void)
+{
+  CArray<StateParams *, StateParams *> *stateArr = mNavHelper->GetStateArray();
+  int lowdose = mWinApp->LowDoseMode() ? 1 : 0;
+  int area = mScope->GetLowDoseArea();
+  StateParams *param;
+
+  // Test before making the state, not after as the dialog button does, where returning
+  // here would leave an uninitialized state on the array
+  if (lowdose && area < 0)
+    ABORT_LINE("The microscope must be in a defined low dose area for line:\n\n");
+  param = mNavHelper->NewStateParam(false);
+  mNavHelper->StoreCurrentStateInParam(param, lowdose,
+    B3DCHOICE(area == FOCUS_CONSET || area == TRIAL_CONSET, area == FOCUS_CONSET ? 1 : 2,
+      0), -1, IS_AREA_VIEW_OR_SEARCH(area) ? area + 1 : 0);
+  if (!mItemEmpty[1]) {
+    SubstituteLineStripItems(mStrLine, 1, mStrCopy);
+    param->name = mStrCopy;
+  }
+  if (mNavHelper->mStateDlg)
+    mNavHelper->mStateDlg->AddNewStateToList();
+  SetReportedValues((double)stateArr->GetSize(), 0.);
+  mLogRpt.Format("Added imaging state %d%s%s", (int)stateArr->GetSize(),
+    param->name.IsEmpty() ? "" : ", ", (LPCTSTR)param->name);
+  return 0;
+}
+
+// RemoveImagingState
+int CMacCmd::RemoveImagingState(void)
+{
+  CArray<StateParams *, StateParams *> *stateArr = mNavHelper->GetStateArray();
+  int *setStateInd = CStateDlg::GetSetStateIndex();
+  int index, err, ind;
+  CString errStr, name;
+
+  SubstituteLineStripItems(mStrLine, 1, mStrCopy);
+  err = CStateDlg::LookupStateByNameOrNum(mStrCopy, index, errStr);
+  if (err)
+    ABORT_LINE("Specified imaging state not available (" + errStr + ") for line:\n\n");
+  name = stateArr->GetAt(index)->name;
+  delete stateArr->GetAt(index);
+  stateArr->RemoveAt(index);
+
+  // Forget a saved index for the state that just went and shift down the ones above it,
+  // which the dialog's own delete does not do
+  for (ind = 0; ind <= MAX_SAVED_STATE_IND; ind++) {
+    if (setStateInd[ind] == index)
+      setStateInd[ind] = -1;
+    else if (setStateInd[ind] > index)
+      setStateInd[ind]--;
+  }
+  if (mNavHelper->mStateDlg)
+    mNavHelper->mStateDlg->FillListBox();
+  mLogRpt.Format("Removed imaging state %d%s%s", index + 1,
+    name.IsEmpty() ? "" : ", ", (LPCTSTR)name);
+  return 0;
+}
+
+// RenameImagingState
+int CMacCmd::RenameImagingState(void)
+{
+  CArray<StateParams *, StateParams *> *stateArr = mNavHelper->GetStateArray();
+  int index, err;
+  CString errStr;
+
+  err = CStateDlg::LookupStateByNameOrNum(mStrItems[1], index, errStr);
+  if (err)
+    ABORT_LINE("Specified imaging state not available (" + errStr + ") for line:\n\n");
+  SubstituteLineStripItems(mStrLine, 2, mStrCopy);
+  stateArr->GetAt(index)->name = mStrCopy;
+  if (mNavHelper->mStateDlg) {
+    mNavHelper->mStateDlg->UpdateListString(index);
+    mNavHelper->mStateDlg->ManageName();
+  }
+  mLogRpt.Format("Imaging state %d is now named %s", index + 1, (LPCTSTR)mStrCopy);
+  return 0;
+}
+
+// ReportNumImagingStates
+int CMacCmd::ReportNumImagingStates(void)
+{
+  int num = (int)mNavHelper->GetStateArray()->GetSize();
+  SetReportedValues(num, 0.);
+  mLogRpt.Format("There are %d imaging states", num);
+  return 0;
+}
+
 // OpenDialog
 int CMacCmd::OpenDialog()
 {
