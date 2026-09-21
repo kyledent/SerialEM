@@ -5635,7 +5635,10 @@
            otherwise.&nbsp; For a valid state, <i>reportedValues 2-6</i> are set with the state number, the type 
            of state, the active camera number or 0 if the camera is not available, the magnification index, and 
            the name.&nbsp; The type is 0-5 for Low Dose V, F, T, R, S, or R using Mont-Map parameters, or -1 or -2
-            for a non-Low Dose Record or Mont-Map state.&nbsp; Command added in 4.2, 8-Feb-24.
+            for a non-Low Dose Record or Mont-Map state.&nbsp; <i>reportedValue7</i> is set to the camera length
+           index, which is 0 unless the state is in diffraction; because the magnification index reported in
+            <i>reportedValue5</i> is 0 for a state in diffraction, this is how to tell a diffraction state from
+            an imaging one.&nbsp; Command added in 4.2, 8-Feb-24; <i>reportedValue7</i> added in 4.3, 21-Sep-26.
           </TD>
         </TR>
         <TR>
@@ -5662,8 +5665,48 @@
         </TR>
          <TR>
           <TD class="scriptcommand">OpenImagingStateDialog</TD>
-          <TD>Opens the <A HREF="hidd_statedlg.htm">Imaging States dialog</A> if it is not already 
+          <TD>Opens the <A HREF="hidd_statedlg.htm">Imaging States dialog</A> if it is not already
             open.&nbsp; </TD>
+        </TR>
+        <TR>
+          <TD class="scriptcommand"><a name="AddImagingState"></a>AddImagingState [name]</TD>
+          <TD>Adds an imaging state from the current microscope and camera settings, equivalent to
+           pressing <b>Add Current State</b> in the <A HREF="hidd_statedlg.htm">Imaging States
+           dialog</A>, and gives it the optional <b>name</b>, which may contain spaces.&nbsp; In Low
+            Dose the state is taken from the current area, so the microscope must be in a defined
+            area or the command stops with an error.&nbsp; If the current state is in diffraction,
+            the camera length and diffraction focus are stored and will be restored by
+            'GoToImagingState'.&nbsp; <i>reportedValue1</i> is set to the number of the new state,
+            which is the number of states after adding it.&nbsp; The dialog does not need to be open.&nbsp;
+            Command added in 4.3, 21-Sep-26.
+          </TD>
+        </TR>
+        <TR>
+          <TD class="scriptcommand"><a name="RemoveImagingState"></a>RemoveImagingState name</TD>
+          <TD>Removes the imaging state specified by <b>name</b>, which can be the full name of the
+           state, a unique set of starting letters, or the number of the state in the table
+           (numbered from 1), as for 'GoToImagingState'.&nbsp; The command stops with an error if the
+            state is not found, and there is no confirmation prompt.&nbsp; Remaining states are
+            renumbered, so a script removing several states by number should work from the highest
+            number down, or remove by name.&nbsp; The dialog does not need to be open.&nbsp;
+            Command added in 4.3, 21-Sep-26.
+          </TD>
+        </TR>
+        <TR>
+          <TD class="scriptcommand"><a name="RenameImagingState"></a>RenameImagingState name new-name</TD>
+          <TD>Renames the imaging state specified by <b>name</b>, which can be the full name, a unique
+           set of starting letters, or the number of the state in the table (numbered from 1), to
+            <b>new-name</b>, which is the rest of the line and may contain spaces.&nbsp; The command
+            stops with an error if the state is not found.&nbsp; The dialog does not need to be
+            open.&nbsp; Command added in 4.3, 21-Sep-26.
+          </TD>
+        </TR>
+        <TR>
+          <TD class="scriptcommand"><a name="ReportNumImagingStates"></a>ReportNumImagingStates</TD>
+          <TD>Reports the number of imaging states in the table.&nbsp; <i>reportedValue1</i> is set to
+           the number, which allows a script to loop over states with 'ImagingStateProperties' or
+            'ListImagingState'.&nbsp; Command added in 4.3, 21-Sep-26.
+          </TD>
         </TR>
         <TR>
           <TD class="scriptcommand">SkipPiecesOutsideItem #I</TD>
