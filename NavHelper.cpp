@@ -2544,6 +2544,16 @@ void CNavHelper::StoreCurrentStateInParam(StateParams *param, int lowdose,
   param->camForParams = camNum;
   param->flags = 0;
   param->lowDose = lowdose;
+
+  // Clear the diffraction fields before either branch.  This function is also called
+  // to update an existing state, and a low dose state describes diffraction in its
+  // ldParams, so without this an update of a state that was stored in non-low dose
+  // diffraction would leave a stale camera length in the top-level fields
+  param->camLenIndex = 0;
+  param->diffFocus = -999.;
+  param->darkFieldMode = -1;
+  param->dfTiltX = param->dfTiltY = 0.;
+
   if (lowdose) {
     param->ldParams = *ldp;
     param->probeMode = ldp->probeMode;
@@ -2562,10 +2572,6 @@ void CNavHelper::StoreCurrentStateInParam(StateParams *param, int lowdose,
       param->diffFocus = mScope->GetDiffractionFocus();
       if (!mScope->GetDarkFieldTilt(param->darkFieldMode, param->dfTiltX, param->dfTiltY))
         param->darkFieldMode = -1;
-    } else {
-      param->camLenIndex = 0;
-      param->diffFocus = -999.;
-      param->darkFieldMode = -1;
     }
     param->intensity = mScope->GetIntensity();
     param->spotSize = mScope->GetSpotSize();
