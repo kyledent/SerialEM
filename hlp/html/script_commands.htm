@@ -5638,7 +5638,10 @@
             for a non-Low Dose Record or Mont-Map state.&nbsp; <i>reportedValue7</i> is set to the camera length
            index, which is 0 unless the state is in diffraction; because the magnification index reported in
             <i>reportedValue5</i> is 0 for a state in diffraction, this is how to tell a diffraction state from
-            an imaging one.&nbsp; Command added in 4.2, 8-Feb-24; <i>reportedValue7</i> added in 4.3, 21-Sep-26.
+            an imaging one.&nbsp; On an FEI/Thermo scope in low-angle diffraction the value carries the same
+            encoding that 'SetCamLenIndex' accepts, namely the index plus 30, so the value can be passed straight
+            back to that command but a script comparing it with a plain camera length index must allow for it.&nbsp;
+            Command added in 4.2, 8-Feb-24; <i>reportedValue7</i> added in 4.3, 21-Sep-26.
           </TD>
         </TR>
         <TR>
