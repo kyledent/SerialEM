@@ -13015,6 +13015,27 @@ int CMacCmd::RenameImagingState(void)
   return 0;
 }
 
+// ReportCamLenIndex
+int CMacCmd::ReportCamLenIndex(void)
+{
+  int index = 0, lowAngle = 0;
+
+  // Same test for diffraction as ReportCameraLength uses: a zero magnification index
+  if (mWinApp->GetSTEMMode() || !mScope->GetMagIndex()) {
+    index = mScope->GetCamLenIndex();
+
+    // The value is the one SetCamLenIndex accepts, so it can be passed straight back.
+    // On an FEI scope in low-angle diffraction it carries LAD_INDEX_BASE added to the
+    // index, which is reported separately rather than left for scripts to work out
+    lowAngle = index > LAD_INDEX_BASE ? 1 : 0;
+    mLogRpt.Format("Camera length index is %d%s", index,
+      lowAngle ? " (low angle)" : "");
+  } else
+    mLogRpt = "Not in STEM or diffraction mode - no camera length index available";
+  SetRepValsAndVars(1, index, lowAngle);
+  return 0;
+}
+
 // ReportNumImagingStates
 int CMacCmd::ReportNumImagingStates(void)
 {

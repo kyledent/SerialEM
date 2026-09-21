@@ -2570,8 +2570,15 @@ void CNavHelper::StoreCurrentStateInParam(StateParams *param, int lowdose,
     if (!param->magIndex) {
       param->camLenIndex = mScope->GetCamLenIndex();
       param->diffFocus = mScope->GetDiffractionFocus();
-      if (!mScope->GetDarkFieldTilt(param->darkFieldMode, param->dfTiltX, param->dfTiltY))
+      // GetDarkFieldTilt returns true with a zero mode both when dark field is off
+      // and when the scope or plugin cannot do it at all (EMscope.cpp:3558-3560), so
+      // a zero mode is not an observation of anything.  Store it only when dark
+      // field is actually on, rather than writing an assertion that was never made
+      if (!mScope->GetDarkFieldTilt(param->darkFieldMode, param->dfTiltX, param->dfTiltY)
+        || !param->darkFieldMode) {
         param->darkFieldMode = -1;
+        param->dfTiltX = param->dfTiltY = 0.;
+      }
     }
     param->intensity = mScope->GetIntensity();
     param->spotSize = mScope->GetSpotSize();

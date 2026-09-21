@@ -5705,6 +5705,18 @@
           </TD>
         </TR>
         <TR>
+          <TD class="scriptcommand"><a name="ReportCamLenIndex"></a>ReportCamLenIndex</TD>
+          <TD>Reports the current camera length index when in diffraction or STEM mode; there was
+           previously no way to read it back, only to set it with 'SetCamLenIndex'.&nbsp;
+            <i>reportedValue1</i> is the index in the form that 'SetCamLenIndex' accepts, so it can be
+            passed straight back, and <i>reportedValue2</i> is 1 if that is a low-angle diffraction
+            value or 0 otherwise.&nbsp; On an FEI/Thermo scope a low-angle index carries 30 added to
+            it, so <i>reportedValue2</i> saves a script having to know that.&nbsp; If the microscope is
+            neither in diffraction nor in STEM mode, both are 0 and a message is logged.&nbsp;
+            Command added in 4.3, 22-Sep-26.
+          </TD>
+        </TR>
+        <TR>
           <TD class="scriptcommand"><a name="ReportNumImagingStates"></a>ReportNumImagingStates</TD>
           <TD>Reports the number of imaging states in the table.&nbsp; <i>reportedValue1</i> is set to
            the number, which allows a script to loop over states with 'ImagingStateProperties' or

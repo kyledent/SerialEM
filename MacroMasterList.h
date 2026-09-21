@@ -890,6 +890,7 @@ MAC_SAME_NAME_ARG(AddImagingState, 0, 0, ADDIMAGINGSTATE, s)
 MAC_SAME_NAME_ARG(RemoveImagingState, 1, 4, REMOVEIMAGINGSTATE, S)
 MAC_SAME_NAME_ARG(RenameImagingState, 2, 4, RENAMEIMAGINGSTATE, SS)
 MAC_SAME_NAME_NOARG(ReportNumImagingStates, 0, 4, REPORTNUMIMAGINGSTATES)
+MAC_SAME_NAME_NOARG(ReportCamLenIndex, 0, 4, REPORTCAMLENINDEX)
 
 // new Python-only commands need to be added to pythonOnlyCmds in ::CMacroProcessor
 // New Not from Python items omit _ARG or _NOARG
