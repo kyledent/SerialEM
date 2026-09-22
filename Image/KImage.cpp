@@ -249,7 +249,7 @@ BOOL KImage::TestHResult(CString inString)
   if (inString) {
     CString message;
     message.Format(_T("Error 0x%x %s"), mHR, inString);
-    AfxMessageBox(message);
+    SEMAfxMessageBox(message);
   }
   return true;
 }

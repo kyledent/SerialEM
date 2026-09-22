@@ -408,7 +408,7 @@ int KStoreIMOD::WriteSection(KImage * inImage)
       if (mrc_write_slice(idata, header->fp, header, mIIfile->nz, 'Z')) {
         retval = 6;
         CString str = b3dGetError();
-        AfxMessageBox(str, MB_EXCLAME);
+        SEMAfxMessageBox(str, MB_EXCLAME);
       } else {
         if (mIIfile->file == IIFILE_MRC)
           mIIfile->nz++;

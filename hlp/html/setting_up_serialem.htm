@@ -567,6 +567,15 @@
       <li>&#39;/Minimized&#39; will start the program with the main window minimized; the log 
         window and script window will still open if they were open upon the previous 
         exit.</li>
+      <li>&#39;/Unattended&#39; declares that no one will be present to dismiss a dialog, as
+        when the program is started automatically or run in a container.&nbsp; Message
+        boxes are written to the log instead of being shown, and dialogs that ask for a
+        value - an entry box, a choice, or a file selection - are refused rather than
+        answered, so that nothing is assumed on your behalf; each is logged, prefixed
+        with UNATTENDED.&nbsp; The program can then start and run, or fail and say why
+        in the log, but it will not stop and wait for input.&nbsp; There is also an
+        UnattendedMode property, but the switch takes effect earlier, before the
+        properties are read.</li>
       <li>Any one of these entries can be &#39;commented out&#39; by placing a &#39;#&#39; after the 
         &#39;/&#39;, i.e., &#39;/#NoCam:1&#39; will be ignored.&nbsp; This feature makes it easy to 
         leave out or add back an argument, if that has to be done frequently.</li>

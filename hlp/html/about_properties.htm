@@ -822,6 +822,20 @@ X lens - 18 <br>
               hours.</TD>
         </TR>
         <TR VALIGN="top">
+          <TD>UnattendedMode</TD>
+          <TD>Set to 1 when no one will be present to dismiss a dialog, such as when
+            the program is started automatically or run in a container.&nbsp; Message
+            boxes are then written to the log instead of being shown, and dialogs that
+            ask for a value - an entry box, a choice, or a file selection - are refused
+            rather than answered, so that nothing is assumed on your behalf.&nbsp; Each
+            one is logged, prefixed with UNATTENDED, together with what was declined.
+            &nbsp; The program can then start and run, or fail and say why in the log,
+            but it will not stop and wait for input.&nbsp; It can also be set for one
+            run with the /Unattended command line switch, which takes effect earlier
+            than this property can, since properties are themselves read by code that
+            can raise a message box.</TD>
+        </TR>
+        <TR VALIGN="top">
           <TD>NoExceptionHandler</TD>
           <TD>By default, the program will intercept crashes and attempt to close valves or
             turn off the beam immediately if the user's settings specify that this should

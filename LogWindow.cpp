@@ -7,6 +7,7 @@
 //
 
 #include "stdafx.h"
+#include <direct.h>
 #include "SerialEM.h"
 #include "SerialEMDoc.h"
 #include "MacroProcessor.h"
@@ -264,7 +265,9 @@ void CLogWindow::DoAppend(CString &inString, int lineFlags, int red, int green, 
     }
   }
 
-  if (mWinApp->GetContinuousSaveLog()) {
+  // Unattended, the log must reach a file: a run that says why it failed and then
+  // exits would otherwise leave nothing behind
+  if (mWinApp->GetContinuousSaveLog() || mWinApp->GetUnattended()) {
     if (mSaveFile.IsEmpty() || newLen != mAppendedLength + mLastSavedLength -
       mPrunedLength)
       Save();
@@ -369,6 +372,36 @@ int CLogWindow::GetFileName(BOOL oldFile, UINT flags, LPCTSTR offerName)
   static char bothFilter[] =
     "Log files (*.log, *.rtf)|*.log; *.rtf|All files (*.*)|*.*||";
   int saveRTF = (mWinApp->GetSaveLogAsRTF() && !mPrunedLength) ? 1 : 0;
+
+  // With no one present to choose a name, make one up rather than refusing the
+  // dialog, which would leave the log unsaved and defeat the purpose of the mode.
+  // Only for a new file: there is no sensible guess at one to read.
+  if (mWinApp->GetUnattended() && !oldFile) {
+    CString name = offerName;
+    char *cwd;
+    if (name.IsEmpty()) {
+      CTime ctdt = CTime::GetCurrentTime();
+      const char **months = mWinApp->mDocWnd->GetMonthStrings();
+      name.Format("SerialEM-%02d%s%d-%02d%02d%02d", ctdt.GetDay(),
+        months[ctdt.GetMonth() - 1], ctdt.GetYear(), ctdt.GetHour(),
+        ctdt.GetMinute(), ctdt.GetSecond());
+    }
+    mSaveFile = name + (saveRTF ? ".rtf" : ".log");
+    if (mSaveFile.Find(':') < 0 && mSaveFile.GetAt(0) != '\\') {
+      cwd = _getcwd(NULL, MAX_PATH);
+      if (cwd) {
+        mSaveFile = CString(cwd) + "\\" + mSaveFile;
+        free(cwd);
+      }
+    }
+
+    // Not through the log, which is what called this
+    OutputDebugString((LPCTSTR)(CString("UNATTENDED: saving the log to ") +
+      mSaveFile + "\r\n"));
+    SetWindowText((mIsSecondary ? "SECONDARY Log: " : "Log: ") + mSaveFile);
+    mTypeOfFileSaved = saveRTF + 1;
+    return 0;
+  }
 
   MyFileDialog fileDlg(oldFile, saveRTF ? ".rtf" : ".log", offerName, flags,
     B3DCHOICE(oldFile, bothFilter, saveRTF ? rtfFilter : logFilter));

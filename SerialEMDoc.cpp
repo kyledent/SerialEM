@@ -3071,6 +3071,15 @@ int MyFileDialog::DoModal()
 {
   CString newDir, str;
   int retval;
+
+  // A file dialog cannot be answered from a log message, and this is the one
+  // place every file dialog in the program goes through.  With no one present,
+  // refuse it the way a cancel would, which every caller already handles.
+  if (SEMUnattendedMode()) {
+    SEMAppendToLog("UNATTENDED: a file dialog was needed but no one was present "
+      "to answer it, so it was cancelled and no file was chosen");
+    return IDCANCEL;
+  }
 #ifdef USE_SDK_FILEDLG
 #ifdef USE_DUMMYDLG
   CDummyDlg dummy;
