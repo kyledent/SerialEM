@@ -5688,8 +5688,9 @@
           <TD class="scriptcommand"><a name="RemoveImagingState"></a>RemoveImagingState name</TD>
           <TD>Removes the imaging state specified by <b>name</b>, which can be the full name of the
            state, a unique set of starting letters, or the number of the state in the table
-           (numbered from 1), as for 'GoToImagingState'.&nbsp; The command stops with an error if the
-            state is not found, and there is no confirmation prompt.&nbsp; Remaining states are
+           (numbered from 1), as for 'GoToImagingState'.&nbsp; There is no confirmation prompt.&nbsp;
+            <i>reportedValue1</i> is 0 on success, or non-zero if the state was not found, in which
+            case nothing is removed and a message is logged rather than the script being stopped.&nbsp; Remaining states are
             renumbered, so a script removing several states by number should work from the highest
             number down, or remove by name.&nbsp; The dialog does not need to be open.&nbsp;
             Command added in 4.3, 21-Sep-26.
@@ -5699,8 +5700,9 @@
           <TD class="scriptcommand"><a name="RenameImagingState"></a>RenameImagingState name new-name</TD>
           <TD>Renames the imaging state specified by <b>name</b>, which can be the full name, a unique
            set of starting letters, or the number of the state in the table (numbered from 1), to
-            <b>new-name</b>, which is the rest of the line and may contain spaces.&nbsp; The command
-            stops with an error if the state is not found.&nbsp; The dialog does not need to be
+            <b>new-name</b>, which is the rest of the line and may contain spaces.&nbsp;
+            <i>reportedValue1</i> is 0 on success, or non-zero if the state was not found, in which
+            case nothing is renamed and a message is logged rather than the script being stopped.&nbsp; The dialog does not need to be
             open.&nbsp; Command added in 4.3, 21-Sep-26.
           </TD>
         </TR>

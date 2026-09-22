@@ -12974,8 +12974,16 @@ int CMacCmd::RemoveImagingState(void)
 
   SubstituteLineStripItems(mStrLine, 1, mStrCopy);
   err = CStateDlg::LookupStateByNameOrNum(mStrCopy, index, errStr);
-  if (err)
-    ABORT_LINE("Specified imaging state not available (" + errStr + ") for line:\n\n");
+
+  // Report rather than abort, as ImagingStateProperties does for the same lookup.
+  // Aborting raises a modal that ErrorsToLog does not suppress, which would block an
+  // unattended run - and for a removal, "it is already not there" is a poor reason to
+  // stop a script.  reportedValue1 carries the error so a caller can still tell
+  if (err) {
+    SetReportedValues(err);
+    mLogRpt = "Specified imaging state not available, not removed: " + errStr;
+    return 0;
+  }
   name = stateArr->GetAt(index)->name;
   delete stateArr->GetAt(index);
   stateArr->RemoveAt(index);
@@ -12990,6 +12998,7 @@ int CMacCmd::RemoveImagingState(void)
   }
   if (mNavHelper->mStateDlg)
     mNavHelper->mStateDlg->FillListBox();
+  SetReportedValues(0.);
   mLogRpt.Format("Removed imaging state %d%s%s", index + 1,
     name.IsEmpty() ? "" : ", ", (LPCTSTR)name);
   return 0;
@@ -13003,14 +13012,18 @@ int CMacCmd::RenameImagingState(void)
   CString errStr;
 
   err = CStateDlg::LookupStateByNameOrNum(mStrItems[1], index, errStr);
-  if (err)
-    ABORT_LINE("Specified imaging state not available (" + errStr + ") for line:\n\n");
+  if (err) {
+    SetReportedValues(err);
+    mLogRpt = "Specified imaging state not available, not renamed: " + errStr;
+    return 0;
+  }
   SubstituteLineStripItems(mStrLine, 2, mStrCopy);
   stateArr->GetAt(index)->name = mStrCopy;
   if (mNavHelper->mStateDlg) {
     mNavHelper->mStateDlg->UpdateListString(index);
     mNavHelper->mStateDlg->ManageName();
   }
+  SetReportedValues(0.);
   mLogRpt.Format("Imaging state %d is now named %s", index + 1, (LPCTSTR)mStrCopy);
   return 0;
 }
