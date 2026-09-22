@@ -192,7 +192,7 @@ int CPluginManager::LoadPlugins(void)
           !mExePath.IsEmpty() ? (LPCTSTR)mExePath : "",
           FindFileData.cFileName, (LPCTSTR)path);
         mWinApp->AppendToLog(mess, action);
-        AfxMessageBox(mess, MB_EXCLAME);
+        SEMAfxMessageBox(mess, MB_EXCLAME);
         AfxFreeLibrary(module);
         twoScopes = true;
         continue;
@@ -519,7 +519,7 @@ double CPluginManager::ExecuteCommand(CString strLine, int *itemInt, double *ite
   }
   if (plug >= mPlugins.GetSize()) {
     mess.Format("There is no plugin loaded named %s, in statement:\n\n", strItems[1]);
-    AfxMessageBox(mess + strLine, MB_OK);
+    SEMAfxMessageBox(mess + strLine, MB_OK);
     return 0.;
   }
 
@@ -531,7 +531,7 @@ double CPluginManager::ExecuteCommand(CString strLine, int *itemInt, double *ite
   if (ind >= plugin->calls.GetSize()) {
     mess.Format("There is no function named %s in this plugin, in statement:\n\n",
       strItems[2]);
-    AfxMessageBox(mess + strLine, MB_OK);
+    SEMAfxMessageBox(mess + strLine, MB_OK);
     return 0.;
   }
   if ((call.ifString > 1 && (call.numInts || call.numDbls != 3)) ||
@@ -540,7 +540,7 @@ double CPluginManager::ExecuteCommand(CString strLine, int *itemInt, double *ite
     (call.numInts > 1 || call.numDbls < 1 || call.numDbls > MAX_CALL_OUTDBLS))) {
     mess.Format("The plugin function %s requires a list of "
       "arguments that the program cannot send, in statement:\n\n", strItems[2]);
-    AfxMessageBox(mess + strLine, MB_OK);
+    SEMAfxMessageBox(mess + strLine, MB_OK);
     return 0.;
   }
   args = B3DMAX(0, B3DMAX(call.numInts, call.numDbls)) + (call.ifString ? 1 : 0);
@@ -549,7 +549,7 @@ double CPluginManager::ExecuteCommand(CString strLine, int *itemInt, double *ite
   if (itemEmpty[2 + args]) {
     mess.Format("The plugin function %s needs %d values and you did not enter enough"
       " values in statement:\n\n", strItems[2], args);
-    AfxMessageBox(mess + strLine, MB_OK);
+    SEMAfxMessageBox(mess + strLine, MB_OK);
     return 0.;
   }
   err = 0;

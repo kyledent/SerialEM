@@ -1075,7 +1075,7 @@ BOOL CSerialEMApp::InitInstance()
 
   //if (!AfxOleInit()){
   if (CoInitializeEx(NULL, COINIT_MULTITHREADED) != S_OK) {
-    AfxMessageBox(_T("COM Initialization failed!"));
+    SEMAfxMessageBox(_T("COM Initialization failed!"));
     return FALSE;
   }
   /*if (CoInitializeSecurity(NULL, -1, NULL, NULL, RPC_C_AUTHN_LEVEL_NONE,
@@ -1137,7 +1137,7 @@ BOOL CSerialEMApp::InitInstance()
     }
   }
   if (!mDocWnd) {
-    AfxMessageBox("No document class found");
+    SEMAfxMessageBox("No document class found");
     return FALSE;
   }
   if (!settingsFile.IsEmpty())
@@ -1217,7 +1217,7 @@ BOOL CSerialEMApp::InitInstance()
       Sleep(50);
     }
     if (hMutex && GetLastError() == ERROR_ALREADY_EXISTS) {
-      AfxMessageBox("There is a non-DUMMY instance of SerialEM still running.\n"
+      SEMAfxMessageBox("There is a non-DUMMY instance of SerialEM still running.\n"
           "It must be closed or killed before you can start another.");
         return FALSE;
     }
@@ -1293,7 +1293,7 @@ BOOL CSerialEMApp::InitInstance()
         mActiveCameraList[iSet++] = mActiveCameraList[iAct];
     }
     if (!iSet) {
-      AfxMessageBox("You cannot remove all of the active cameras with /NoCam");
+      SEMAfxMessageBox("You cannot remove all of the active cameras with /NoCam");
       return false;
     }
     mActiveCamListSize = iSet;
@@ -1320,7 +1320,7 @@ BOOL CSerialEMApp::InitInstance()
             " %d\n\nFor a K2 camera, it needs to be the number of\nlinear mode counts per"
             " electron, not a value near 1.\nFor a K3, it needs to be 32 and the entry"
             " is not needed", mCamParams[iCam].countsPerElectron, iCam);
-          AfxMessageBox(message, MB_EXCLAME);
+          SEMAfxMessageBox(message, MB_EXCLAME);
       }
     }
 
@@ -1335,7 +1335,7 @@ BOOL CSerialEMApp::InitInstance()
           "Should it be UsableArea %d %d %d %d instead?", iCam, longInY ? "Y" : "X",
           longInY ? "X" : "Y", def->usableLeft, def->usableTop, def->usableRight,
           def->usableBottom);
-        AfxMessageBox(message, MB_EXCLAME);
+        SEMAfxMessageBox(message, MB_EXCLAME);
         AppendToLog(message);
     }
   }
@@ -1345,7 +1345,7 @@ BOOL CSerialEMApp::InitInstance()
       message.Format("The general property ScalingForK2Counts is set to %1.f\n\n"
         "It needs to be close to the number of linear mode\ncounts per"
         " electron, not a value near 1.", mCamera->GetScalingForK2Counts());
-      AfxMessageBox(message, MB_EXCLAME);
+      SEMAfxMessageBox(message, MB_EXCLAME);
   }
 
   // Double sizes for K2 camera and define the DM and Gatan camera flags
@@ -1406,7 +1406,7 @@ BOOL CSerialEMApp::InitInstance()
       message.Format("%s is not defined for camera %d",
         mCamParams[iCam].pixelMicrons <= 0 ? "Pixel size" : "Camera size in X and Y" ,
         iCam);
-      AfxMessageBox(message, MB_EXCLAME);
+      SEMAfxMessageBox(message, MB_EXCLAME);
       return false;
     }
 
@@ -2169,7 +2169,7 @@ void CSerialEMApp::CleanupAndReportCrash(CString &message)
   }
   if (LowDoseMode())
     message += "\r\n\r\nWill try to leave low dose mode before closing...";
-  AfxMessageBox(message);
+  SEMAfxMessageBox(message);
   if (LowDoseMode())
     mLowDoseDlg.SetLowDoseMode(false, false, true);
   CBaseSocket::UninitializeWSA();
@@ -3010,7 +3010,7 @@ void CSerialEMApp::AddIdleTask(int (__cdecl *busyFunc)(void), void (__cdecl *nex
   // Start the timer if necessary if not using the idle processing
 #ifdef TASK_TIMER_INTERVAL
   if (!mMainFrame->NewTask())
-    AfxMessageBox("Failed to start timer to monitor completion of tasks",
+    SEMAfxMessageBox("Failed to start timer to monitor completion of tasks",
       MB_EXCLAME);
 #endif
 }
@@ -6329,7 +6329,7 @@ bool CSerialEMApp::EnterLowDoseAreaIfCrashed(BOOL inSTEM, BOOL inEFTEM)
     }
 
     // If it made it to here it is a match
-    if (AfxMessageBox("It appears that SerialEM did not exit properly\n"
+    if (SEMAfxMessageBox("It appears that SerialEM did not exit properly\n"
       "and the scope is in the " + mModeName[area == SEARCH_AREA ? SEARCH_CONSET : area]
       + " Low Dose area\n\nDo you want to start in that area to avoid problems with"
       " various offsets?", MB_QUESTION) == IDNO)

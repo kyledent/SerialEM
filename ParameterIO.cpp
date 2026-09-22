@@ -384,7 +384,7 @@ int CParameterIO::ReadSettings(CString strFileName, bool readingSys)
                 " parameter set %d\nThese frame summing parameters are being removed - "
                 "this may take alarmingly long after you close this message.\n\n"
                 " You will need to set up frame summing parameters again.", iCam, iset);
-              AfxMessageBox(message, MB_EXCLAME);
+              SEMAfxMessageBox(message, MB_EXCLAME);
               cs->summedFrameList.clear();
               cs->userFrameFractions.clear();
               cs->userSubframeFractions.clear();
@@ -534,7 +534,7 @@ int CParameterIO::ReadSettings(CString strFileName, bool readingSys)
           itemInt[1] < mWinApp->GetAutoPruneLogLines()) {
           strCopy.Format("The number of lines for log pruning has been changed to "
             "the new default of %d", mWinApp->GetAutoPruneLogLines());
-          AfxMessageBox(strCopy, MB_OK | MB_ICONINFORMATION);
+          SEMAfxMessageBox(strCopy, MB_OK | MB_ICONINFORMATION);
         }
       } else if (NAME_IS("AutofocusEucenAbsParams")) {
         mWinApp->mFocusManager->SetEucenAbsFocusParams(itemDbl[1], itemDbl[2],
@@ -565,7 +565,7 @@ int CParameterIO::ReadSettings(CString strFileName, bool readingSys)
 
       else if (NAME_IS("AutosaveNavigator")) {
         if (!itemInt[1])
-          AfxMessageBox("It is now the default to autosave a Navigator file\n"
+          SEMAfxMessageBox("It is now the default to autosave a Navigator file\n"
             "periodically.  If you do not want Navigator files to be\n"
             "saved automatically, turn this option off with the\n"
             "Navigator - Autosave Nav File menu item.", MB_OK | MB_ICONINFORMATION);
@@ -1088,7 +1088,7 @@ int CParameterIO::ReadSettings(CString strFileName, bool readingSys)
       } else if (NAME_IS("ToolDialogPlacement")) {
         index = itemInt[1];
         if (index < 0 || index >= MAX_TOOL_DLGS || strItems[5].IsEmpty()) {
-          AfxMessageBox("Error in panel placement line in settings file "
+          SEMAfxMessageBox("Error in panel placement line in settings file "
             + strFileName + " :\n" + strLine, MB_EXCLAME);
         } else {
           ConstrainWindowPlacement(&itemInt[2], &itemInt[3], &itemInt[4], &itemInt[5],
@@ -1153,7 +1153,7 @@ int CParameterIO::ReadSettings(CString strFileName, bool readingSys)
         if (strItems[index + 10].IsEmpty() ||
           (index && (itemInt[1] < 0 || itemInt[1] >= MAX_MACROS))) {
           if (index && itemInt[1] < 0)
-            AfxMessageBox("Error in window placement line in settings file "
+            SEMAfxMessageBox("Error in window placement line in settings file "
               + strFileName + " :\n" + strLine, MB_EXCLAME);
         } else {
           place = &winPlace;
@@ -1327,7 +1327,7 @@ int CParameterIO::ReadSettings(CString strFileName, bool readingSys)
       } else if (NAME_IS("StateParams3")) {
         index = itemInt[1];
         if (index < 0 || index >= stateArray->GetSize()) {
-          AfxMessageBox("Index out of range in StateParams3 line in settings file "
+          SEMAfxMessageBox("Index out of range in StateParams3 line in settings file "
             + strFileName + " :\n" + strLine, MB_EXCLAME);
         } else {
           stateP = stateArray->GetAt(index);
@@ -1341,7 +1341,7 @@ int CParameterIO::ReadSettings(CString strFileName, bool readingSys)
       } else if (NAME_IS("StateName")) {
         index = itemInt[1];
         if (index < 0 || index >= stateArray->GetSize()) {
-          AfxMessageBox("Index out of range in state name line in settings file "
+          SEMAfxMessageBox("Index out of range in state name line in settings file "
             + strFileName + " :\n" + strLine, MB_EXCLAME);
         } else {
           stateP = stateArray->GetAt(index);
@@ -1351,7 +1351,7 @@ int CParameterIO::ReadSettings(CString strFileName, bool readingSys)
       } else if (NAME_IS("StateParams2")) {
         index = itemInt[1];
         if (index < 0 || index >= stateArray->GetSize()) {
-          AfxMessageBox("Index out of range in StateParams2 line in settings file "
+          SEMAfxMessageBox("Index out of range in StateParams2 line in settings file "
             + strFileName + " :\n" + strLine, MB_EXCLAME);
         } else {
           stateP = stateArray->GetAt(index);
@@ -1374,7 +1374,7 @@ int CParameterIO::ReadSettings(CString strFileName, bool readingSys)
           GIF > 2 || strItems[5].IsEmpty() || (index < 0 && !stateP->lowDose) ||
           (!strItems[6].IsEmpty() && strItems[9].IsEmpty()) ||
           (!strItems[11].IsEmpty() && strItems[12].IsEmpty()) ) {
-          AfxMessageBox("Error in low dose parameter line in settings file "
+          SEMAfxMessageBox("Error in low dose parameter line in settings file "
             + strFileName + " :\n" + strLine, MB_EXCLAME);
         } else {
           if (index >= 0) {
@@ -1432,7 +1432,7 @@ int CParameterIO::ReadSettings(CString strFileName, bool readingSys)
       } else if (NAME_IS("ImageXrayCriteria")) {
         index = itemInt[1];
         if (index < 0 || index >= MAX_CAMERAS || strItems[4].IsEmpty()) {
-          AfxMessageBox("Incorrect entry in settings file "
+          SEMAfxMessageBox("Incorrect entry in settings file "
             + strFileName + " :\n" + strLine, MB_EXCLAME);
         } else {
           mCamParam[index].imageXRayAbsCrit = itemFlt[2];
@@ -1443,7 +1443,7 @@ int CParameterIO::ReadSettings(CString strFileName, bool readingSys)
       } else if (NAME_IS("GainReferenceTarget")) {
         index = itemInt[1];
         if (index < 0 || index >= MAX_CAMERAS || strItems[4].IsEmpty()) {
-          AfxMessageBox("Incorrect entry in settings file "
+          SEMAfxMessageBox("Incorrect entry in settings file "
             + strFileName + " :\n" + strLine, MB_EXCLAME);
         } else {
           mCamParam[index].gainRefBinning = itemInt[2];
@@ -1535,12 +1535,12 @@ int CParameterIO::ReadSettings(CString strFileName, bool readingSys)
           index = StringToEntryList(3, strCopy, mTSParam->numExtraChannels,
             mTSParam->extraChannels, NULL, MAX_STEM_CHANNELS);
         if (index)
-          AfxMessageBox("Extra Record series line badly formatted or too long in settings"
+          SEMAfxMessageBox("Extra Record series line badly formatted or too long in settings"
             " file " + strFileName + " :\n" + strLine, MB_EXCLAME);
       } else if (NAME_IS("TiltSeriesVariation")) {
         if (itemInt[4] < 0 || itemInt[4] >= MAX_VARY_TYPES || 
           mTSParam->numVaryItems >= MAX_TS_VARIES) {
-          AfxMessageBox("Invalid type of change or too many changes for array in settings"
+          SEMAfxMessageBox("Invalid type of change or too many changes for array in settings"
             " file " + strFileName + " :\n" + strLine, MB_EXCLAME);
         } else {
           mTSParam->varyArray[mTSParam->numVaryItems].angle = itemFlt[1];
@@ -1635,7 +1635,7 @@ int CParameterIO::ReadSettings(CString strFileName, bool readingSys)
 
       } else if (NAME_IS("FrameAlignParams2") || NAME_IS("FrameAliSetName")) {
         if (itemInt[1] != faLastFileIndex || faLastArrayIndex < 0) {
-          AfxMessageBox("Frame alignment parameter or set name line not preceded by a\n"
+          SEMAfxMessageBox("Frame alignment parameter or set name line not preceded by a\n"
             "FrameAlignParams1 with the same parameter set index in settings\n"
             " file " + strFileName + " :\n" + strLine, MB_EXCLAME);
         } else {
@@ -1707,7 +1707,7 @@ int CParameterIO::ReadSettings(CString strFileName, bool readingSys)
     mFile = NULL;
   }
   if (!unrecognized.IsEmpty())
-    AfxMessageBox("Unrecognized entries in settings file " + strFileName 
+    SEMAfxMessageBox("Unrecognized entries in settings file " + strFileName 
       + " :\n" + unrecognized , MB_EXCLAME);
 
   // If there are no frame align params, set up default sets
@@ -1726,7 +1726,7 @@ int CParameterIO::ReadSettings(CString strFileName, bool readingSys)
   if (err) {
     strLine.Format("Removed %d low dose states from list because no matching \n"
       "low dose parameters were found in the settings file", err);
-    AfxMessageBox(strLine, MB_EXCLAME);
+    SEMAfxMessageBox(strLine, MB_EXCLAME);
   }
 
   // Purge the duplicates from tilt series variations
@@ -1763,7 +1763,7 @@ int CParameterIO::ReadSettings(CString strFileName, bool readingSys)
       message = strLine;
       message.Replace("-scripts.txt", "-scripts-saved.txt");
       if (CopyFile((LPCTSTR)strLine, (LPCTSTR)message, true))
-        AfxMessageBox("Existing copy of " + strLine + "\r\nwas saved as " + message + 
+        SEMAfxMessageBox("Existing copy of " + strLine + "\r\nwas saved as " + message + 
           "\r\nto keep it from being overwritten by scripts from the settings file");
     }
   }
@@ -2631,7 +2631,7 @@ void CParameterIO::WriteSettings(CString strFileName)
   catch(CFileException *perr) {
     perr->Delete();
     CString message = "Error writing settings to file " + strFileName;
-    AfxMessageBox(message, MB_EXCLAME);
+    SEMAfxMessageBox(message, MB_EXCLAME);
   } 
   if (mFile) {
     delete mFile;
@@ -2726,7 +2726,7 @@ int CParameterIO::ReadMacrosFromFile(CString &filename, const CString &curSettin
     if (printMess)
       mWinApp->AppendToLog(strLine);
     else
-      AfxMessageBox(strLine, MB_OK | MB_ICONINFORMATION);
+      SEMAfxMessageBox(strLine, MB_OK | MB_ICONINFORMATION);
   }
   return retval;
 }
@@ -2745,7 +2745,7 @@ void CParameterIO::WriteMacrosToFile(CString filename, int maxMacros)
   catch(CFileException *perr) {
     perr->Delete();
     CString message = "Error writing scripts to file " + filename;
-    AfxMessageBox(message, MB_EXCLAME);
+    SEMAfxMessageBox(message, MB_EXCLAME);
   } 
   if (mFile) {
     delete mFile;
@@ -3069,7 +3069,7 @@ void CParameterIO::WriteAcqParamsToFile(NavAcqParams *navParams,
   catch (CFileException *perr) {
     perr->Delete();
     CString message = "Error writing Navigator acquisition parameters to file " +filename;
-    AfxMessageBox(message, MB_EXCLAME);
+    SEMAfxMessageBox(message, MB_EXCLAME);
   }
   if (mFile) {
     delete mFile;
@@ -3147,7 +3147,7 @@ int CParameterIO::ReadDisableOrHideFile(CString & filename, std::set<int>  *IDsT
           type = 4;
         }
         if (type < 1 && !versionEnd) {
-          AfxMessageBox("Incorrect number for disabling or hiding in line:\n" +
+          SEMAfxMessageBox("Incorrect number for disabling or hiding in line:\n" +
             strLine + "\n\nin file:  " + filename, MB_EXCLAME);
         } else {
           StripItems(strLine, 1, tag);
@@ -3191,7 +3191,7 @@ int CParameterIO::ReadDisableOrHideFile(CString & filename, std::set<int>  *IDsT
                 } else {
                   tag.Format("This menu item can only be %s not %s in line:\n",
                     type == 1 ? "hidden" : "disabled", type > 1 ? "hidden" : "disabled");
-                  AfxMessageBox(tag + strLine + "\n\nin file:  " + filename, MB_EXCLAME);
+                  SEMAfxMessageBox(tag + strLine + "\n\nin file:  " + filename, MB_EXCLAME);
                 }
                 break;
               }
@@ -3202,11 +3202,11 @@ int CParameterIO::ReadDisableOrHideFile(CString & filename, std::set<int>  *IDsT
           }
         }
       } else
-        AfxMessageBox("Incomplete entry to disable or hide in line:\n"
+        SEMAfxMessageBox("Incomplete entry to disable or hide in line:\n"
           + strLine + "\n\nin file:  " + filename, MB_EXCLAME);
     }
     if (!unknown.IsEmpty())
-      AfxMessageBox("Unrecognized description of item(s) to disable or hide in "
+      SEMAfxMessageBox("Unrecognized description of item(s) to disable or hide in "
         "\nin file:  " + filename + "\n" + unknown, MB_EXCLAME);
     file->Close();
   }
@@ -3220,7 +3220,7 @@ int CParameterIO::ReadDisableOrHideFile(CString & filename, std::set<int>  *IDsT
     file = NULL;
   }
   if (err)
-    AfxMessageBox(mess + " file of items to disable or hide:\n" + filename);
+    SEMAfxMessageBox(mess + " file of items to disable or hide:\n" + filename);
   if (!err && toggleMode)
     mWinApp->SetBasicMode(true);
   return err;
@@ -3361,7 +3361,7 @@ int CParameterIO::ReadProperties(CString strFileName)
         if (itemEmpty[1] && !noValOKprops.count(propLower)) {
           message.Format("The property %s is present without a value and\n"
             "must have a value to be interpreted properly", (LPCTSTR)strItems[0]);
-          AfxMessageBox(message, MB_EXCLAME);
+          SEMAfxMessageBox(message, MB_EXCLAME);
         }
       }
       if (!startCcomment)
@@ -3375,7 +3375,7 @@ int CParameterIO::ReadProperties(CString strFileName)
           (err = ReadAndParse(strLine, strItems, MAX_TOKENS)) == 0) {
         }
         if (err)
-          AfxMessageBox(CString(err < 0 ? "End of file was reached" :
+          SEMAfxMessageBox(CString(err < 0 ? "End of file was reached" :
             "A read error occurred") + " looking for */ (the end of a C-style comment) in"
             " SerialEMproperties.txt", MB_EXCLAME);
 
@@ -3383,7 +3383,7 @@ int CParameterIO::ReadProperties(CString strFileName)
         int iset = itemInt[1];
         if (iset >= MAX_CAMERAS) {
           message.Format("Index in \"CameraProperties %d\" is out of range", iset);
-          AfxMessageBox(message, MB_EXCLAME);
+          SEMAfxMessageBox(message, MB_EXCLAME);
           retval = 1;
           break;
         }
@@ -3391,7 +3391,7 @@ int CParameterIO::ReadProperties(CString strFileName)
           camP = &mCamParam[iset];
           if (camEntered[iset]) {
             message.Format("More than one entry in properties file for camera %d", iset);
-            AfxMessageBox(message, MB_EXCLAME);
+            SEMAfxMessageBox(message, MB_EXCLAME);
           }
           camEntered[iset] = 1;
         }
@@ -3594,13 +3594,13 @@ int CParameterIO::ReadProperties(CString strFileName)
             if (magInd < 1 || magInd >= MAX_MAGS) {
               message.Format("Mag index out of range in \"RotationAndPixel %d\" line for"
                 "camera %d\nin properties file %s", magInd, iset, strFileName);
-              AfxMessageBox(message, MB_EXCLAME);
+              SEMAfxMessageBox(message, MB_EXCLAME);
             } else {
               mMagTab[magInd].deltaRotation[iset] = itemFlt[2];
               mMagTab[magInd].rotation[iset] = itemFlt[3];
               if (fabs(itemDbl[4]) > 998.9 && fabs(itemDbl[4]) < 999.1) {
                 if (!warned999)
-                  AfxMessageBox("RotationAndPixel lines should have 0 for undefined"
+                  SEMAfxMessageBox("RotationAndPixel lines should have 0 for undefined"
                     " pixel\nsizes, not 999, in properties file " + strFileName,
                     MB_EXCLAME);
                 warned999 = true;
@@ -3615,7 +3615,7 @@ int CParameterIO::ReadProperties(CString strFileName)
               message.Format("Mag index out of range or missing pixel size in"
                 " \"RefinedPixel %d\" line for camera %d\nin properties file %s", iset,
                 strFileName);
-              AfxMessageBox(message, MB_EXCLAME);
+              SEMAfxMessageBox(message, MB_EXCLAME);
             } else {
               refinedPix->insert(std::pair<int, float>(10 * magInd + iset, itemFlt[2]));
             }
@@ -3626,7 +3626,7 @@ int CParameterIO::ReadProperties(CString strFileName)
               if (index >= MAX_BINNINGS) {
                 message.Format("Too many binnings for camera %d\n"
                   "in properties file %s", iset, strFileName);
-                AfxMessageBox(message, MB_EXCLAME);
+                SEMAfxMessageBox(message, MB_EXCLAME);
                 break;
               }
               camP->binnings[index] = atoi((LPCTSTR)strItems[index + 1]);
@@ -3697,7 +3697,7 @@ int CParameterIO::ReadProperties(CString strFileName)
               if (camP->numHotColumns >= MAX_HOT_COLUMNS) {
                 message.Format("Too many hot columns for camera %d\n"
                   "in properties file %s", iset, iset, strFileName);
-                AfxMessageBox(message, MB_EXCLAME);
+                SEMAfxMessageBox(message, MB_EXCLAME);
                 break;
               }
               camP->hotColumn[camP->numHotColumns++] =
@@ -3710,7 +3710,7 @@ int CParameterIO::ReadProperties(CString strFileName)
               if (camP->hotPixelX.size() >= MAX_HOT_PIXELS) {
                 message.Format("Too many hot pixels for camera %d\n"
                   "in properties file %s", iset, strFileName);
-                AfxMessageBox(message, MB_EXCLAME);
+                SEMAfxMessageBox(message, MB_EXCLAME);
                 break;
               }
               camP->hotPixelX.push_back(atoi((LPCTSTR)strItems[index++]));
@@ -3728,11 +3728,11 @@ int CParameterIO::ReadProperties(CString strFileName)
             if (strItems[4].IsEmpty()) {
               message.Format("Binning offset entry needs four numbers\n"
                 "for camera %d: %s", iset, strLine);
-              AfxMessageBox(message, MB_EXCLAME);
+              SEMAfxMessageBox(message, MB_EXCLAME);
             } else if (camP->numBinnedOffsets >= MAX_BINNINGS) {
               message.Format("Too many binning offsets for camera %d\n"
                 "in properties file %s", iset, strFileName);
-              AfxMessageBox(message, MB_EXCLAME);
+              SEMAfxMessageBox(message, MB_EXCLAME);
             } else {
               camP->offsetBinning[camP->numBinnedOffsets] =
                 itemInt[1];
@@ -3749,9 +3749,9 @@ int CParameterIO::ReadProperties(CString strFileName)
             if (strItems[3].IsEmpty()) {
               message.Format("Relative rotation entry needs three numbers\n"
                 "for camera %d: %s", iset, strLine);
-              AfxMessageBox(message, MB_EXCLAME);
+              SEMAfxMessageBox(message, MB_EXCLAME);
             } else if (ind >= MAX_REL_ROT) {
-              AfxMessageBox("Too many special relative rotations for arrays",
+              SEMAfxMessageBox("Too many special relative rotations for arrays",
                 MB_EXCLAME);
             } else {
               relRotations[ind].camera = iset;
@@ -3776,7 +3776,7 @@ int CParameterIO::ReadProperties(CString strFileName)
             if (nMags <= 0 || scale <= 0) {
               message.Format("Incorrect DoseRateTable entry for camera %d: %s",
                 iset, strLine);
-              AfxMessageBox(message, MB_EXCLAME);
+              SEMAfxMessageBox(message, MB_EXCLAME);
 
             } else {
               err = 0;
@@ -3792,7 +3792,7 @@ int CParameterIO::ReadProperties(CString strFileName)
               if (err) {
                 message.Format("%d errors occurred reading the Dose Rate table for "
                   "camera %d", err, iset);
-                AfxMessageBox(message, MB_EXCLAME);
+                SEMAfxMessageBox(message, MB_EXCLAME);
               }
             }
 
@@ -3803,7 +3803,7 @@ int CParameterIO::ReadProperties(CString strFileName)
             message.Format("Unrecognized entry in properties file %s\n"
               "for camera %d: %s\n\nCheck the help to see if it is a general property"
               " instead of a camera property", strFileName, iset, strLine);
-            AfxMessageBox(message, MB_EXCLAME);
+            SEMAfxMessageBox(message, MB_EXCLAME);
           }
 
         }
@@ -3880,7 +3880,7 @@ int CParameterIO::ReadProperties(CString strFileName)
         if (index < 1 || index > MAX_1VIEW_TYPES) {
           message.Format("OneView type value of %d is out of range in %s entry\n"
             "in properties file %s", index, strItems[0], strFileName);
-          AfxMessageBox(message, MB_EXCLAME);
+          SEMAfxMessageBox(message, MB_EXCLAME);
         } else {
           if (MatchNoCase("OneViewLikeMinExposures"))
             StoreFloatsPerBinning(&strItems[1], "OneView-like minimum exposure", -1,
@@ -3895,7 +3895,7 @@ int CParameterIO::ReadProperties(CString strFileName)
           StripItems(strLine, 1, K2FilterNames[ind]);
           camera->SetNumK2Filters(ind + 1);
         } else
-          AfxMessageBox("Too many K2/K3 filter names for arrays", MB_EXCLAME);
+          SEMAfxMessageBox("Too many K2/K3 filter names for arrays", MB_EXCLAME);
       } else if (MatchNoCase("K2SuperResReference")) {
         StripItems(strLine, 1, message);
         camera->SetSuperResRef(message);
@@ -3950,7 +3950,7 @@ int CParameterIO::ReadProperties(CString strFileName)
       } else if (MatchNoCase("SocketServerIP")) {
 #endif 
         if (itemInt[1] < 0 || itemEmpty[2])
-          AfxMessageBox("The SocketServerIP property needs two values: a socket"
+          SEMAfxMessageBox("The SocketServerIP property needs two values: a socket"
             " ID and the IP address", MB_EXCLAME);
         CBaseSocket::SetServerIP(itemInt[1], strItems[2]);
 #ifdef _WIN64
@@ -3960,7 +3960,7 @@ int CParameterIO::ReadProperties(CString strFileName)
       } else if (MatchNoCase("SocketServerPort")) {
 #endif
         if (itemInt[1] < 0 || itemEmpty[2])
-          AfxMessageBox("The SocketServerPort property needs two values: a socket"
+          SEMAfxMessageBox("The SocketServerPort property needs two values: a socket"
             " ID and the port number", MB_EXCLAME);
         CBaseSocket::SetServerPort(itemInt[1], itemInt[2]);
       } else if (MatchNoCase("InitialCurrentCamera"))
@@ -4030,7 +4030,7 @@ int CParameterIO::ReadProperties(CString strFileName)
 
       } else if (MatchNoCase("PathToPython")) {
         if (strItems[2].IsEmpty()) {
-          AfxMessageBox("Entry must contain a version number then the path in properties"
+          SEMAfxMessageBox("Entry must contain a version number then the path in properties"
             " file " + strFileName + " : " + strLine, MB_EXCLAME);
         } else {
           StripItems(strLine, 2, message);
@@ -4040,14 +4040,14 @@ int CParameterIO::ReadProperties(CString strFileName)
       } else if (MatchNoCase("ControlSetName")) {
         index = itemInt[1];
         if (index < 0 || index >= MAX_CONSETS || strItems[2].IsEmpty())
-          AfxMessageBox("Index out of range or missing control set name in properties"
+          SEMAfxMessageBox("Index out of range or missing control set name in properties"
             " file " + strFileName + " : " + strLine, MB_EXCLAME);
         else
           mModeNames[index] = strItems[2];
 
       } else if (MatchNoCase("SearchAreaName")) {
         if (strItems[1].IsEmpty())
-          AfxMessageBox("Missing area name in properties file " + strFileName +
+          SEMAfxMessageBox("Missing area name in properties file " + strFileName +
             " : " + strLine, MB_EXCLAME);
         else
           mWinApp->mLowDoseDlg.SetSearchName(strItems[1]);
@@ -4102,7 +4102,7 @@ int CParameterIO::ReadProperties(CString strFileName)
           message = message.Left(ind);
         int *toSkip = parselist((LPCTSTR)message, &ind);
         if (!toSkip) {
-          AfxMessageBox("Bad characters for interpreting entry as a list in " + 
+          SEMAfxMessageBox("Bad characters for interpreting entry as a list in " + 
             strFileName + " : " + strLine, MB_EXCLAME);
         } else {
           for (index = 0; index < ind; index++)
@@ -4186,12 +4186,12 @@ int CParameterIO::ReadProperties(CString strFileName)
 
       } else if (MatchNoCase("WatchGauge")) {
         if (strItems[3].IsEmpty()) {
-          AfxMessageBox("Missing threshold values in properties file " + strFileName 
+          SEMAfxMessageBox("Missing threshold values in properties file " + strFileName 
             + " : " + strLine , MB_EXCLAME);
           break;
         }
         if (scope->mNumGauges == MAX_GAUGE_WATCH) {
-          AfxMessageBox("Too many gauges to watch in properties file " + strFileName,
+          SEMAfxMessageBox("Too many gauges to watch in properties file " + strFileName,
             MB_EXCLAME);
           break;
         }
@@ -4204,7 +4204,7 @@ int CParameterIO::ReadProperties(CString strFileName)
       }
       else if (MatchNoCase("PiezoScaling")) {
         if (itemEmpty[6]) {
-          AfxMessageBox("Not enough values on line in properties file " + strFileName 
+          SEMAfxMessageBox("Not enough values on line in properties file " + strFileName 
             + " : " + strLine , MB_EXCLAME);
         } else {
           pzScale.plugNum = itemInt[1];
@@ -4271,7 +4271,7 @@ int CParameterIO::ReadProperties(CString strFileName)
         MatchNoCase("MontFilterSet2R1R2S1S2")) {
           index = MatchNoCase("MontageFilterR1R2S1S2") ? 0 : 1;
           if (itemEmpty[4])
-            AfxMessageBox("Four numbers are required in properties file " + strFileName 
+            SEMAfxMessageBox("Four numbers are required in properties file " + strFileName 
             + " for line: " + strLine , MB_EXCLAME);
           else
             mWinApp->mMontageController->SetXcorrFilter(index, itemFlt[1], 
@@ -4314,7 +4314,7 @@ int CParameterIO::ReadProperties(CString strFileName)
         if (itemInt[1] < 1 || itemInt[1] > ind) {
           message.Format("Index value (%d) must be between 1 and %d in property "
             "line:\n", itemInt[1], ind);
-          AfxMessageBox(message + strLine, MB_EXCLAME);
+          SEMAfxMessageBox(message + strLine, MB_EXCLAME);
         } else {
           relax.normIndex = lensNormMap[itemInt[1] - 1];
           relax.numLens = 0;
@@ -4330,7 +4330,7 @@ int CParameterIO::ReadProperties(CString strFileName)
             message.Format("More that %d lenses were entered in property line:\n%s\n\n"
               "Request that developers make the array size larger",
               MAX_LENS_TO_RELAX, (LPCTSTR)strLine);
-            AfxMessageBox(message);
+            SEMAfxMessageBox(message);
           }
           relaxData->Add(relax);
         }
@@ -4339,11 +4339,11 @@ int CParameterIO::ReadProperties(CString strFileName)
         if (itemInt[1] < 0 || itemInt[1] > SEARCH_AREA) {
           message.Format("Low dose set index (%d) must be between 0 and 2 in property "
             "line:\n", itemInt[1]);
-          AfxMessageBox(message + strLine, MB_EXCLAME);
+          SEMAfxMessageBox(message + strLine, MB_EXCLAME);
         } else if (itemInt[2] < 0 || itemInt[2] > SEARCH_AREA) {
           message.Format("Low dose area value (%d) must be between 0 and 4 in property "
             "line:\n", itemInt[2]);
-          AfxMessageBox(message + strLine, MB_EXCLAME);
+          SEMAfxMessageBox(message + strLine, MB_EXCLAME);
         } else {
           FLCseq.setIndex = (short)itemInt[1];
           FLCseq.ldArea = (short)itemInt[2];
@@ -4358,7 +4358,7 @@ int CParameterIO::ReadProperties(CString strFileName)
             message.Format("More that %d lenses were entered in property line:\n%s\n\n"
               "Request that developers make the array size larger",
               MAX_FLC_FOR_AREA, (LPCTSTR)strLine);
-            AfxMessageBox(message);
+            SEMAfxMessageBox(message);
           }
           FLCsequences->Add(FLCseq);
         }
@@ -4519,7 +4519,7 @@ int CParameterIO::ReadProperties(CString strFileName)
         if (strItems[2] == "=")
           ind = 3;
         if (strItems[ind].IsEmpty()) {
-          AfxMessageBox("Invalid key-value pair entry in property entry:\n\n" + strLine,
+          SEMAfxMessageBox("Invalid key-value pair entry in property entry:\n\n" + strLine,
             MB_EXCLAME);
         } else {
           StripItems(strLine, ind, message);
@@ -4603,7 +4603,7 @@ int CParameterIO::ReadProperties(CString strFileName)
       
       } else if (MatchNoCase("ToolCommand")) {
         if (itemEmpty[2]) {
-          AfxMessageBox("ToolCommand property entry must have a number then a command");
+          SEMAfxMessageBox("ToolCommand property entry must have a number then a command");
         } else {
           StripItems(strLine, 2, message);
           mWinApp->mExternalTools->AddCommand(itemInt[1] - 1, message);
@@ -4611,7 +4611,7 @@ int CParameterIO::ReadProperties(CString strFileName)
 
       } else if (MatchNoCase("ToolArguments")) {
          if (itemEmpty[2]) {
-          AfxMessageBox("ToolArguments property entry must have a number then an argument"
+          SEMAfxMessageBox("ToolArguments property entry must have a number then an argument"
             " list");
         } else {
           StripItems(strLine, 2, message);
@@ -4640,7 +4640,7 @@ int CParameterIO::ReadProperties(CString strFileName)
      } else if (MatchNoCase("ImportStageToImage")) {
        index = navParams->numImportXforms;
        if (index >= MAX_IMPORT_XFORMS) {
-         AfxMessageBox("Too many import stage-to-image transformations for arrays",
+         SEMAfxMessageBox("Too many import stage-to-image transformations for arrays",
             MB_EXCLAME);
        } else {
          navParams->importXform[index].xpx = itemFlt[1];
@@ -4659,7 +4659,7 @@ int CParameterIO::ReadProperties(CString strFileName)
        MatchNoCase("ImportTiffIDField")) {
        index = itemInt[1];
        if (index < 0 || index >= MAX_IMPORT_XFORMS) {
-         AfxMessageBox("Import transform # in Tiff Field definition is out of range", 
+         SEMAfxMessageBox("Import transform # in Tiff Field definition is out of range", 
            MB_EXCLAME);
        } else {
          if (MatchNoCase("ImportTiffXField"))
@@ -4743,7 +4743,7 @@ int CParameterIO::ReadProperties(CString strFileName)
          err = 0;
        }
        if (err > 0) {
-         AfxMessageBox("Error reading magnification table, line\n" +
+         SEMAfxMessageBox("Error reading magnification table, line\n" +
            strLine, MB_EXCLAME);
          retval = err;
          break;
@@ -4770,7 +4770,7 @@ int CParameterIO::ReadProperties(CString strFileName)
            diffRotations[index] = itemFlt[3];
        }
        if (err > 0) {
-         AfxMessageBox("Error reading camera length table, line\n" +
+         SEMAfxMessageBox("Error reading camera length table, line\n" +
            strLine, MB_EXCLAME);
          retval = err;
          break;
@@ -4798,7 +4798,7 @@ int CParameterIO::ReadProperties(CString strFileName)
          err = 0;
        }
        if (err > 0) {
-         AfxMessageBox("Error reading focus tick table, line\n" +
+         SEMAfxMessageBox("Error reading focus tick table, line\n" +
            strLine, MB_EXCLAME);
          retval = err;
          break;
@@ -4807,7 +4807,7 @@ int CParameterIO::ReadProperties(CString strFileName)
      } else if (MatchNoCase("ImageShiftDelays")) {
        nMags = itemInt[1];
        if (nMags > MAX_IS_DELAYS) {
-         AfxMessageBox("Too many Image Shift delays for arrays", MB_EXCLAME);
+         SEMAfxMessageBox("Too many Image Shift delays for arrays", MB_EXCLAME);
          retval = 1;
          break;
        }
@@ -4826,7 +4826,7 @@ int CParameterIO::ReadProperties(CString strFileName)
          ISdelay[line] = itemFlt[1];
        }
        if (err > 0) {
-         AfxMessageBox("Error reading image shift delays, line\n" +
+         SEMAfxMessageBox("Error reading image shift delays, line\n" +
            strLine, MB_EXCLAME);
          retval = err;
          break;
@@ -4834,7 +4834,7 @@ int CParameterIO::ReadProperties(CString strFileName)
          mShiftManager->SetNumISdelays(nMags);
 
      } else if (!strItems[0].IsEmpty() && !recognized && !recognized35)
-       AfxMessageBox("Unrecognized entry in properties file " + strFileName
+       SEMAfxMessageBox("Unrecognized entry in properties file " + strFileName
          + " : " + strLine, MB_EXCLAME);
 
     }
@@ -4856,7 +4856,7 @@ int CParameterIO::ReadProperties(CString strFileName)
     mDupMessage = "These items are entered more than once in property file " +
       strFileName + "\r\n   "
       "(only the last entry has any effect):\r\n" + mDupMessage;
-    AfxMessageBox(mDupMessage, MB_EXCLAME);
+    SEMAfxMessageBox(mDupMessage, MB_EXCLAME);
   }
   mCheckForComments = false;
 
@@ -4970,7 +4970,7 @@ int CParameterIO::ReadCalibration(CString strFileName)
           sm->ypy = itemFlt[5];
         }
         if (err > 0) {
-          AfxMessageBox("Error reading image shift calibrations, line\n" +
+          SEMAfxMessageBox("Error reading image shift calibrations, line\n" +
             strLine, MB_EXCLAME);
           retval = err;
           break;
@@ -5105,7 +5105,7 @@ int CParameterIO::ReadCalibration(CString strFileName)
         }
         if (err > 0) {
           if (err == 1)
-            AfxMessageBox("Error reading focus calibrations, line\n" +
+            SEMAfxMessageBox("Error reading focus calibrations, line\n" +
             strLine, MB_EXCLAME);
           retval = err;
           break;
@@ -5135,7 +5135,7 @@ int CParameterIO::ReadCalibration(CString strFileName)
         }
         if (err > 0) {
           if (err == 1)
-            AfxMessageBox("Error reading defocus versus Z table, line\n" +
+            SEMAfxMessageBox("Error reading defocus versus Z table, line\n" +
             strLine, MB_EXCLAME);
           retval = err;
           break;
@@ -5214,7 +5214,7 @@ int CParameterIO::ReadCalibration(CString strFileName)
           beamInd = mWinApp->mBeamAssessor->GetNumTables();
           freeInd = mWinApp->mBeamAssessor->GetFreeIndex();
           if (beamInd >= MAX_INTENSITY_TABLES || freeInd > 0.9 * MAX_INTENSITY_ARRAYS) {
-            AfxMessageBox("Too many beam calibrations for arrays", MB_EXCLAME);
+            SEMAfxMessageBox("Too many beam calibrations for arrays", MB_EXCLAME);
             err = 2;
             nCal = 0;
           } else {
@@ -5256,7 +5256,7 @@ int CParameterIO::ReadCalibration(CString strFileName)
         }
         if (err > 0) {
           if (err == 1)
-            AfxMessageBox("Error reading beam calibrations, line\n" +
+            SEMAfxMessageBox("Error reading beam calibrations, line\n" +
             strLine, MB_EXCLAME);
           retval = err;
           break;
@@ -5312,7 +5312,7 @@ int CParameterIO::ReadCalibration(CString strFileName)
         }
         if (err > 0) {
           if (err == 1)
-            AfxMessageBox("Error reading filter mag-dependent shifts, line\n" +
+            SEMAfxMessageBox("Error reading filter mag-dependent shifts, line\n" +
             strLine, MB_EXCLAME);
           retval = err;
           break;
@@ -5344,7 +5344,7 @@ int CParameterIO::ReadCalibration(CString strFileName)
         }
         if (err > 0) {
           if (err == 1)
-            AfxMessageBox(focInd < 0 ? "Error reading base focus values, line\n" :
+            SEMAfxMessageBox(focInd < 0 ? "Error reading base focus values, line\n" :
             "Error reading neutral image shift values, line\n" + strLine, MB_EXCLAME);
           retval = err;
           break;
@@ -5425,7 +5425,7 @@ int CParameterIO::ReadCalibration(CString strFileName)
         }
         if (err > 0) {
           if (err == 1)
-            AfxMessageBox("Error reading image shift offsets, line\n" +
+            SEMAfxMessageBox("Error reading image shift offsets, line\n" +
             strLine, MB_EXCLAME);
           retval = err;
           break;
@@ -5437,7 +5437,7 @@ int CParameterIO::ReadCalibration(CString strFileName)
         if (index < 2 || index >= MAX_MAGS || camera < 2 || camera >= MAX_MAGS || 
           strItems[4].IsEmpty()) {
             retval = 1;
-            AfxMessageBox("Error reading GIF image shift offset, line\n" +
+            SEMAfxMessageBox("Error reading GIF image shift offset, line\n" +
             strLine, MB_EXCLAME);
             break;
         }
@@ -5496,7 +5496,7 @@ int CParameterIO::ReadCalibration(CString strFileName)
 
         if (err > 0) {
           if (err == 1)
-            AfxMessageBox("Error reading spot intensities, line\n" +
+            SEMAfxMessageBox("Error reading spot intensities, line\n" +
             strLine, MB_EXCLAME);
           retval = err;
           break;
@@ -5541,7 +5541,7 @@ int CParameterIO::ReadCalibration(CString strFileName)
         }
         if (err > 0) {
           if (err == 1)
-            AfxMessageBox("Error reading illuminated area limits, line\n" +
+            SEMAfxMessageBox("Error reading illuminated area limits, line\n" +
               strLine, MB_EXCLAME);
           retval = err;
           break;
@@ -5552,7 +5552,7 @@ int CParameterIO::ReadCalibration(CString strFileName)
         index = itemInt[1];
         if (index < 1 || index >= MAX_MAGS || strItems[3].IsEmpty()) {
           retval = 1;
-          AfxMessageBox("Error reading standard LM focus, line\n" +
+          SEMAfxMessageBox("Error reading standard LM focus, line\n" +
             strLine, MB_EXCLAME);
           break;
         }
@@ -5561,7 +5561,7 @@ int CParameterIO::ReadCalibration(CString strFileName)
           LMfocTab[2 * index] = itemDbl[3];
 
       } else if (!strItems[0].IsEmpty())
-        AfxMessageBox("Unrecognized entry in calibration file " + strFileName 
+        SEMAfxMessageBox("Unrecognized entry in calibration file " + strFileName 
         + " : " + strLine , MB_EXCLAME);
     }
     if (err > 0)
@@ -6066,7 +6066,7 @@ void CParameterIO::WriteCalibration(CString strFileName)
   catch(CFileException *perr) {
     perr->Delete();
     CString message = "Error writing calibrations to file " + strFileName;
-    AfxMessageBox(message, MB_EXCLAME);
+    SEMAfxMessageBox(message, MB_EXCLAME);
     err = 1;
   } 
   if (mFile) {
@@ -6154,7 +6154,7 @@ int CParameterIO::ReadShortTermCal(CString strFileName, BOOL ignoreCals)
         index = itemInt[1] * 2 + itemInt[2];
         index = 2 * index + B3DCHOICE(itemEmpty[6], 1, itemInt[6]);
         if (index < 0 || index >= 4 * MAX_SPOT_SIZE || strItems[5].IsEmpty()) {
-          AfxMessageBox("Incorrect entry in short term calibration file "
+          SEMAfxMessageBox("Incorrect entry in short term calibration file "
             + strFileName + " :\n" + strLine, MB_EXCLAME);
         } else {
           doseTables[index].timeStamp = itemInt[5];
@@ -6194,7 +6194,7 @@ int CParameterIO::ReadShortTermCal(CString strFileName, BOOL ignoreCals)
         index = itemInt[2];
         cam = itemInt[3];
         if (index <= 0 || index >= MAX_MAGS || cam < 0 || cam >= MAX_CAMERAS) {
-          AfxMessageBox("Incorrect entry in short term calibration file "
+          SEMAfxMessageBox("Incorrect entry in short term calibration file "
             + strFileName + " :\n" + strLine, MB_EXCLAME);
         } else if (timeStamp - inTime < 60 * IS_STAGE_LIFETIME_HOURS) {
           if (NAME_IS("ImageShiftMatrix")) {
@@ -6370,7 +6370,7 @@ void CParameterIO::WriteShortTermCal(CString strFileName)
   catch(CFileException *perr) {
     perr->Delete();
     CString message = "Error writing short-term calibrations to file " + strFileName;
-    AfxMessageBox(message, MB_EXCLAME);
+    SEMAfxMessageBox(message, MB_EXCLAME);
     err = 1;
   } 
   if (mFile) {
@@ -6402,13 +6402,13 @@ int CParameterIO::ReadFlybackTimes(CString & fileName)
       retval = 1;
     else if (strItems[0] != "SerialEMFlybackTimes") {
       retval = 1;
-      AfxMessageBox("File not recognized as a flyback time file", MB_EXCLAME);
+      SEMAfxMessageBox("File not recognized as a flyback time file", MB_EXCLAME);
     }
     while (retval == 0 && 
       (err = ReadSuperParse(strLine, strItems, itemEmpty, itemInt, itemDbl, 
                             MAX_TOKENS)) == 0) {
         if (itemInt[2] <= 0 || itemInt[3] <= 0 || itemEmpty[7]) {
-          AfxMessageBox("Incorrect entry in flyback time file "
+          SEMAfxMessageBox("Incorrect entry in flyback time file "
             + fileName + " :\n" + strLine, MB_EXCLAME);
         } else {
           dateTime = strItems[0] + " " + strItems[1];
@@ -6464,7 +6464,7 @@ void CParameterIO::WriteFlybackTimes(CString & fileName)
   catch(CFileException *perr) {
     perr->Delete();
     CString message = "Error writing measured flyback times to file " + fileName;
-    AfxMessageBox(message, MB_EXCLAME);
+    SEMAfxMessageBox(message, MB_EXCLAME);
   } 
   delete mFile;
   mFile = NULL;
@@ -6756,7 +6756,7 @@ int CParameterIO::CheckForByteOrderMark(CString &item0, const char * tag,
     mess.Format("%s does not start with %s and cannot be read as a %s file",
       (LPCTSTR)filename, tag, descrip);
   }
-  AfxMessageBox(mess, MB_EXCLAME);
+  SEMAfxMessageBox(mess, MB_EXCLAME);
   return 1;
 }
 
@@ -6769,7 +6769,7 @@ void CParameterIO::CheckForSpecialChars(CString & strLine)
     if (linePtr[ind] == '#' || linePtr[ind] == '\r' || linePtr[ind] == '\n')
       return;
     if (linePtr[ind] > 127) {
-      AfxMessageBox("Warning: there is a special or unicode character in line\n" +
+      SEMAfxMessageBox("Warning: there is a special or unicode character in line\n" +
         strLine + "\n\n" + "Properties may not be read correctly", MB_EXCLAME);
       return;
     }
@@ -7033,7 +7033,7 @@ void CParameterIO::ReadPartialBad(CString *strItems, int *itemInt, UShortVec &pa
   if (strItems[4].IsEmpty() || !strItems[5].IsEmpty()) {
     message.Format("Partial bad %s entry needs exactly four numbers "
       "in %s", colText, strLine);
-    AfxMessageBox(message, MB_EXCLAME);
+    SEMAfxMessageBox(message, MB_EXCLAME);
   } else {
     CorDefAddPartialBadCol(&itemInt[1], partialBadCol, partialBadWidth, partialBadStartY,
       partialBadEndY);
@@ -7154,7 +7154,7 @@ void CParameterIO::StoreFloatsPerBinning(CString *strItems, const char *descrip,
         cam.Format(" for camera %d", iset);
       message.Format("Inappropriate %s (%f)%s\n"
         "in properties file %s", descrip, values[index], (LPCTSTR)cam, strFileName);
-      AfxMessageBox(message, MB_EXCLAME);
+      SEMAfxMessageBox(message, MB_EXCLAME);
       values[index] = 1.;
     }
     index++;
@@ -7337,7 +7337,7 @@ void CParameterIO::UserSetProperty(void)
 #include "PropertyTests.h"
 #undef PROP_TEST_SECT4
   else {
-    AfxMessageBox(name + " is not a recognized property or cannot be set by this "
+    SEMAfxMessageBox(name + " is not a recognized property or cannot be set by this "
       "command");
   }
   if (ivalIn > -1000000000)

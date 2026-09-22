@@ -16,6 +16,22 @@
 #define new DEBUG_NEW
 #endif
 
+// An input dialog cannot become a log message, because it exists to obtain a value.
+// With no one present to supply one, the only safe course is to refuse: say so in
+// the log and return FALSE, which leaves the caller's value untouched and takes the
+// cancel path it already has.  Assuming a value silently would be worse than the
+// hang this avoids, because the hang is at least visible.
+static BOOL RefusedWhenUnattended(CString inText)
+{
+  CString report;
+  if (!SEMUnattendedMode())
+    return FALSE;
+  report = "UNATTENDED: an entry was needed but no one was present to give one, so "
+    "the operation was refused and nothing was changed.  It asked:  " + inText;
+  SEMAppendToLog(report);
+  return TRUE;
+}
+
 // Gets an integer with no info line; return true for OK
 BOOL KGetOneInt(CString inText, int &iVal)
 {
@@ -25,6 +41,8 @@ BOOL KGetOneInt(CString inText, int &iVal)
 // Gets an integer with an info line; return true for OK
 BOOL KGetOneInt(CString infoText, CString inText, int &iVal)
 {
+  if (RefusedWhenUnattended(inText))
+    return FALSE;
   CAskOneDlg askDlg;
   askDlg.m_sTextString = inText;
   askDlg.m_strInfoLine = infoText;
@@ -47,6 +65,8 @@ BOOL KGetOneFloat(CString inText, float &fVal, int inDecimals)
 // Gets a float with an info line; return true for OK
 BOOL KGetOneFloat(CString infoText, CString inText, float &fVal, int inDecimals)
 {
+  if (RefusedWhenUnattended(inText))
+    return FALSE;
   char format[6];
   CAskOneDlg askDlg;
   askDlg.m_sTextString = inText;
@@ -73,6 +93,8 @@ BOOL KGetOneString(CString inText, CString &inEditString, int extraWidth,
 BOOL KGetOneString(CString infoText, CString inText, CString &inEditString,
                    int extraWidth, CString browserTitle)
 {
+  if (RefusedWhenUnattended(inText))
+    return FALSE;
   CAskOneDlg askDlg;
   askDlg.m_sTextString = inText;
   askDlg.m_strInfoLine = infoText;
@@ -90,6 +112,8 @@ BOOL KGetOneString(CString infoText, CString inText, CString &inEditString,
 BOOL KGetOneChoice(CString infoText1, CString infoText2, int &iVal, CString choice1,
   CString choice2, CString choice3)
 {
+  if (RefusedWhenUnattended(infoText1))
+    return FALSE;
   CRadioChoiceDlg dlg;
   dlg.mInfoLine1 = infoText1;
   dlg.mInfoLine2 = infoText2;

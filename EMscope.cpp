@@ -641,7 +641,7 @@ int CEMscope::Initialize()
     return 0;
   }
   if (sInitialized) {
-    AfxMessageBox(_T("Warning: Call to EMscope::Initialize when"
+    SEMAfxMessageBox(_T("Warning: Call to EMscope::Initialize when"
       " scope is currently initialized"), MB_EXCLAME);
     return 1;
   }
@@ -650,11 +650,11 @@ int CEMscope::Initialize()
   // If scope is not defined as JEOL, look for a plugin scope
   message = mWinApp->mPluginManager->GetScopePluginName();
   if (message.IsEmpty()) {
-    AfxMessageBox("No microscope plugin was loaded and one is required", MB_EXCLAME);
+    SEMAfxMessageBox("No microscope plugin was loaded and one is required", MB_EXCLAME);
     return 1;
   }
   if (message == "ScopePlugin") {
-    AfxMessageBox("A sample microscope plugin was loaded, and a real one is "
+    SEMAfxMessageBox("A sample microscope plugin was loaded, and a real one is "
       "required instead", MB_EXCLAME);
     return 1;
   }
@@ -664,7 +664,7 @@ int CEMscope::Initialize()
     HitachiScope = true;
   } else if (message == "FEIScope") {
     if (!mPlugFuncs->BeginThreadAccess) {
-      AfxMessageBox("An FEI scope plugin was loaded but it is too old\n"
+      SEMAfxMessageBox("An FEI scope plugin was loaded but it is too old\n"
         "to use with this version of SerialEM", MB_EXCLAME);
       return 1;
     }
@@ -672,7 +672,7 @@ int CEMscope::Initialize()
   } else if (message == "JEOLScope") {
     JEOLscope = true;
   } else {
-    AfxMessageBox("An unrecognized scope plugin was loaded, and a real one is "
+    SEMAfxMessageBox("An unrecognized scope plugin was loaded, and a real one is "
       "required instead", MB_EXCLAME);
     return 1;
   }
@@ -1128,7 +1128,7 @@ int CEMscope::Initialize()
     }
 
     if (startErr && startErr >= startCall - 1) {
-      AfxMessageBox("Too many errors occurred on initial calls to microscope - "
+      SEMAfxMessageBox("Too many errors occurred on initial calls to microscope - "
         "it will not be available", MB_EXCLAME);
       sInitialized = false;
       mPlugFuncs->UninitializeScope();
@@ -1136,13 +1136,13 @@ int CEMscope::Initialize()
     }
 
     if (startErr)
-      AfxMessageBox("Errors occurred on initial calls to microscope", MB_EXCLAME);
+      SEMAfxMessageBox("Errors occurred on initial calls to microscope", MB_EXCLAME);
 
     // No longer put it in Photo MDS mode if requested, just turn MDS off
     if (mJeolForceMDSmode < 0) {
       if (GetMDSMode() != JEOL_MDS_OFF) {
         SetMDSMode(JEOL_MDS_OFF);
-        AfxMessageBox("MDS mode has been turned off to put the scope\n into a standard "
+        SEMAfxMessageBox("MDS mode has been turned off to put the scope\n into a standard "
           "state for working with SerialEM.", MB_EXCLAME);
       }
     }
@@ -1159,7 +1159,7 @@ int CEMscope::Initialize()
       if (fabs(htval - mWarnIfKVnotAt) > 0.8) {
         message.Format("WARNING: The scope is currently at %.1f kV\nand the program is "
           "calibrated for %.1f kV", htval, mWarnIfKVnotAt);
-        AfxMessageBox(message, MB_EXCLAME);
+        SEMAfxMessageBox(message, MB_EXCLAME);
       }
     }
     if (JEOLscope) {
@@ -1174,7 +1174,7 @@ int CEMscope::Initialize()
               message.Format("WARNING: The scope is currently in %sMAG mode and the "
                 "program properties are set up for %sMAG mode", mode == JEOL_MAG1_MODE ?
                 "" : "SA", mode == JEOL_MAG1_MODE ? "SA" : "");
-              AfxMessageBox(message, MB_EXCLAME);
+              SEMAfxMessageBox(message, MB_EXCLAME);
           }
         }
       }
@@ -1201,7 +1201,7 @@ int CEMscope::Initialize()
               "in a current SerialEM installation package\n"
               "(normally in a folder C:\\Program Files\\SerialEM\\SerialEM_4-x-x...)",
               plugVers, FEISCOPE_PLUGIN_VERSION);
-            AfxMessageBox(message, MB_ICONINFORMATION | MB_OK);
+            SEMAfxMessageBox(message, MB_ICONINFORMATION | MB_OK);
           }
           if (mPlugFuncs->GetPluginVersions && servVers >= 0 && servVers < needVers) {
             if (CBaseSocket::ServerIsRemote(FEI_SOCK_ID))
@@ -1219,14 +1219,14 @@ int CEMscope::Initialize()
                 "(normally in a folder C:\\Program Files\\SerialEM\\SerialEM_4-x-x...)\n"
                 "and replace the version that you are now running",
                 servVers, FEISCOPE_PLUGIN_VERSION);
-            AfxMessageBox(message, MB_ICONINFORMATION | MB_OK);
+            SEMAfxMessageBox(message, MB_ICONINFORMATION | MB_OK);
           }
           if (mCamera->GetTakeUnbinnedIfSavingEER() &&
             mPluginVersion < PLUGFEI_CAN_BIN_IMAGE) {
             message.Format("The version needs to be %d to do software binning, so\n"
               "software binning has been disabled and Falcon binning may not work",
               PLUGFEI_CAN_BIN_IMAGE);
-            AfxMessageBox(message, MB_ICONINFORMATION | MB_OK);
+            SEMAfxMessageBox(message, MB_ICONINFORMATION | MB_OK);
             mCamera->SetTakeUnbinnedIfSavingEER(false);
           }
       }
@@ -1277,10 +1277,10 @@ int CEMscope::Initialize()
             message.Format("Switching the beam blank axis from %d to %d for this run.\n"
               "If this works OK, you can change HitachiBeamBlankAxis to %d to avoid"
               " this message", hitachi->beamBlankAxis, ind, ind);
-            AfxMessageBox(str, MB_EXCLAME);
+            SEMAfxMessageBox(str, MB_EXCLAME);
             hitachi->beamBlankAxis = ind;
           } else {
-            AfxMessageBox("Cannot get values of GH or GT deflectors in order to pick a"
+            SEMAfxMessageBox("Cannot get values of GH or GT deflectors in order to pick a"
               " better beam blank axis - blanking will not work right!", MB_EXCLAME);
           }
       }
@@ -4744,7 +4744,7 @@ BOOL CEMscope::ScanMagnifications()
     return false;
 
   if (FEIscope && GetEFTEM() && GetScreenPos() != spUp) {
-    AfxMessageBox("You must raise the viewing screen to get valid"
+    SEMAfxMessageBox("You must raise the viewing screen to get valid"
       " rotation values in EFTEM mode", MB_EXCLAME);
     return false;
   }
@@ -4788,7 +4788,7 @@ BOOL CEMscope::ScanMagnifications()
         "Do not try to step to the next mag until the previous step shows up in the "
         "log window!\r\n\r\nNow go to the lowest mag in LM.";
       mWinApp->AppendToLog(report);
-      AfxMessageBox(report, MB_EXCLAME);
+      SEMAfxMessageBox(report, MB_EXCLAME);
 
       // Loop on each mode
       magInd = 1;
@@ -4798,7 +4798,7 @@ BOOL CEMscope::ScanMagnifications()
         baseIndex = magInd;
         if (curMode) {
           PLUGSCOPE_SET(ProbeMode, imMicroProbe);
-          AfxMessageBox("Go to the lowest LM magnification again for microprobe mode",
+          SEMAfxMessageBox("Go to the lowest LM magnification again for microprobe mode",
             MB_EXCLAME);
         }
 
@@ -4844,7 +4844,7 @@ BOOL CEMscope::ScanMagnifications()
       if (magInd >= MAX_MAGS) {
         report.Format("You need a new version of the program with MAX_MAGS set to %d\n\n"
           "Tell David!", magInd + 2);
-        AfxMessageBox(report, MB_EXCLAME);
+        SEMAfxMessageBox(report, MB_EXCLAME);
       }
     }
     catch (_com_error E) {
@@ -9776,12 +9776,12 @@ BOOL CEMscope::TakeFilmExposure(BOOL useAda, double loadDelay, double preExpose,
                                 BOOL screenOn)
 {
   if (FilmBusy() > 0) {
-    AfxMessageBox(_T("Film picture already in progress"));
+    SEMAfxMessageBox(_T("Film picture already in progress"));
     return false;
   }
   if (JEOLscope) {
     if (useAda) {
-      AfxMessageBox(_T("Special exposure sequence not available on JEOL"));
+      SEMAfxMessageBox(_T("Special exposure sequence not available on JEOL"));
       return false;
     }
 
@@ -9794,14 +9794,14 @@ BOOL CEMscope::TakeFilmExposure(BOOL useAda, double loadDelay, double preExpose,
         mAdaExists = SUCCEEDED(hr) ? 1 : 0;
       }
       if (mAdaExists <= 0) {
-        AfxMessageBox(_T("Cannot connect to adaexp server - is it installed?"));
+        SEMAfxMessageBox(_T("Cannot connect to adaexp server - is it installed?"));
         return false;
       }
     }
     try {
       if (mPlugFuncs->GetFilmStock) {
         if (!mPlugFuncs->GetFilmStock()) {
-          AfxMessageBox(_T("The film stock is apparently zero; cannot take picture"));
+          SEMAfxMessageBox(_T("The film stock is apparently zero; cannot take picture"));
           return false;
         }
       } else {
@@ -10010,7 +10010,7 @@ UINT CEMscope::FilmExposeProc(LPVOID pParam)
       CString message;
       message.Format("Error %d doing special film exposure (err %d shStat %d exStat %d)",
         errnum, err, shutterStatus, externalStatus);
-      AfxMessageBox(message, MB_EXCLAME);
+      SEMAfxMessageBox(message, MB_EXCLAME);
       SEMTrace('1', "%s", (LPCTSTR)message);
       retval = 1;
     }

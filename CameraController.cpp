@@ -716,7 +716,7 @@ int CCameraController::Initialize(int whichCameras)
   if (firstTime && !mCEOSserverIP.IsEmpty()) {
     mCEOSFilter = new CCEOSFilter;
     if (mCEOSFilter->Connect(mCEOSserverIP, mCEOSserverPort, report)) {
-      AfxMessageBox("Connection to CEOS filter failed with message:\n" + report +
+      SEMAfxMessageBox("Connection to CEOS filter failed with message:\n" + report +
         "\n\nControl of the filter will not be available", MB_EXCLAME);
       mNoFilterControl = true;
     } else {
@@ -725,7 +725,7 @@ int CCameraController::Initialize(int whichCameras)
         report.Format("Getting information from CEOS filter failed with message:\n%s"
           "\n\nControl of the filter will not be available", 
           mCEOSFilter->GetErrorString(err));
-        AfxMessageBox(report, MB_EXCLAME);
+        SEMAfxMessageBox(report, MB_EXCLAME);
         mNoFilterControl = true;
       }
       mFilterUpdateID = ::SetTimer(NULL, 1, 500, FilterUpdateProc);
@@ -735,7 +735,7 @@ int CCameraController::Initialize(int whichCameras)
   if (firstTime && !mEDMserverIP.IsEmpty()) {
     mDoseModulator = new CDoseModulator;
     if (mDoseModulator->Initialize(report)) {
-      AfxMessageBox("Initialization of Dose Modulator failed with message:\n" + report +
+      SEMAfxMessageBox("Initialization of Dose Modulator failed with message:\n" + report +
         "\n\nDose modulation will not be available", MB_EXCLAME);
       B3DDELETE(mDoseModulator);
     }
@@ -914,7 +914,7 @@ int CCameraController::Initialize(int whichCameras)
 
   // For omega filter, do filter setup here
   if (mScope->GetHasOmegaFilter() && mScope->GetInitialized() && SetupFilter())
-     AfxMessageBox("An error occurred trying to initialize filter parameters.",
+     SEMAfxMessageBox("An error occurred trying to initialize filter parameters.",
        MB_EXCLAME);
   
   // Create Tietz interface if necessary
@@ -1065,7 +1065,7 @@ void CCameraController::InitializeDMcameras(int DMind, int *numDMListed,
                 "INSTALL.bat in a current SerialEM installation package\n"
                 "(normally in a folder C:\\Program Files\\SerialEM\\SerialEM_3-x-x...)",
                 plugVersion, SEMCCD_PLUGIN_VERSION);
-            AfxMessageBox(report, MB_ICONINFORMATION | MB_OK);
+            SEMAfxMessageBox(report, MB_ICONINFORMATION | MB_OK);
           }
         }
         catch (...) {
@@ -1094,13 +1094,13 @@ void CCameraController::InitializeDMcameras(int DMind, int *numDMListed,
               report.Format("Digiscan is%s set up to Flip Horizontal Scan and it is%s "
                 "supposed to.\n\nYou should fix this in the DigiScan Setup Advanced "
                 "(Configuration) dialog.", doFlip ? "" : " not", doFlip ? " not" : "");
-              AfxMessageBox(report, MB_EXCLAME);
+              SEMAfxMessageBox(report, MB_EXCLAME);
             }
             if (fabs(mDSglobalRotOffset - rotOffset) > 0.01) {
               report.Format("DigiScan is set up with a Rotation Offset of %.2f and it "
                 "is supposed to be %.2f.\n\nYou should fix this in the DigiScan Setup"
                 " Advanced (Configuration) dialog.", rotOffset, mDSglobalRotOffset);
-              AfxMessageBox(report, MB_EXCLAME);
+              SEMAfxMessageBox(report, MB_EXCLAME);
             }
           }
           allnum++;
@@ -1153,7 +1153,7 @@ void CCameraController::InitializeDMcameras(int DMind, int *numDMListed,
           "If a camera is unavailable, you should edit the properties\n"
           "file to list just the available cameras, then restart SerialEM.\n\n",
           num, DMind == SOCK_IND ? "socket server " : "", numDMListed[DMind]);
-        AfxMessageBox(report, MB_EXCLAME);
+        SEMAfxMessageBox(report, MB_EXCLAME);
       }
       nlist= B3DMIN(num, numDMListed[DMind]);
       mNumDMCameras[DMind] = nlist;
@@ -1321,7 +1321,7 @@ void CCameraController::InitializeDMcameras(int DMind, int *numDMListed,
     // interfaces
     if (anyGIF && DMind == sGIFisSocket && !mNoFilterControl && !mCEOSFilter) {
       if (SetupFilter())
-        AfxMessageBox("An error occurred trying to initialize filter parameters.\n\n"
+        SEMAfxMessageBox("An error occurred trying to initialize filter parameters.\n\n"
         "You probably need to start Filter Control and restart Digital Micrograph\n"
         "if you want to use the energy filter", MB_EXCLAME);
 
@@ -1350,7 +1350,7 @@ int CCameraController::InitializeTietz(int whichCameras, int *originalList, int 
 
     funcs = mWinApp->mPluginManager->GetCameraFuncs("TietzPlugin", flags, 0);
     if (!funcs) {
-      AfxMessageBox("The TietzPlugin was not loaded; no Tietz camera will be available",
+      SEMAfxMessageBox("The TietzPlugin was not loaded; no Tietz camera will be available",
         MB_EXCLAME);
       return 1;
     }
@@ -1358,7 +1358,7 @@ int CCameraController::InitializeTietz(int whichCameras, int *originalList, int 
       || !funcs->UninitializeCameras || !funcs->PrepareForAcquire || 
       !funcs->SelectCamera || !funcs->SelectShutter || !funcs->SetRotationFlip ||
       !funcs->SetGainIndex || !funcs->GetNumberOfGains || !funcs->GetPluginVersion) {
-        AfxMessageBox("The TietzPlugin is missing at least one required function; no "
+        SEMAfxMessageBox("The TietzPlugin is missing at least one required function; no "
           "Tietz camera will be available", MB_EXCLAME);
       return 1;
     }
@@ -1378,7 +1378,7 @@ int CCameraController::InitializeTietz(int whichCameras, int *originalList, int 
       }
     }
     if (hasSTEM && (!funcs->GetSTEMProperties || !funcs->AcquireSTEMImage)) {
-      AfxMessageBox("The TietzPlugin is missing a required function for STEM access; no "
+      SEMAfxMessageBox("The TietzPlugin is missing a required function for STEM access; no "
         "Tietz camera will be available", MB_EXCLAME);
       return 1;
     }
@@ -1386,10 +1386,10 @@ int CCameraController::InitializeTietz(int whichCameras, int *originalList, int 
     if (anyGPU) {
       funcs->GetPluginVersion(&plugVers, &servVers);
       if (plugVers < TIETZ_VERSION_HAS_GPU) {
-        AfxMessageBox("The Tietz plugin version does not support a GPU camera and must be"
+        SEMAfxMessageBox("The Tietz plugin version does not support a GPU camera and must be"
           " upgraded to the current version", MB_EXCLAME);
       } else if (servVers > 0 && servVers < TIETZ_VERSION_HAS_GPU) {
-        AfxMessageBox("The Tietz-SEMserver version in the Tietz computer does not support a"
+        SEMAfxMessageBox("The Tietz-SEMserver version in the Tietz computer does not support a"
           " GPU camera and must be upgraded to the current version", MB_EXCLAME);
       }
     }
@@ -1429,7 +1429,7 @@ int CCameraController::InitializeTietz(int whichCameras, int *originalList, int 
               param->cropFullSizeImages = 0;
             if (param->cropFullSizeImages && !funcs->SetSizeOfCamera) {
               param->cropFullSizeImages = 0;
-              AfxMessageBox("The TietzPlugin is missing a function required for cropping"
+              SEMAfxMessageBox("The TietzPlugin is missing a function required for cropping"
                 " full sized image; that feature will be unavailable", MB_EXCLAME);
             }
             if (param->canTakeFrames & FRAMES_CAN_BE_ALIGNED)
@@ -1440,7 +1440,7 @@ int CCameraController::InitializeTietz(int whichCameras, int *originalList, int 
             // camera number is -1 for scan. -2 for LUT, -3 and -4 for simulation
             B3DCLAMP(param->cameraNumber, -4, -1);
             if (param->sizeY != param->sizeX) {
-              AfxMessageBox("The Tietz plugin requires a square STEM camera size; the X"
+              SEMAfxMessageBox("The Tietz plugin requires a square STEM camera size; the X"
                 " size will be used", MB_EXCLAME);
               param->sizeY = param->sizeX;
             }
@@ -1453,7 +1453,7 @@ int CCameraController::InitializeTietz(int whichCameras, int *originalList, int 
       if (ind == TIETZ_NO_SOCKET) 
         mess += "\n\nIs the Tietz-SEMServer running on the Tietz computer?\n"
         "Set property DebugOutput to K to diagnose connection to the server";
-      AfxMessageBox(mess, MB_EXCLAME);
+      SEMAfxMessageBox(mess, MB_EXCLAME);
     }
   }
 
@@ -1509,7 +1509,7 @@ void CCameraController::InitializeFEIcameras(int &numFEIlisted, int *originalLis
             " camera must be selected in the microscope user interface CCD panel\r\n"
             "for the camera to be available");
           else
-            AfxMessageBox("The FEI camera named " + mAllParams[i].name + 
+            SEMAfxMessageBox("The FEI camera named " + mAllParams[i].name + 
             " was not found among the available cameras\n\nIf using standard scripting,"
               " check that TIA is running.\n\nIf it is, or if using Advanced Scripting,"
               " check that the " + (mAllParams[i].detectorName[0].IsEmpty() ? 
@@ -1518,7 +1518,7 @@ void CCameraController::InitializeFEIcameras(int &numFEIlisted, int *originalLis
                 "software", MB_EXCLAME);
         }
         if (err == 2) {
-          AfxMessageBox("FEI camera cannot be assessed because microscope object is "
+          SEMAfxMessageBox("FEI camera cannot be assessed because microscope object is "
             "not initialized", MB_EXCLAME);
           break;
         }
@@ -1533,7 +1533,7 @@ void CCameraController::InitializeFEIcameras(int &numFEIlisted, int *originalLis
       mAllParams[i].flyback = mAllParams[i].basicFlyback + mAllParams[i].addedFlyback;
       if (mAllParams[i].GIF && mAllParams[i].filterIsFEI) {
         if (mScope->GetPluginVersion() < PLUGFEI_FILT_FLASH_LOAD)
-          AfxMessageBox("The FEI camera named " + mAllParams[i].name + " is specified\n"
+          SEMAfxMessageBox("The FEI camera named " + mAllParams[i].name + " is specified\n"
             "as being on an FEI filter but the FEI scope plugin version does not support"
             " this", MB_EXCLAME);
         else
@@ -1561,7 +1561,7 @@ void CCameraController::InitializeFEIcameras(int &numFEIlisted, int *originalLis
           for (bin = 0; bin < mAllParams[i].numBinnings; bin++) {
             if (mAllParams[i].gainFactor[bin] != 1.) {
               mAllParams[i].autoGainAtBinning = 0;
-              AfxMessageBox("The FEI camera named " + mAllParams[i].name + " has "
+              SEMAfxMessageBox("The FEI camera named " + mAllParams[i].name + " has "
                 "both RelativeGainFactors and AutoGainFactors property entries.\n\n"
                 "The AutoGainFactors entry will be ignored.", MB_EXCLAME);
             }
@@ -1569,7 +1569,7 @@ void CCameraController::InitializeFEIcameras(int &numFEIlisted, int *originalLis
         }
         if (mAllParams[i].autoGainAtBinning >= mAllParams[i].numBinnings) {
           mAllParams[i].autoGainAtBinning = 0;
-          AfxMessageBox("The starting binning index in the AutoGainFactors property entry"
+          SEMAfxMessageBox("The starting binning index in the AutoGainFactors property entry"
             " is too high for the\nFEI camera named " + mAllParams[i].name + 
             " and this entry will have no effect", MB_EXCLAME);
 
@@ -1650,7 +1650,7 @@ void CCameraController::InitializeDirectElectron(int *originalList, int numOrig)
         mTD.DE_Cam = new DirectElectronCamera(mAllParams[i].DE_camType, i);
       mDE_Cam = mTD.DE_Cam;
       if (mAllParams[i].name.Find("Default Camera") == 0) {
-        AfxMessageBox("The Direct Electron camera must have a Name property entry",
+        SEMAfxMessageBox("The Direct Electron camera must have a Name property entry",
           MB_EXCLAME);
         mAllParams[i].failedToInitialize = true;
         
@@ -1670,7 +1670,7 @@ void CCameraController::InitializeDirectElectron(int *originalList, int numOrig)
 
         if (mTD.DE_Cam->GetServerVersion() >= DE_ROI_IS_ON_CHIP &&
           (mAllParams[i].DE_ImageInvertX || mAllParams[i].DE_ImageRot)) {
-          AfxMessageBox("Properties DEImageRotation and DEImageInvertXAxis no longer "
+          SEMAfxMessageBox("Properties DEImageRotation and DEImageInvertXAxis no longer "
             "have any effect for DE cameras.\n"
             "These operations should be done in the server.", MB_EXCLAME);
           mAllParams[i].DE_ImageInvertX = mAllParams[i].DE_ImageRot = 0;
@@ -1682,7 +1682,7 @@ void CCameraController::InitializeDirectElectron(int *originalList, int numOrig)
           mSomeDEcanReturnEarly = true;
 
       } else if (mWinApp->mPluginManager->GetDEplugIndex() >= 0) {
-        AfxMessageBox("FAILURE in Initializing Direct Electron camera", MB_EXCLAME);
+        SEMAfxMessageBox("FAILURE in Initializing Direct Electron camera", MB_EXCLAME);
         mAllParams[i].failedToInitialize = true;
       }
     }
@@ -1698,7 +1698,7 @@ void CCameraController::InitializeDirectElectron(int *originalList, int numOrig)
     // Get the virtual detector names  and substitute for the ones in properties
     // while keeping a list of which ones are virtual in properties
     if (mTD.DE_Cam->GetVirtualDetectorNames(virtList, enabled)) {
-      AfxMessageBox("An error occurred getting virtual detector names from the DE"
+      SEMAfxMessageBox("An error occurred getting virtual detector names from the DE"
         " interface", MB_EXCLAME);
       mAllParams[STEMnum].failedToInitialize = true;
     } else if (!virtList.size()) {
@@ -1735,7 +1735,7 @@ int CCameraController::FindSTEMandPhysicalCamera(int *originalList, int numOrig,
             mAllParams[i].samePhysicalCamera = physNum = originalList[j];
       }
       if (physNum < 0) {
-        AfxMessageBox(CString(dectris ? "The DECTRIS" : "Direct Electron") + 
+        SEMAfxMessageBox(CString(dectris ? "The DECTRIS" : "Direct Electron") + 
           " STEM camera must either have a SamePhysicalCamera property or be named by"
           " the same camera name plus \" STEM\"", MB_EXCLAME);
         mAllParams[i].failedToInitialize = true;
@@ -1789,17 +1789,17 @@ void CCameraController::InitializePluginCameras(int &numPlugListed, int *origina
         mPlugFuncs[i] = mWinApp->mPluginManager->GetCameraFuncs(useName, flags, plugNum);
         if (!mPlugFuncs[i]) {
           if (plugNum)
-            AfxMessageBox("Not enough plugins with the plugin name " + useName +
+            SEMAfxMessageBox("Not enough plugins with the plugin name " + useName +
               " were loaded, so the camera with property PluginName " + 
               camP->pluginName + " will be unavailable", MB_EXCLAME);
           else
-            AfxMessageBox("The camera plugin with plugin name " + camP->pluginName
+            SEMAfxMessageBox("The camera plugin with plugin name " + camP->pluginName
               + " did not load, so that camera will be unavailable", MB_EXCLAME);
           err = 1;
         } else {
           num = mPlugFuncs[i]->GetNumberOfCameras();
           if (num <= 0) {
-            AfxMessageBox("Error getting number of cameras from the camera plugin "
+            SEMAfxMessageBox("Error getting number of cameras from the camera plugin "
               "named " + camP->pluginName, MB_EXCLAME);
             err = 1;
           }
@@ -1807,7 +1807,7 @@ void CCameraController::InitializePluginCameras(int &numPlugListed, int *origina
         if (!err && mPlugFuncs[i]->SetDebugMode)
           mPlugFuncs[i]->SetDebugMode(GetDebugOutput('Z') ? 1 : 0);
         if (!err && num > 1 && !mPlugFuncs[i]->SelectCamera) {
-          AfxMessageBox("The camera plugin named " + camP->pluginName +
+          SEMAfxMessageBox("The camera plugin named " + camP->pluginName +
             "reported more than one camera but has no CameraSelect function",
             MB_EXCLAME);
           err = 1;
@@ -1817,14 +1817,14 @@ void CCameraController::InitializePluginCameras(int &numPlugListed, int *origina
           report.Format("The PluginCameraIndex property for a plugin camera is %d but the"
             " plugin named %s only reports %d cameras",
             camP->cameraNumber, (LPCTSTR)camP->pluginName, num);
-          AfxMessageBox(report, MB_EXCLAME);
+          SEMAfxMessageBox(report, MB_EXCLAME);
           err = 1;
         }
 
         // Test for shutter call if there is a second label and only one shutter not set
         if (!err && !camP->onlyOneShutter &&
           !camP->shutterLabel2.IsEmpty() && !mPlugFuncs[i]->SelectShutter) {
-          AfxMessageBox("The properties for a plugin camera had a second shutter label "
+          SEMAfxMessageBox("The properties for a plugin camera had a second shutter label "
             "but the plugin named " + camP->pluginName +
             "has no CameraShutter function", MB_EXCLAME);
           err = 1;
@@ -1833,13 +1833,13 @@ void CCameraController::InitializePluginCameras(int &numPlugListed, int *origina
         // Test for insertion functions if retractable
         if (!err && camP->retractable && (!mPlugFuncs[i]->IsCameraInserted ||
           !mPlugFuncs[i]->SetCameraInsertion)) {
-          AfxMessageBox("The \"Retractable\" property is set for a plugin camera but "
+          SEMAfxMessageBox("The \"Retractable\" property is set for a plugin camera but "
             "the plugin named " + camP->pluginName +
             " has no insertion functions", MB_EXCLAME);
           err = 1;
         }
         if (!err && camP->rotationFlip && !mPlugFuncs[i]->SetRotationFlip) {
-          AfxMessageBox("The \"RotationAndFlip\" property is set for a plugin camera "
+          SEMAfxMessageBox("The \"RotationAndFlip\" property is set for a plugin camera "
             "but the plugin named " + camP->pluginName +
             " has no SetRotationFlip function", MB_EXCLAME);
           err = 1;
@@ -1852,11 +1852,11 @@ void CCameraController::InitializePluginCameras(int &numPlugListed, int *origina
         if (flags & PLUGFLAG_SINGLE_OK_IF_SAVE)
           camP->CamFlags |= CAMFLAG_SINGLE_OK_IF_SAVE;
         if (!err && (flags & PLUGFLAG_DECTRIS) && !camP->DectrisType) {
-          AfxMessageBox("With the newer DECTRIS plugin that was loaded,\n"
+          SEMAfxMessageBox("With the newer DECTRIS plugin that was loaded,\n"
             "additional features will be available if the properties\nfor the camera "
             "named " + camP->name + " include a DectrisCameraType entry");
         } else if (!err && !(flags & PLUGFLAG_DECTRIS) && camP->DectrisType) {
-          AfxMessageBox("An older DECTRIS plugin was loaded and the properties\n"
+          SEMAfxMessageBox("An older DECTRIS plugin was loaded and the properties\n"
             "for the camera named " + camP->name + " should NOT"
             " include a DectrisCameraType entry");
           camP->DectrisType = 0;
@@ -1871,14 +1871,14 @@ void CCameraController::InitializePluginCameras(int &numPlugListed, int *origina
               B3DCLAMP(camP->TietzGainIndex, 0, numGain);
           }
           if (mPlugFuncs[i]->SetGainIndex(camP->TietzGainIndex)) {
-            AfxMessageBox("An error occurred sending the value of TietzGainIndex to the"
+            SEMAfxMessageBox("An error occurred sending the value of TietzGainIndex to the"
               " plugin camera " + camP->pluginName);
           }
         }
 
         if (!err && camP->canTakeFrames &&
           !(mPlugFuncs[i]->SetupFrameAcquire && mPlugFuncs[i]->GetNextFrame)) {
-          AfxMessageBox("The \"CanTakeFrames\" property is set for a plugin camera "
+          SEMAfxMessageBox("The \"CanTakeFrames\" property is set for a plugin camera "
             "but the plugin named " + camP->pluginName +
             " is missing one of the required functions", MB_EXCLAME);
           camP->canTakeFrames = 0;
@@ -1904,7 +1904,7 @@ void CCameraController::InitializePluginCameras(int &numPlugListed, int *origina
           report.Format("Failed to initialize camera %d %sin the plugin named %s",
             camP->cameraNumber, camP->STEMcamera ? "(STEM) " : "",
             (LPCTSTR)camP->pluginName);
-          AfxMessageBox(report, MB_EXCLAME);
+          SEMAfxMessageBox(report, MB_EXCLAME);
           err = 1;
         }
         if (!err && mPlugFuncs[i]->SetRotationFlip)
@@ -3068,7 +3068,7 @@ void CCameraController::ShowReference(int type)
   }
 
   if (!mTD.Array[0]) {
-    AfxMessageBox("Failed to get memory for displaying reference image", MB_EXCLAME);
+    SEMAfxMessageBox("Failed to get memory for displaying reference image", MB_EXCLAME);
     return;
   }
   if (type == DARK_REFERENCE || byteSize == 4) {
@@ -5010,7 +5010,7 @@ int CCameraController::CapManageInsertTempK2Saving(const ControlSet &conSet, int
           if (B3DNINT(EasyRunScript(command, 0, mParam->useSocket ? SOCK_IND : COM_IND))){
             mParam->checkTemperature = false;
           } else {
-            AfxMessageBox("The camera temperature is not yet stable", MB_EXCLAME);
+            SEMAfxMessageBox("The camera temperature is not yet stable", MB_EXCLAME);
             justReturn = true;
             callCleanup = true;
           }
@@ -5686,7 +5686,7 @@ int CCameraController::CapSetLDAreaFilterSettling(int inSet)
     (mParam->GIF || mScope->GetHasOmegaFilter())) {
     if ((filtErr = SetupFilter(true)) != 0 && !(filtErr > 0 && mAllowSpectroscopyImages)){
       if (filtErr > 0)
-        AfxMessageBox("The filter is in spectroscopy mode\n\n"
+        SEMAfxMessageBox("The filter is in spectroscopy mode\n\n"
           "You must go back to imaging mode before you can take pictures.", MB_EXCLAME);
       else
         SEMMessageBox("An error occurred while trying to set the state of"
@@ -12226,7 +12226,7 @@ int CCameraController::LockInitializeTietz(BOOL firstTime)
             report += "\n\nTietz camera " + camP->name + " could not be reinitialized\n"
             "after getting the camera lock back\n\nDo not try to use it!";
         }
-        AfxMessageBox(report, MB_EXCLAME);
+        SEMAfxMessageBox(report, MB_EXCLAME);
         if (err == TIETZ_NO_LOCK)
           return 1;
         camP->failedToInitialize = true;
@@ -12253,10 +12253,10 @@ int CCameraController::LockInitializeTietz(BOOL firstTime)
           err = mPlugFuncs[ind]->SetGainIndex(camP->TietzGainIndex);
         }
         if (numGain < 0 || err)
-          AfxMessageBox(mPlugFuncs[ind]->GetLastErrorString(), MB_EXCLAME);
+          SEMAfxMessageBox(mPlugFuncs[ind]->GetLastErrorString(), MB_EXCLAME);
         if (camP->TietzImageGeometry >= 0 &&
           mPlugFuncs[ind]->SetRotationFlip(camP->TietzType, camP->TietzImageGeometry))
-          AfxMessageBox(mPlugFuncs[ind]->GetLastErrorString(), MB_EXCLAME);
+          SEMAfxMessageBox(mPlugFuncs[ind]->GetLastErrorString(), MB_EXCLAME);
         if (!camP->TietzBlocks) {
           if (mPlugFuncs[ind]->GetCameraSize(&xsize, &ysize))
             ReportOnSizeCheck(mActiveList[i], -1, -1);
@@ -12272,7 +12272,7 @@ int CCameraController::LockInitializeTietz(BOOL firstTime)
           }
           if (mPlugFuncs[ind]->SetSizeOfCamera(camP->TietzType, chipX, chipY)) {
             camP->cropFullSizeImages = 0;
-            AfxMessageBox("Error in TietzPlugin setting parameters required for "
+            SEMAfxMessageBox("Error in TietzPlugin setting parameters required for "
               "cropping full sized image; that feature will be unavailable", MB_EXCLAME);
           }
         }
@@ -12286,12 +12286,12 @@ int CCameraController::LockInitializeTietz(BOOL firstTime)
 int CCameraController::SwitchTeitzToBeamShutter(int cam)
 {
   if (mPlugFuncs[cam]->SelectCamera(mCameraWithBeamOn)) {
-    AfxMessageBox("Error selecting last active Tietz camera in order to close film "
+    SEMAfxMessageBox("Error selecting last active Tietz camera in order to close film "
       "shutter", MB_EXCLAME);
     return 1;
   }
   if (mPlugFuncs[cam]->SelectShutter(USE_BEAM_BLANK)) {
-    AfxMessageBox(_T("Error closing film shutter of last Tietz camera "), MB_EXCLAME);
+    SEMAfxMessageBox(_T("Error closing film shutter of last Tietz camera "), MB_EXCLAME);
     return 1;
   }
   mCameraWithBeamOn = 0;
@@ -13124,7 +13124,7 @@ void CCameraController::CheckGatanSize(int camNum, int paramInd)
   if (xsize > 7) {
     mess.Format("DMrotationAndFlip property for camera %d is %d and must be between 0 "
       "and 7", camNum, xsize);
-    AfxMessageBox(mess, MB_EXCLAME);
+    SEMAfxMessageBox(mess, MB_EXCLAME);
     doOrient = false;
   }
   if (doOrient) {
@@ -13149,7 +13149,7 @@ void CCameraController::CheckGatanSize(int camNum, int paramInd)
             "camera # %d, %s\nIt should be set to rotate by %d, %sflip around Y\n\n"
             "Do you want SerialEM to fix this configuration?", paramInd, 
             (LPCTSTR)camP->name, 90 * (xsize % 4), xsize < 4 ? "NO " : "");
-          setRF = AfxMessageBox(mess, MB_QUESTION) == IDYES;
+          setRF = SEMAfxMessageBox(mess, MB_QUESTION) == IDYES;
         }
         if (setRF) {
           mess.Format("%s %d)\n"
@@ -13229,7 +13229,7 @@ void CCameraController::ReportOnSizeCheck(int paramInd, int xsize, int ysize)
       " than the size in the properties file (%d x %d)\n\n"
       "This may make the program crash or misbehave", paramInd, 
       (LPCTSTR)camP->name, xsize, ysize, propX, propY);
-    AfxMessageBox(mess, MB_EXCLAME);
+    SEMAfxMessageBox(mess, MB_EXCLAME);
   } else if (xsize > propX || ysize > propY) {
     mess.Format("Warning: Camera # %d, %s, reports a bigger size (%d x %d)\r\n"
       "       than the size in the properties file (%d x %d)", paramInd,
@@ -13493,7 +13493,7 @@ void CCameraController::GetMergeK2DefectList(int DMind, CameraParameters *param,
     if (errToLog)
       mWinApp->AppendToLog(CString("WARNING: ") + str);
     else
-      AfxMessageBox(str, MB_EXCLAME);
+      SEMAfxMessageBox(str, MB_EXCLAME);
   } else {
     numPoints = numTotal = 0;
 
@@ -13506,7 +13506,7 @@ void CCameraController::GetMergeK2DefectList(int DMind, CameraParameters *param,
         if (errToLog)
           mWinApp->AppendToLog(str);
         else
-          AfxMessageBox(str, MB_EXCLAME);
+          SEMAfxMessageBox(str, MB_EXCLAME);
       }
       if (IsCameraFaux()) {
         xyPairs[2 * numPoints] = GetTickCount() % 1024;
