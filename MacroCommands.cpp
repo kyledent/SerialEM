@@ -12956,6 +12956,19 @@ int CMacCmd::AddImagingState(void)
     SubstituteLineStripItems(mStrLine, 1, mStrCopy);
     param->name = mStrCopy;
   }
+
+  // A low dose state records the AREA's stored parameters, not the live scope, and the
+  // two only track each other under continuous update.  Changing the scope directly -
+  // SetCamLenIndex, SetMagIndex - does not write back, so the state can silently record
+  // an imaging area while the microscope is in diffraction.  Warn on that disagreement
+  // rather than on continuous update being off, which is the normal case
+  if (lowdose && !param->ldParams.magIndex != !mScope->GetMagIndex())
+    mWinApp->AppendToLog("WARNING: the microscope is " +
+      CString(mScope->GetMagIndex() ? "in imaging mode" : "in diffraction") +
+      " but the low dose area this state was stored from is not.\r\n"
+      "  A low dose state records the area's parameters, not the current scope state;"
+      " turn on continuous update in the Low Dose panel to keep them together.");
+
   if (mNavHelper->mStateDlg)
     mNavHelper->mStateDlg->AddNewStateToList();
   SetReportedValues((double)stateArr->GetSize(), 0.);
