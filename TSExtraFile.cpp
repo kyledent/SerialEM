@@ -268,7 +268,7 @@ void CTSExtraFile::OnOK()
     mNumExtraExposures = 0;
   } else if (mWinApp->mParamIO->StringToEntryList(1, m_strExposures, mNumExtraExposures,
     NULL, &mExtraExposures[0], MAX_EXTRA_RECORDS)) {
-      AfxMessageBox("There is a problem with the exposure time entry.\n"
+      SEMAfxMessageBox("There is a problem with the exposure time entry.\n"
         "It should consist of one or more numbers separated by spaces, not commas.\n\n"
         "You need to fix the entry or set it to 0.");
       return;
@@ -497,7 +497,7 @@ void CTSExtraFile::ManageExtraRecords()
     str.Format("There can be only %d open files, so it is not possible to save\n%d extra "
       "%s to consecutive files starting with file #%d", MAX_STORES, numExtra,
       (LPCTSTR)modeNames[RECORD_CONSET], mFileIndex[RECORD_CONSET] + 1);
-    AfxMessageBox(str, MB_EXCLAME);
+    SEMAfxMessageBox(str, MB_EXCLAME);
     m_bConsecutiveFiles = false;
   }
 
@@ -566,7 +566,7 @@ int CTSExtraFile::ValidateRecordEntries(int whichRecord)
           if (mExtraChannels[i] < 1 || mExtraChannels[i] > mCamParam->numChannels) {
             message.Format("Warning: Detector numbers should be between 1 and %d",
               mCamParam->numChannels);
-            AfxMessageBox(message, MB_EXCLAME);
+            SEMAfxMessageBox(message, MB_EXCLAME);
             return -1;
           }
         }
@@ -577,11 +577,11 @@ int CTSExtraFile::ValidateRecordEntries(int whichRecord)
   if (err > 0) {
     message = err == 1 ? "Each entry must have two comma-separated numbers.\n\n"
       : "The list of entries is too long.\n\n";
-    AfxMessageBox(message + "Correct or delete the list of entries before proceeding.",
+    SEMAfxMessageBox(message + "Correct or delete the list of entries before proceeding.",
       MB_EXCLAME);
   }
   if (err < 0)
-    AfxMessageBox("Warning: There are more than the expected number of\n"
+    SEMAfxMessageBox("Warning: There are more than the expected number of\n"
       "commas or values in at least one of the entries", MB_EXCLAME);
   return err;
 }

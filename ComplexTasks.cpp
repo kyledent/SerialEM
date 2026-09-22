@@ -321,7 +321,7 @@ void CComplexTasks::OnTasksSettiltaxisoffset()
   if (KGetOneFloat(infoLine, "Enter new total tilt axis offset:", newVal, 2))
     mScope->SetTiltAxisOffset(newVal);
   if (!mScope->GetShiftToTiltAxis())
-    AfxMessageBox("Your entry will have no effect unless you select the option to\n"
+    SEMAfxMessageBox("Your entry will have no effect unless you select the option to\n"
     "center image shift on the tilt axis in the Align&Focus control panel", MB_EXCLAME);
 }
 
@@ -1329,7 +1329,7 @@ void CComplexTasks::FindEucentricity(int coarseFine)
         "%d grooves left, then right by about\n"
         "the same amount, stopping at the nearest groove",
         B3DNINT(mManualHitachiBacklash / mZMicronsPerDialMark));
-      AfxMessageBox(mess, MB_OK | MB_ICONINFORMATION);
+      SEMAfxMessageBox(mess, MB_OK | MB_ICONINFORMATION);
     }
 
     // Set up angles if doing fine
@@ -2059,7 +2059,7 @@ void CComplexTasks::ReportManualZChange(float delZ, const char *roughFine)
     " left %d grooves then right %.1f grooves", fabs(delZ),
     backlash + overshoot, backlash + overshoot - fabs(delZ));
   }
-  AfxMessageBox(mess, MB_OK | MB_ICONINFORMATION);
+  SEMAfxMessageBox(mess, MB_OK | MB_ICONINFORMATION);
 }
 
 ////////////////////////////////////////////////////////////////////////

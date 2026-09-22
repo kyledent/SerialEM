@@ -317,7 +317,7 @@ void CFocusManager::OnFocusSetFilterCutoffs()
 void CFocusManager::OnFocusSetAbsoluteLimits()
 { double eucenFocus;
   float minDefocus;
-  if (AfxMessageBox("Set microscope to eucentric focus,\n"
+  if (SEMAfxMessageBox("Set microscope to eucentric focus,\n"
     " or go to eucentric height and focus a specimen", MB_OKCANCEL | MB_ICONINFORMATION)
     != IDOK)
     return;
@@ -396,7 +396,7 @@ void CFocusManager::OnFocusReportonexisting()
     mSFbaseFocus = mScope->GetUnoffsetDefocus();
     for (int buf = numpic; buf > 0; buf--) {
       if (!mImBufs[buf - 1].GetDefocus(focus)) {
-        AfxMessageBox("There is no defocus value for one of the images", MB_EXCLAME);
+        SEMAfxMessageBox("There is no defocus value for one of the images", MB_EXCLAME);
         break;
       }
       mCalDefocus = focus;
@@ -769,7 +769,7 @@ void CFocusManager::CalFocusStart(bool doSparse)
       "at ~%.0f microns relative to eucentric focus.  See the help for\n"
       "the Calibration - Focus & Tuning - Set Focus Range command.\n\n"
       "Do you want to proceed?", mFalconCalLimit - (mCalOffset + mCalRange / 2.));
-    if (AfxMessageBox(str, MB_QUESTION) == IDNO)
+    if (SEMAfxMessageBox(str, MB_QUESTION) == IDNO)
       return;
   }
 
@@ -782,7 +782,7 @@ void CFocusManager::CalFocusStart(bool doSparse)
     " parameter set.\n"
     "Before proceeding, make sure that this parameter set takes\n"
     "fairly good pictures and that you are already well focused.\n\n" + str;
-  if (AfxMessageBox(str + "Do you want to proceed?", MB_YESNO | MB_ICONQUESTION) == IDNO)
+  if (SEMAfxMessageBox(str + "Do you want to proceed?", MB_YESNO | MB_ICONQUESTION) == IDNO)
     return;
   mFCindex = 0;
   SetWorkingBeamTilt(mFocusMag);
@@ -913,7 +913,7 @@ void CFocusManager::CalFocusData(float inX, float inY)
     report.Format("The slope of the curve is very different at %d points\n"
       "from the slope near zero defocus.\n\nYou should check conditions and redo"
       " this calibration.", numBad);
-    AfxMessageBox(report, MB_EXCLAME);
+    SEMAfxMessageBox(report, MB_EXCLAME);
     FocusTasksFinished();
     return;
   }
@@ -1013,7 +1013,7 @@ void CFocusManager::CalFocusData(float inX, float inY)
     if (mWinApp->GetAdministrator() && !oldCal.calibrated &&
       oldCal.numPoints == mNewCal.numPoints &&
       delDelta > -0.01 && delDelta < 0.01) {
-      if (AfxMessageBox("Do you want to modify all old focus calibration\r\n"
+      if (SEMAfxMessageBox("Do you want to modify all old focus calibration\r\n"
         "tables for this camera and tilt direction by these changes?",
         MB_YESNO | MB_ICONQUESTION) == IDYES) {
         ScaleMat delMat;
@@ -2352,7 +2352,7 @@ float CFocusManager::GetAdjustedSFnormalizedSlope(int probeMode)
 
 void CFocusManager::CalSTEMfocus(void)
 {
-  if (AfxMessageBox(
+  if (SEMAfxMessageBox(
     "This procedure estimates the spreading of the beam with defocus using"
     " a series of pictures with the " +  mModeNames[1] + " parameter set.\n"
     "Before proceeding, make sure that this parameter set takes\n"
@@ -2403,7 +2403,7 @@ void CFocusManager::STEMfocusShot(int param)
     if (param) {
       str.Format("No image in buffer %c; be sure to load all required images sequentially"
         , 'A' + param - 1);
-      AfxMessageBox(str, MB_EXCLAME);
+      SEMAfxMessageBox(str, MB_EXCLAME);
     }
     StopSTEMfocus();
     return;
@@ -2434,7 +2434,7 @@ void CFocusManager::STEMfocusShot(int param)
 
     // Finished with calibration shots: make sure there are enough points for fits
     if (mSFmaxPowerInd <= 1 || mSFmaxPowerInd >= mNumRotavs - 2) {
-      AfxMessageBox("The highest power is too near the end of the range\n"
+      SEMAfxMessageBox("The highest power is too near the end of the range\n"
         "Focus better or use more focus levels", MB_EXCLAME);
       StopSTEMfocus();
       return;
@@ -2478,7 +2478,7 @@ void CFocusManager::STEMfocusShot(int param)
     if (numpts1 < 2 || numpts2 < 2) {
       str.Format("There are too few points to fit because sizes\nabove %.f need to be"
         "excluded from the fits.\n\nUse a smaller focus range", maxUsableSize);
-      AfxMessageBox(str, MB_EXCLAME);
+      SEMAfxMessageBox(str, MB_EXCLAME);
       StopSTEMfocus();
       return;
     }
@@ -2574,7 +2574,7 @@ void CFocusManager::STEMfocusShot(int param)
               SEMMessageBox("Too many focus steps have been taken\r\n"
                 "without finding a maximum power", MB_EXCLAME);
           } else {
-            i = AfxMessageBox("Too many focus steps have been taken\r\n"
+            i = SEMAfxMessageBox("Too many focus steps have been taken\r\n"
               "without finding a maximum power\n\n"
               "Do you want to start autofocusing again from the last tested defocus?",
               MB_YESNO | MB_ICONQUESTION);
@@ -2615,7 +2615,7 @@ void CFocusManager::STEMfocusShot(int param)
       mSincCurve, mNumSincPts, mNumSincNodes, 0, 0, 1., &paraFocus, &bestFocus, &slope1);
     if (i > 0) {
       str.Format("findFocus gave an unexpected error %d", i);
-      AfxMessageBox(str, MB_EXCLAME);
+      SEMAfxMessageBox(str, MB_EXCLAME);
       StopSTEMfocus();
       return;
     }
@@ -2726,7 +2726,7 @@ int CFocusManager::RotavIndexForDefocus(double defocus)
 void CFocusManager::OnStemFocusVsZ()
 {
   double stageX, stageY;
-  if (AfxMessageBox("This calibration steps the stage to a series of Z levels and "
+  if (SEMAfxMessageBox("This calibration steps the stage to a series of Z levels and "
     "autofocuses at each one.\n\nThe stage should be at the eucentric height, images"
     " should\nalready be close to focus, and the magnification\nshould be suitable for "
     "measuring focus accurately.\n\nDo you want to proceed?", MB_YESNO | MB_ICONQUESTION)
@@ -2882,7 +2882,7 @@ int CFocusManager::FocusVsZBusy(void)
 void CFocusManager::FocusVsZcleanup(int error)
 {
   if (error == IDLE_TIMEOUT_ERROR)
-    AfxMessageBox(_T("Time out in the STEM focus versus Z routine"));
+    SEMAfxMessageBox(_T("Time out in the STEM focus versus Z routine"));
   StopFocusVsZ();
   mWinApp->ErrorOccurred(error);
 }

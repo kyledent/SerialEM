@@ -608,7 +608,7 @@ void CMenuTargets::OnTasksNavigator()
     " dialog\r\n5) Repeat until all desired states are transferred\r\n\r\n"
     "This is the only time that this message will appear";
     mWinApp->AppendToLog(mess, LOG_OPEN_IF_CLOSED);
-    AfxMessageBox(mess, MB_OK | MB_ICONINFORMATION);
+    SEMAfxMessageBox(mess, MB_OK | MB_ICONINFORMATION);
     param->stockFile = "";
   }
   mNavigator = new CNavigatorDlg();
@@ -1036,9 +1036,9 @@ void CMenuTargets::OnGridsReadSessionfile()
     mNavHelper->OpenMultiGrid();
   int err = mWinApp->mMultiGridTasks->LoadSessionFile(false, str);
   if (err > 0)
-    AfxMessageBox("Could not load multi-grid session file:\n" + str, MB_EXCLAME);
+    SEMAfxMessageBox("Could not load multi-grid session file:\n" + str, MB_EXCLAME);
   if (err < 0 && !str.IsEmpty())
-    AfxMessageBox("Errors when loading the multi-grid session file:\n" + str, MB_EXCLAME);
+    SEMAfxMessageBox("Errors when loading the multi-grid session file:\n" + str, MB_EXCLAME);
 }
 
 void CMenuTargets::OnUpdateGridsReadSessionfile(CCmdUI *pCmdUI)
@@ -1074,7 +1074,7 @@ void CMenuTargets::OnLoadAllGridMaps()
 {
   CString errStr;
   if (mWinApp->mMultiGridTasks->LoadAllGridMaps(-1, errStr))
-    AfxMessageBox(errStr, MB_EXCLAME);
+    SEMAfxMessageBox(errStr, MB_EXCLAME);
 }
 
 void CMenuTargets::OnUpdateLoadAllGridMaps(CCmdUI *pCmdUI)
@@ -1322,7 +1322,7 @@ void CMenuTargets::OnNavigatorSetgridlimits()
     if (!KGetOneFloat(str, limits[i], 0))
       return;
     if (((i % 2) ? 1 : -1) * (limits[i] - mScope->GetStageLimit(i)) > 0)
-      AfxMessageBox("You need to set or alter the StageLimits entry in "
+      SEMAfxMessageBox("You need to set or alter the StageLimits entry in "
       "SerialEMproperties.txt\nin order for an entry beyond the default limit to have "
       "any effect", MB_EXCLAME);
   }
@@ -1401,7 +1401,7 @@ void CMenuTargets::OnNavigatorAlignToMap()
 {
   mWinApp->RestoreViewFocus();
   if (!mNavHelper->OKtoAlignWithRotation()) {
-    AfxMessageBox("To open this dialog, there must be a map in the Read buffer\n"
+    SEMAfxMessageBox("To open this dialog, there must be a map in the Read buffer\n"
       "and an image in buffer A or a montage overview in B\n(and montage center in A) at"
       " a different registration from the map", MB_OK | MB_ICONINFORMATION);
     return;
@@ -1706,7 +1706,7 @@ void CMenuTargets::OnAutoalign()
 // List image shift vectors as lengths and angles on specimen
 void CMenuTargets::OnCalibrationListisvectors()
 {
-  BOOL useCalPixel = AfxMessageBox("Do you want to use calibrated pixel sizes where "
+  BOOL useCalPixel = SEMAfxMessageBox("Do you want to use calibrated pixel sizes where "
     "available\ninstead of nominal pixel sizes calculated from the magnification?",
     MB_YESNO, MB_ICONQUESTION) == IDYES;
   DoListISVectors(useCalPixel);
@@ -1918,7 +1918,7 @@ void CMenuTargets::RemoveOneCal(bool doStage)
     return;
   magInd = FindIndexForMagValue(mag, camera, magInd);
   if (magInd <= 0) {
-    AfxMessageBox("That magnification value does not exist for this camera", MB_EXCLAME);
+    SEMAfxMessageBox("That magnification value does not exist for this camera", MB_EXCLAME);
     return;
   }
   magTab = mWinApp->GetMagTable() + magInd;
@@ -1926,7 +1926,7 @@ void CMenuTargets::RemoveOneCal(bool doStage)
   calibrated = B3DCHOICE(doStage, &magTab->stageCalibrated[camera],
     &magTab->calibrated[camera]);
   if (!mat->xpx) {
-    AfxMessageBox("That magnification is not calibrated for this camera", MB_EXCLAME);
+    SEMAfxMessageBox("That magnification is not calibrated for this camera", MB_EXCLAME);
     return;
   }
   str.Format("The %s calibration for mag %d and camera %s is:\n  %.3f %.3f %3f %.3f\n\n"
@@ -1936,7 +1936,7 @@ void CMenuTargets::RemoveOneCal(bool doStage)
     "saved in the main calibration file.  It will be removed from the\n"
     "main calibration file only if you save calibrations", doStage ? "stage" : "image",
     mag, (LPCTSTR)camP->name, mat->xpx, mat->xpy, mat->ypx, mat->ypy);
-  if (AfxMessageBox(str, MB_QUESTION) != IDYES)
+  if (SEMAfxMessageBox(str, MB_QUESTION) != IDYES)
     return;
 
   // It gets saved if either of these is non-zero
@@ -1965,7 +1965,7 @@ void CMenuTargets::OnRemoveMagISOffsetCals()
     "and will keep it from being saved in the main calibration\n"
     "file. It will be removed from the main calibration file\n"
     "only if you save calibrations.", eftem ? "EFTEM" : "non-EFTEM");
-  if (AfxMessageBox(str, MB_QUESTION) != IDYES)
+  if (SEMAfxMessageBox(str, MB_QUESTION) != IDYES)
     return;
 
   mWinApp->GetNumMagRanges(camera, numRanges, lowestMicro);
@@ -2521,7 +2521,7 @@ void CMenuTargets::OnCalibrationC2factor()
   double intSave = mScope->GetIntensity();
   int probe = mScope->ReadProbeMode();
 
-  if (AfxMessageBox("To calibrate the intensity to C2 factor,\nyou need to have "
+  if (SEMAfxMessageBox("To calibrate the intensity to C2 factor,\nyou need to have "
     "a readout for the C2 lens in the Microscope User Interface.\n\n"
     "The program will go to each spot size and ask you to enter the C2 reading.\n",
     MB_OKCANCEL | MB_ICONINFORMATION) != IDOK)
@@ -2566,7 +2566,7 @@ void CMenuTargets::OnUpdateCalibrationC2factor(CCmdUI* pCmdUI)
 void CMenuTargets::OnCalibrationNeutralISvalues()
 {
   if (HitachiScope) {
-    if (AfxMessageBox("This command will go to each magnification in LM and HR\n"
+    if (SEMAfxMessageBox("This command will go to each magnification in LM and HR\n"
       "modes and record the currently stored image shift value.\n"
       "It should only be run if the mags are well-lined up when\n"
       "stepping through them in the Hitachi interface\nwith SerialEM not running.\n\n"
@@ -2948,7 +2948,7 @@ void CMenuTargets::OnCalibrationQuickFlybackTime()
       return;
     }
   }
-  AfxMessageBox("You did not enter the first letter of a parameter set name", MB_EXCLAME);
+  SEMAfxMessageBox("You did not enter the first letter of a parameter set name", MB_EXCLAME);
 }
 
 void CMenuTargets::OnUpdateCalibrationQuickFlybackTime(CCmdUI *pCmdUI)
@@ -2990,7 +2990,7 @@ int CMenuTargets::DoCalibrateStandardLMfocus(bool fromMacro)
   int probe = mScope->ReadProbeMode();
   if (mWinApp->GetSTEMMode() || magInd < 1) {
     if (!fromMacro)
-      AfxMessageBox("Standard focus is not used in STEM mode\n"
+      SEMAfxMessageBox("Standard focus is not used in STEM mode\n"
         "or diffraction mode", MB_EXCLAME);
     return 1;
   }

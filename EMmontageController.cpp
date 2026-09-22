@@ -615,7 +615,7 @@ int EMmontageController::StartMontage(int inTrial, BOOL inReadMont, float cookDw
         mParam->binning / binDiv, mConSets[useSetNum].binning / binDiv,
         (LPCTSTR)(*(mWinApp->GetModeNames() + useSetNum)),
         mConSets[useSetNum].exposure, mParam->binning / binDiv);
-      if (AfxMessageBox(mess, MB_QUESTION) == IDNO)
+      if (SEMAfxMessageBox(mess, MB_QUESTION) == IDNO)
         return 1;
       mParam->warnedConSetBin = true;
     }
@@ -634,7 +634,7 @@ int EMmontageController::StartMontage(int inTrial, BOOL inReadMont, float cookDw
     } */
 
     if (mDoStageMoves && mTrialMontage == MONT_TRIAL_IMAGE) {
-      if (AfxMessageBox("This is a stage montage but you started a Prescan.\n\n"
+      if (SEMAfxMessageBox("This is a stage montage but you started a Prescan.\n\n"
         "Are you sure you want to do a Prescan?",
         MB_YESNO | MB_ICONQUESTION) == IDNO)
         return 1;
@@ -1268,7 +1268,7 @@ int EMmontageController::StartMontage(int inTrial, BOOL inReadMont, float cookDw
 
     // Confirm if not under external control and Z is not in order
     if (!already && !external && mParam->zCurrent != mParam->zMax + 1)
-      if (AfxMessageBox("The current Z value is not the next Z value for this file.\n\n"
+      if (SEMAfxMessageBox("The current Z value is not the next Z value for this file.\n\n"
         "Are you sure you want to continue with this Z value?",
         MB_OKCANCEL | MB_ICONQUESTION) == IDCANCEL)
         return 1;
@@ -1338,7 +1338,7 @@ int EMmontageController::StartMontage(int inTrial, BOOL inReadMont, float cookDw
 
       // If it is all done or not resumable, confirm unless under external control
       if (firstUndone <= lastDone) {
-        if (!external && AfxMessageBox(
+        if (!external && SEMAfxMessageBox(
           "There are already pieces in the file at the current Z value.\n\n"
           "Are you sure you want to overwrite these pieces?",
           MB_OKCANCEL | MB_ICONQUESTION) == IDCANCEL)

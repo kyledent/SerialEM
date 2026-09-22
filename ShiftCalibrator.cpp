@@ -169,14 +169,14 @@ void CShiftCalibrator::CalibrateIS(int ifRep, BOOL calStage, BOOL fromMacro)
     pr = MatMul(MatInv(mSM->FallbackSpecimenToStage(1., 1.)),
       mSM->SpecimenToCamera(mCurrentCamera, mCalIndex));
     if (!mSM->GetAnyCalPixelSizes()) {
-      if (AfxMessageBox("You should not run stage calibration without having at least\n"
+      if (SEMAfxMessageBox("You should not run stage calibration without having at least\n"
         "one calibrated pixel size entered into properties (not necessarily for this mag"
         " and camera).\nThere are no calibrated pixel sizes in properties.\n\n"
         "Are you sure you want to proceed?", MB_QUESTION) == IDNO)
         return;
     }
     if (!pr.xpx && !pr.ypx) {
-      AfxMessageBox("There is insufficient information about pixel sizes and rotations in"
+      SEMAfxMessageBox("There is insufficient information about pixel sizes and rotations in"
         " the properties and calibrations to do a stage calibration\n\n"
         "This is probably due to a bug in the program", MB_EXCLAME);
       return;
@@ -308,7 +308,7 @@ void CShiftCalibrator::CalibrateIS(int ifRep, BOOL calStage, BOOL fromMacro)
           "RotationAndPixel entries at those mags and above\n";
         message += "than to have lots of stage calibrations at higher mags.\n\n"
           "Are you sure you want to do this calibration?";
-        if (AfxMessageBox(message, MB_QUESTION) == IDNO)
+        if (SEMAfxMessageBox(message, MB_QUESTION) == IDNO)
           return;
     }
   }
@@ -332,7 +332,7 @@ void CShiftCalibrator::CalibrateIS(int ifRep, BOOL calStage, BOOL fromMacro)
            "there are multiple grid bars in the field of view\n\n";
    }
    if (!ifRep && !mFromMacro) {
-    if (AfxMessageBox(message + "Are you ready to proceed?", MB_YESNO | MB_ICONQUESTION)
+    if (SEMAfxMessageBox(message + "Are you ready to proceed?", MB_YESNO | MB_ICONQUESTION)
       == IDNO)
       return;
   }
@@ -353,7 +353,7 @@ void CShiftCalibrator::CalibrateIS(int ifRep, BOOL calStage, BOOL fromMacro)
     if (!mFirstCal &&
       !(mSM->ImageShiftIsOK(xOut, 0., true) && mSM->ImageShiftIsOK(-xOut, 0., true) &&
         mSM->ImageShiftIsOK(0., yOut, true) && mSM->ImageShiftIsOK(0., -yOut, true))) {
-      AfxMessageBox(_T(
+      SEMAfxMessageBox(_T(
         "The image shift is too close to the end of its range\n"
         "or the computed output values are too large.\n\n"
         "Reset the image shifts to zero or try calibrating from scratch."), MB_EXCLAME);
@@ -518,7 +518,7 @@ void CShiftCalibrator::ShiftCleanup(int error)
 {
   StopCalibrating();
   if (error == IDLE_TIMEOUT_ERROR)
-    AfxMessageBox(_T("Timeout calibrating image or stage shifts"));
+    SEMAfxMessageBox(_T("Timeout calibrating image or stage shifts"));
   mWinApp->ErrorOccurred(error);
 }
 
@@ -568,13 +568,13 @@ void CShiftCalibrator::ShiftDone()
     imA = mImBufs[1].mImage;
     imB = mImBufs[0].mImage;
     if (imA == NULL || imB == NULL) {
-      AfxMessageBox(_T("Error getting image buffers - calibration aborted"), MB_EXCLAME);
+      SEMAfxMessageBox(_T("Error getting image buffers - calibration aborted"), MB_EXCLAME);
       StopCalibrating();
       return;
     }
     if (imA->getWidth() != binnedX || imB->getWidth() != binnedX ||
       imA->getHeight() != binnedY || imB->getHeight() != binnedY) {
-      AfxMessageBox(_T(
+      SEMAfxMessageBox(_T(
         "Image sizes do not match expectations - calibration aborted"), MB_EXCLAME);
       StopCalibrating();
       return;
@@ -588,7 +588,7 @@ void CShiftCalibrator::ShiftDone()
       0., &aaCCC, NULL, true, &aaXshift, &aaYshift);
     mSM->SetPeaksToEvaluate(0, 0.);
     if (j) {
-      AfxMessageBox(_T("Alignment routine error"), MB_EXCLAME);
+      SEMAfxMessageBox(_T("Alignment routine error"), MB_EXCLAME);
       StopCalibrating();
       return;
     }
@@ -606,7 +606,7 @@ void CShiftCalibrator::ShiftDone()
         &aaCCC, NULL, true, &aaXshift, &aaYshift);
       mSM->SetPeaksToEvaluate(0, 0.);
       if (j) {
-        AfxMessageBox(_T("Alignment routine error"), MB_EXCLAME);
+        SEMAfxMessageBox(_T("Alignment routine error"), MB_EXCLAME);
         StopCalibrating();
         return;
       }
@@ -745,7 +745,7 @@ void CShiftCalibrator::ShiftDone()
         "to be wrong.  Do you want to forget about this calibration?\n\n"
         "(Perhaps try again with Whole Image Correlations turned %s.",
         mWholeCorrForStageCal ? "OFF" : "ON");
-      if (AfxMessageBox(report, MB_QUESTION) == IDYES)
+      if (SEMAfxMessageBox(report, MB_QUESTION) == IDYES)
         return;
     }
     report = "";
@@ -761,7 +761,7 @@ void CShiftCalibrator::ShiftDone()
           "Something is wrong, probably in the GlobalExtraRotation property\r\n"
           "or the ExtraRotation camera propertes.  See the Help or get help.", angle,
           diff);
-        AfxMessageBox(rotmess, MB_EXCLAME);
+        SEMAfxMessageBox(rotmess, MB_EXCLAME);
       }
     } else {
       rotmess.Format("\r\nThe property InvertStageXaxis %s set and the angles from\r\n"
@@ -771,7 +771,7 @@ void CShiftCalibrator::ShiftDone()
         " calibration to get a correct rotation angle.", mSM->GetInvertStageXAxis() ?
         "IS" : "is NOT", mSM->GetInvertStageXAxis() ? "should NOT" : "SHOULD", angle,
         xtheta, ytheta);
-      AfxMessageBox(rotmess, MB_EXCLAME);
+      SEMAfxMessageBox(rotmess, MB_EXCLAME);
     }
     report += rotmess;
     mWinApp->AppendToLog(report,
@@ -834,7 +834,7 @@ void CShiftCalibrator::ShiftDone()
         "\r\nInsert a calibrated pixel size into a \"RotationAndPixel\" camera property"
         " for this mag\r\nOr, if this is a cross-line grating, get an image and run"
         " the\r\nFind Pixel Size routine at this mag before trying again.");
-      AfxMessageBox(report, MB_EXCLAME);
+      SEMAfxMessageBox(report, MB_EXCLAME);
       mWinApp->AppendToLog(report);
       StopCalibrating();
       return;
@@ -973,7 +973,7 @@ void CShiftCalibrator::ShiftDone()
     mWinApp->AppendToLog(report, LOG_SWALLOW_IF_NOT_ADMIN_OR_OPEN);
   }
 
-  if (mess == 3 && AfxMessageBox("Do you want the program to forget about this "
+  if (mess == 3 && SEMAfxMessageBox("Do you want the program to forget about this "
     "calibration?\n\n(Try rerunning with \"IS from scratch\")", MB_QUESTION) == IDYES) {
       mat->xpx = mat->xpy = 0.;
       StopCalibrating();
@@ -1021,7 +1021,7 @@ void CShiftCalibrator::ShiftDone()
     report.Format("Do you want to modify all other old, directly measured image "
       "shift\r\ncalibration matrices for this camera and mag range by the same change?"
       "\r\n     (%d matrices, mags %d to %d)", numToDo, minMagx, maxMagx);
-    if (numToDo > 0 && AfxMessageBox(report, MB_QUESTION) == IDYES) {
+    if (numToDo > 0 && SEMAfxMessageBox(report, MB_QUESTION) == IDYES) {
       for (int iMag = limlo; iMag <= limhi; iMag++) {
         if (!mMagTab[iMag].calibrated[iCam] && mMagTab[iMag].matIS[iCam].xpx != 0. &&
           mSM->CanTransferIS(mCalIndex, iMag, mCamParams[iCam].STEMcamera,
@@ -1034,7 +1034,7 @@ void CShiftCalibrator::ShiftDone()
     // An old idea that seems not to be any good if you think about it
     /* if (mWinApp->GetAdministrator() && mWinApp->mFocusManager->FocusReady() &&
       !mFocusModified && mCalIndex >= mScope->GetLowestMModeMagInd() &&
-      !mCamParams[iCam].STEMcamera && AfxMessageBox("Do you want to modify all old\r\n"
+      !mCamParams[iCam].STEMcamera && SEMAfxMessageBox("Do you want to modify all old\r\n"
       "focus calibration tables by the same change?",
       MB_YESNO | MB_ICONQUESTION) == IDYES) {
       mWinApp->mFocusManager->ModifyAllCalibrations(delMat, mCurrentCamera);
@@ -1153,11 +1153,11 @@ void CShiftCalibrator::CalibrateISoffset(void)
   int firstCam = EFTEM ? mFirstGIFCamera : mFirstRegularCamera;
   mMagIndex = mScope->GetMagIndex();
   if (mWinApp->LowDoseMode()) {
-    AfxMessageBox("You cannot do this calibration in Low Dose mode", MB_EXCLAME);
+    SEMAfxMessageBox("You cannot do this calibration in Low Dose mode", MB_EXCLAME);
     return;
   }
   if (bothExist && mScope->GetSecondaryMode()) {
-    AfxMessageBox("This calibration cannot be done in the secondary\n"
+    SEMAfxMessageBox("This calibration cannot be done in the secondary\n"
       " magnification mode when there is a GIF", MB_EXCLAME);
     return;
   }
@@ -1172,7 +1172,7 @@ void CShiftCalibrator::CalibrateISoffset(void)
       str.Format("In %sEFTEM mode, this calibration should be done with "
         "the %s camera, but %s is the current camera.", EFTEM ? "" : "non-",
         (LPCTSTR)mCamParams[firstCam].name, (LPCTSTR)mCamParams[curCam].name);
-      AfxMessageBox(str, MB_EXCLAME);
+      SEMAfxMessageBox(str, MB_EXCLAME);
       return;
     }
     MagRangeWithoutIScal(curCam);
@@ -1185,7 +1185,7 @@ void CShiftCalibrator::CalibrateISoffset(void)
         "image shift calibration in every mag range.\n\n"
         "There is no calibration for the mag range including %dx for the %s camera.",
         MagOrEFTEMmag(EFTEM, miss), (LPCTSTR)mCamParams[curCam].name);
-      AfxMessageBox(str, MB_EXCLAME);
+      SEMAfxMessageBox(str, MB_EXCLAME);
       return;
     }
   }
@@ -1194,7 +1194,7 @@ void CShiftCalibrator::CalibrateISoffset(void)
     str.Format("There is no image shift calibration at %s magnification\n"
       "so nothing can be calibrated from this mag",
       mLowestISOmag > mMagIndex ? "this" : "the next lower");
-    AfxMessageBox(str, MB_EXCLAME);
+    SEMAfxMessageBox(str, MB_EXCLAME);
     return;
   }
 
@@ -1222,10 +1222,10 @@ void CShiftCalibrator::CalibrateISoffset(void)
       MagOrEFTEMmag(EFTEM, mLowestISOmag));
     str += str2;
   }
-  if (AfxMessageBox(str + "\n\nAre you ready to proceed?", MB_YESNO | MB_ICONQUESTION) ==
+  if (SEMAfxMessageBox(str + "\n\nAre you ready to proceed?", MB_YESNO | MB_ICONQUESTION) ==
     IDNO)
     return;
-  mTakeTrial = AfxMessageBox("Do you want a " + modeNames[2] + " image taken after every"
+  mTakeTrial = SEMAfxMessageBox("Do you want a " + modeNames[2] + " image taken after every"
     " mag change?\n\n(This will not happen when going into Low Mag mode or\nif the camera"
     " is acquiring in continuous mode)", MB_YESNO | MB_ICONQUESTION)
     == IDYES;
@@ -1266,7 +1266,7 @@ void CShiftCalibrator::CalISoffsetNextMag(void)
       "If you need to skip this mag, press STOP and run the procedure\n"
       "again starting at the next lower mag.\nOtherwise center the feature at this mag",
       MagOrEFTEMmag(mWinApp->GetEFTEMMode(), mMagIndex));
-    AfxMessageBox(str, MB_EXCLAME);
+    SEMAfxMessageBox(str, MB_EXCLAME);
     return;
   }
 
@@ -1314,7 +1314,7 @@ void CShiftCalibrator::CalISoffsetDone(BOOL ifStop)
     str.Format("Because you are not at the expected mag, %dx, no image shift is being\n"
       "recorded and this is being treated the same as stopping the procedure\n",
       MagOrEFTEMmag(gif != 0, mMagIndex));
-      AfxMessageBox(str, MB_EXCLAME);
+      SEMAfxMessageBox(str, MB_EXCLAME);
     } else {
       ifStop = CheckStageGetShift();
     }
@@ -1324,7 +1324,7 @@ void CShiftCalibrator::CalISoffsetDone(BOOL ifStop)
     str.Format("The procedure has been stopped rather than ended.\n"
       "Shifts are available at %d mags.\n\nDo you want to incorporate them into the"
       " calibration (Yes) or abandon them (No)?", mCalISOindex);
-    ifStop = AfxMessageBox(str, MB_YESNO | MB_ICONQUESTION) == IDNO;
+    ifStop = SEMAfxMessageBox(str, MB_YESNO | MB_ICONQUESTION) == IDNO;
   }
 
   if (!ifStop && mCalISOindex > 1) {
@@ -1335,7 +1335,7 @@ void CShiftCalibrator::CalISoffsetDone(BOOL ifStop)
       iStart = lowestM;
       iEnd = MAX_MAGS;
       if (secondary) {
-        if (AfxMessageBox("You need to pick a mag in either the primary or\n"
+        if (SEMAfxMessageBox("You need to pick a mag in either the primary or\n"
           "the secondary mag mode at which the offset will be zero\n\n"
           "Do you want the zero offset in the primary mag mode?", MB_QUESTION) == IDYES) {
             iEnd = secondary;
@@ -1468,7 +1468,7 @@ BOOL CShiftCalibrator::CheckStageGetShift(void)
         "The alignment image shift cannot be relied on at this mag.\n\n"
         "The procedure is being STOPPED without recording an image shift for this mag.",
         stageX - mCalISOstageX, stageY - mCalISOstageY, mCalISOstageLimit);
-      AfxMessageBox(report,  MB_EXCLAME);
+      SEMAfxMessageBox(report,  MB_EXCLAME);
     return true;
   }
 
@@ -1503,19 +1503,19 @@ void CShiftCalibrator::CalibrateEFTEMoffset(void)
     mCamParams[mFirstGIFCamera].name + " camera,\r\n"
     "using only image shift to align the feature.\r\n"
     "   5. Invoke the Calibrate EFTEM IS Offset command.";
-  if (AfxMessageBox(str + "\n\nHave you already done all of those steps?",
+  if (SEMAfxMessageBox(str + "\n\nHave you already done all of those steps?",
     MB_YESNO | MB_ICONQUESTION) == IDNO) {
     mWinApp->AppendToLog(str, LOG_OPEN_IF_CLOSED);
     return;
   }
 
   if (!mImBufs[bufNum].mImage || !mImBufs->mImage) {
-    AfxMessageBox("There are not images in both of the required buffers", MB_EXCLAME);
+    SEMAfxMessageBox("There are not images in both of the required buffers", MB_EXCLAME);
     return;
   }
   mImBufs[bufNum].mImage->getShifts(imshfX, imshfY);
   if (imshfX || imshfY) {
-    AfxMessageBox("The image in buffer " + letStr + "cannot be used, it has an alignment"
+    SEMAfxMessageBox("The image in buffer " + letStr + "cannot be used, it has an alignment"
       " shift.", MB_EXCLAME);
     return;
   }
@@ -1524,18 +1524,18 @@ void CShiftCalibrator::CalibrateEFTEMoffset(void)
   mImBufs->GetStagePosition(stageX, stageY);
   if (fabs(imshfX - stageX) > mCalISOstageLimit ||
     fabs(imshfY - stageY) > mCalISOstageLimit) {
-    AfxMessageBox("The stage moved between these pictures so they cannot be used",
+    SEMAfxMessageBox("The stage moved between these pictures so they cannot be used",
       MB_EXCLAME);
     return;
   }
 
   if (mImBufs[bufNum].mCamera != mFirstRegularCamera) {
-    AfxMessageBox("The image in buffer " + letStr + "was not taken with the " +
+    SEMAfxMessageBox("The image in buffer " + letStr + "was not taken with the " +
        mCamParams[mFirstRegularCamera].name + " camera", MB_EXCLAME);
     return;
   }
   if (mImBufs->mCamera != mFirstGIFCamera) {
-    AfxMessageBox("The image in buffer A was not taken with the " +
+    SEMAfxMessageBox("The image in buffer A was not taken with the " +
        mCamParams[mFirstGIFCamera].name + " camera", MB_EXCLAME);
     return;
   }
@@ -1543,7 +1543,7 @@ void CShiftCalibrator::CalibrateEFTEMoffset(void)
   toMag = mImBufs->mMagInd;
   if (fromMag < mScope->GetLowestMModeMagInd() ||
     fromMag < mScope->GetLowestMModeMagInd()) {
-    AfxMessageBox("One of the images was taken in low mag mode", MB_EXCLAME);
+    SEMAfxMessageBox("One of the images was taken in low mag mode", MB_EXCLAME);
     return;
   }
 
@@ -1610,7 +1610,7 @@ void CShiftCalibrator::ConvertIS(int fromCam, int fromMag, double fromISX,
 int CShiftCalibrator::GetZeroOffsetMode(void)
 {
   if (mZeroOffsetMode < 0)
-    mZeroOffsetMode = AfxMessageBox("The image shift offset needs to be set to zero\n"
+    mZeroOffsetMode = SEMAfxMessageBox("The image shift offset needs to be set to zero\n"
       "at one mag for either the pre-GIF camera or the GIF camera.\n"
       "The offsets for the other camera will then be incremented\n"
       " by the offset between the two modes.\n\n"
@@ -1721,7 +1721,7 @@ BOOL CShiftCalibrator::BothModesHaveIScal(void)
         "image shift calibration in every mag range, for both of the imaging modes.\n\n"
         "There is no calibration for the mag range including %dx for the %s camera.",
         MagOrEFTEMmag(gif != 0, miss), (LPCTSTR)mCamParams[cam].name);
-      AfxMessageBox(str, MB_EXCLAME);
+      SEMAfxMessageBox(str, MB_EXCLAME);
       return false;
     }
   }
@@ -1744,7 +1744,7 @@ void CShiftCalibrator::SetFirstCameras()
 int CShiftCalibrator::MeasureInterSetShift(int fromTS)
 {
   int i;
-  if (!fromTS && AfxMessageBox(
+  if (!fromTS && SEMAfxMessageBox(
     "This procedure measures the shifts between Record and other images.\n"
     "These shifts are used when autofocusing and during a tilt series.\n\n"
     "They are only valid at the mag and binning at which they are taken, and over\n"
@@ -1890,7 +1890,7 @@ void CShiftCalibrator::InterSetShiftNextTask(int param)
       "If another alignment is no good, you should use Revise/Cancel Shifts\r\n"
       "to disable use of these shifts (answer No to revise the shift of the\r\n"
       " image in A, and then Yes to disable the shifts).";
-    AfxMessageBox(errMess, MB_EXCLAME);
+    SEMAfxMessageBox(errMess, MB_EXCLAME);
     mWinApp->AppendToLog(errMess, LOG_SWALLOW_IF_CLOSED);
     return;
   }
@@ -1943,14 +1943,14 @@ void CShiftCalibrator::ReviseOrCancelInterSetShifts(void)
   if (mImBufs->mTimeStamp == mISStimeStampLast) {
     str.Format("Do you want to revise the shift for %s images with"
       " the current shift of the image in buffer A?", (LPCTSTR)mModeNames[mISSsetLast]);
-    if (AfxMessageBox(str, MB_QUESTION) == IDYES) {
+    if (SEMAfxMessageBox(str, MB_QUESTION) == IDYES) {
       SaveLastInterSetShift();
       return;
     }
   }
   str.Format("Do you want to disable (zero out) the shift adjustments\n"
     "between the different image types and %s?", (LPCTSTR)mModeNames[RECORD_CONSET]);
-  if (AfxMessageBox(str, MB_QUESTION) == IDNO)
+  if (SEMAfxMessageBox(str, MB_QUESTION) == IDNO)
     return;
   for (int i = 0; i < 5; i++) {
     mISSshifts->binning[i] = 0;
@@ -2012,26 +2012,26 @@ int CShiftCalibrator::CalibrateHighDefocus(int fromScript, float *outScale,
       "image, and draw new or better lines between corresponding points.", aaText);
     mWinApp->AppendToLog(mess);
     mGaveFocusMagMessage = true;
-    if (AfxMessageBox(mess + "\n\nAre you ready to proceed?", MB_QUESTION) == IDNO)
+    if (SEMAfxMessageBox(mess + "\n\nAre you ready to proceed?", MB_QUESTION) == IDNO)
       return 1;
   }
   if (!mImBufs->mImage || !refBuf->mImage || underProbe != refProbe ||
     mImBufs->mMagInd != refBuf->mMagInd) {
       mess.Format("There needs to be a zero-defocus image in the Autoalign\n buffer (%c)"
         "and an underfocus image at the same magnification in Buffer A", aaText);
-      AfxMessageBox(mess, MB_EXCLAME);
+      SEMAfxMessageBox(mess, MB_EXCLAME);
       return 1;
   }
   if (!mImBufs->GetDefocus(underFocus) || !mImBufs->GetSpotSize(underSpot) ||
     !mImBufs->GetIntensity(intensity) || !refBuf->GetDefocus(refFocus)) {
-      AfxMessageBox("Images do not have enough focus or beam information to proceed");
+      SEMAfxMessageBox("Images do not have enough focus or beam information to proceed");
       return 1;
   }
   focDiff = underFocus - refFocus;
   if (focDiff >= 0) {
     mess.Format("The zero-defocus image needs to be in the Autoalign buffer (%c)\n"
       " and the underfocus image needs to be in buffer A", aaText);
-    AfxMessageBox(mess, MB_EXCLAME);
+    SEMAfxMessageBox(mess, MB_EXCLAME);
     return 1;
   }
   if (haveLines) {
@@ -2040,7 +2040,7 @@ int CShiftCalibrator::CalibrateHighDefocus(int fromScript, float *outScale,
     mWinApp->mMainView->GetLineLength(mImBufs, underPixels, dummy, underAngle, true);
     mWinApp->mMainView->GetLineLength(refBuf, refPixels, dummy, refAngle, true);
     if (underPixels < 100 || refPixels < 100) {
-      AfxMessageBox("The lines should be at least 100 pixels long", MB_EXCLAME);
+      SEMAfxMessageBox("The lines should be at least 100 pixels long", MB_EXCLAME);
       return 1;
     }
     initialScale = refPixels / underPixels;
@@ -2058,7 +2058,7 @@ int CShiftCalibrator::CalibrateHighDefocus(int fromScript, float *outScale,
     ind = mSM->GetDefocusMagAndRot(underSpot, refProbe, intensity, focDiff, scale,
       rotation, nearFoc, nearC2dist, nearC2Ind, numNearC2);
     if (ind < 2 && fabs((double)nearFoc - focDiff) > 10.) {
-      AfxMessageBox("There are no calibrations near this defocus;\n"
+      SEMAfxMessageBox("There are no calibrations near this defocus;\n"
         "you should draw lines between corresponding points on the two images",
         MB_EXCLAME);
       return 1;
@@ -2092,7 +2092,7 @@ int CShiftCalibrator::CalibrateHighDefocus(int fromScript, float *outScale,
         "You need to draw lines between corresponding points in the images");
   }
   if (!mess.IsEmpty()) {
-    AfxMessageBox(mess, MB_EXCLAME);
+    SEMAfxMessageBox(mess, MB_EXCLAME);
     mWinApp->mMultiTSTasks->SetCkAlignStep(saveStep);
     mWinApp->mMultiTSTasks->SetCkNumStepCuts(saveStepCuts);
     mWinApp->mMultiTSTasks->SetCkNumAlignSteps(saveNumSteps);
@@ -2113,7 +2113,7 @@ int CShiftCalibrator::CalibrateHighDefocus(int fromScript, float *outScale,
   mWinApp->mMultiTSTasks->SetCkNumStepCuts(saveStepCuts);
   mWinApp->mMultiTSTasks->SetCkNumAlignSteps(saveNumSteps);
   if (ind) {
-    AfxMessageBox("Autoalignment failed in the second scaling search", MB_EXCLAME);
+    SEMAfxMessageBox("Autoalignment failed in the second scaling search", MB_EXCLAME);
     return 1;
   }
   PrintfToLog("Correlations give final scale %.3f  rotation %.1f", scale, rotation);
@@ -2144,7 +2144,7 @@ int CShiftCalibrator::CalibrateHighDefocus(int fromScript, float *outScale,
   mess = CString("Is this calibration good?  Are the images aligned?\n\n"
     "(If not, copy buffer B to A and try drawing ") + B3DCHOICE(haveLines,
     "the lines better)", "lines between corresponding points on each image)");
-  if (fromScript > 1 || AfxMessageBox(mess, MB_QUESTION) == IDYES) {
+  if (fromScript > 1 || SEMAfxMessageBox(mess, MB_QUESTION) == IDYES) {
     mSM->AddHighFocusMagCal(underSpot, refProbe, intensity, focDiff, 1. / scale,
       -rotation, 0);
     if (outScale)
@@ -2177,7 +2177,7 @@ int CShiftCalibrator::CalibrateISatHighDefocus(bool interactive, float curFocus)
     if (!mWarnedHighFocusNotCal && !mMagTab[mCalIndex].calibrated[mCurrentCamera] &&
       !mMagsTransFrom.count(mCalIndex)) {
       mWarnedHighFocusNotCal = true;
-      if (AfxMessageBox("It is recommended that you redo the regular image shift "
+      if (SEMAfxMessageBox("It is recommended that you redo the regular image shift "
         "calibration since it is the reference for the high-focus calibrations\n\n"
         "Do you want to do that first?", MB_QUESTION) == IDYES)
         return 1;

@@ -528,7 +528,7 @@ void CMultiGridDlg::OnButMgGetNames()
     // Now try to get all the names
     names = "";
     if (!mWinApp->mScope->CassetteSlotStatus(0, status, names) && !names.IsEmpty()) {
-      AfxMessageBox(names, MB_EXCLAME);
+      SEMAfxMessageBox(names, MB_EXCLAME);
       return;
     }
     for (slot = 0; slot < numSlots; slot++) {
@@ -570,7 +570,7 @@ void CMultiGridDlg::OnButMgGetNames()
       // many slots to show
       if (numEmpty == 1) {
         str.Format("Is the grid from slot %d loaded on the stage?", maybeStage + 1);
-        if (AfxMessageBox(str, MB_QUESTION) != IDYES)
+        if (SEMAfxMessageBox(str, MB_QUESTION) != IDYES)
           maybeStage = -1;
       } else
         maybeStage = -1;
@@ -740,7 +740,7 @@ void CMultiGridDlg::OnButMgInventory()
 // Button to reset the names to cartInfo names
 void CMultiGridDlg::OnButMgResetNames()
 {
-  if (!mNamesChanged || (mNamesChanged && AfxMessageBox("Resetting to names from scope "
+  if (!mNamesChanged || (mNamesChanged && SEMAfxMessageBox("Resetting to names from scope "
     "will lose your name changes\n\nAre you sure you want to do this?", MB_QUESTION) ==
     IDYES))
     ReloadTable(1, 0);
@@ -750,7 +750,7 @@ void CMultiGridDlg::OnButMgResetNames()
 // Button to clear out the names
 void CMultiGridDlg::OnButMgClearNames()
 {
-  if (!mNamesChanged || (mNamesChanged && AfxMessageBox("Clearing the names will throw "
+  if (!mNamesChanged || (mNamesChanged && SEMAfxMessageBox("Clearing the names will throw "
     "away your name changes\n\nAre you sure you want to do this?", MB_QUESTION) == IDYES))
     ReloadTable(2, 0);
   mWinApp->RestoreViewFocus();
@@ -1696,15 +1696,15 @@ void CMultiGridDlg::ProcessMultiStateCombo(CComboBox &combo, int *stateNums,
     sameArea))
     return;
   if (numNon > 1)
-    AfxMessageBox(gridPref + "Only one non-Low Dose state can be selected", MB_EXCLAME);
+    SEMAfxMessageBox(gridPref + "Only one non-Low Dose state can be selected", MB_EXCLAME);
   else if (numNon && numLD)
-    AfxMessageBox(gridPref + "You cannot select both Low Dose and non-Low Dose states",
+    SEMAfxMessageBox(gridPref + "You cannot select both Low Dose and non-Low Dose states",
       MB_EXCLAME);
   else if (sameArea)
-    AfxMessageBox(gridPref + "You cannot select more than one state in the same Low Dose"
+    SEMAfxMessageBox(gridPref + "You cannot select more than one state in the same Low Dose"
       " area", MB_EXCLAME);
   else
-    AfxMessageBox(gridPref + "All selected states for one phase must be for the same "
+    SEMAfxMessageBox(gridPref + "All selected states for one phase must be for the same "
       "camera", MB_EXCLAME);
   stateNames[index] = prevName;
   stateNums[index] = prevNum;
@@ -2139,14 +2139,14 @@ void CMultiGridDlg::OnButRealignToGridMap()
     // Run refine procedure if that is chosen
     DialogToParams();
     if (CheckRefineOptions(FOV, ldArea, setNum, &state, numXpc, numYpc, errStr)) {
-      AfxMessageBox("Cannot refine alignment: " + errStr, MB_EXCLAME);
+      SEMAfxMessageBox("Cannot refine alignment: " + errStr, MB_EXCLAME);
       return;
     }
 
     // Need to get Nav loaded, so use this call here
     if (mMGTasks->PrepareAlignToGridMap(mDlgIndToJCDindex[mSelectedGrid], true, &item,
       errStr)) {
-      AfxMessageBox("Cannot refine alignment: " + errStr, MB_EXCLAME);
+      SEMAfxMessageBox("Cannot refine alignment: " + errStr, MB_EXCLAME);
       return;
     }
 
@@ -2161,7 +2161,7 @@ void CMultiGridDlg::OnButRealignToGridMap()
         applyMarker = true;
 
       // Ask whether to apply marker shift if both kinds exist
-      if (offsetTypes == 3 && AfxMessageBox(
+      if (offsetTypes == 3 && SEMAfxMessageBox(
         "There is both a shift offset for the Low Dose area\n"
         "used for the grid map, and a marker shift from the grid map\n"
         "magnification that has not been applied to this map yet.\n\n"
@@ -2180,12 +2180,12 @@ void CMultiGridDlg::OnButRealignToGridMap()
     }
     if (mMGTasks->RefineGridMapAlignment(mDlgIndToJCDindex[mSelectedGrid],
       mParams.refineStateNum, true, numXpc, numYpc, errStr))
-      AfxMessageBox("Failed to refine grid map alignment:\n" + errStr, MB_EXCLAME);
+      SEMAfxMessageBox("Failed to refine grid map alignment:\n" + errStr, MB_EXCLAME);
 
     // Otherwise regular realign
   } else if (mMGTasks->RealignToGridMap(mDlgIndToJCDindex[mSelectedGrid], true, true,
     errStr) > 0) {
-      AfxMessageBox("Failed to realign to grid map: " + errStr, MB_EXCLAME);
+      SEMAfxMessageBox("Failed to realign to grid map: " + errStr, MB_EXCLAME);
   }
 }
 
@@ -2522,7 +2522,7 @@ int CMultiGridDlg::DoSetupLMMmont(bool skipDlg)
         "Resolve this discrepancy before setting up the montage",
         m_iLMMacquireType ? "View" : "Search",
         lowDose ? "state for a different Low Dose area" : "non-Low Dose state");
-      AfxMessageBox(str, MB_EXCLAME);
+      SEMAfxMessageBox(str, MB_EXCLAME);
       return 1;
     }
 
@@ -2561,7 +2561,7 @@ int CMultiGridDlg::DoSetupLMMmont(bool skipDlg)
           ldArea = RECORD_CONSET;
       }
       if (ldArea < 0) {
-        AfxMessageBox("You selected to used the current state and Low Dose\n"
+        SEMAfxMessageBox("You selected to used the current state and Low Dose\n"
           "mode is on, but there is neither a current low dose area\n"
           "nor do the current montage parameters specify to use View or Search "
           "in Low Dose.\n"
@@ -2592,7 +2592,7 @@ int CMultiGridDlg::DoSetupLMMmont(bool skipDlg)
   montP->useMultiShot = false;
   ind = mWinApp->LookupActiveCamera(camera);
   if (ind < 0) {
-    AfxMessageBox("The camera for the state to be set is not in the active list",
+    SEMAfxMessageBox("The camera for the state to be set is not in the active list",
       MB_EXCLAME);
     return 1;
   }
@@ -2613,7 +2613,7 @@ int CMultiGridDlg::DoSetupLMMmont(bool skipDlg)
       str.Format("You selected to set a state at %dx but changed the mag to %d"
           " in Montage Setup\n\nDo you want to proceed with these settings?",
         MagForCamera(camera, stateMag), MagForCamera(camera, montP->magIndex));
-      if (AfxMessageBox(str, MB_QUESTION) != IDYES)
+      if (SEMAfxMessageBox(str, MB_QUESTION) != IDYES)
         err = 1;
     }
 
@@ -2650,7 +2650,7 @@ int CMultiGridDlg::DoSetupLMMmont(bool skipDlg)
     mGridMontSetupOverlap = m_bUseMontOverlap ? m_iMontOverlap : 0;
     mGridMontSetupAcqType = m_iLMMacquireType;
     if (mMGTasks->SaveSessionFile(str) > 0)
-      AfxMessageBox(str, MB_EXCLAME);
+      SEMAfxMessageBox(str, MB_EXCLAME);
 
     // Save the image size in the camera parameters
     SaveMontSetupSize(montP, lowDose, mMontSetupSizesXY[0], mMontSetupSizesXY[1]);
@@ -2695,7 +2695,7 @@ StateParams *CMultiGridDlg::GetOrRefindState(int &stateNum, CString &stateName,
       str += ".\nYou need to check the selection of this state"
         " before proceeding.\n\nDo you want to reload the combo box "
         "with the current states first?";
-      if (AfxMessageBox(str, MB_QUESTION) == IDYES) {
+      if (SEMAfxMessageBox(str, MB_QUESTION) == IDYES) {
         LoadAllComboBoxes();
         SetAllComboBoxesFromNameOrNum();
       }
@@ -2736,7 +2736,7 @@ int CMultiGridDlg::CheckMultipleStates(CComboBox **comboArr, int *stateNums,
             if (errStr)
               *errStr = str;
             else
-              AfxMessageBox(str, MB_EXCLAME);
+              SEMAfxMessageBox(str, MB_EXCLAME);
             return 1;
           }
         }
@@ -2763,7 +2763,7 @@ int CMultiGridDlg::CheckMultipleStates(CComboBox **comboArr, int *stateNums,
   if (errStr)
     *errStr = str;
   else
-    AfxMessageBox(str, MB_EXCLAME);
+    SEMAfxMessageBox(str, MB_EXCLAME);
   return 1;
 }
 
@@ -2899,7 +2899,7 @@ int CMultiGridDlg::SetupMMMacquire(bool skipDlg)
     "medium-mag maps", numStates, stateCamera, stateArr, stateLowDose, stateMagInds))
     return 1;
   if (numStates && !stateLowDose[0] && m_iMMMacquireType < 2) {
-    AfxMessageBox("You selected medium mag map acquisition with a Low-Dose\n"
+    SEMAfxMessageBox("You selected medium mag map acquisition with a Low-Dose\n"
       "area but are setting a non-Low Dose state.\n"
       "This makes no sense and needs to be fixed before proceeding", MB_EXCLAME);
     return 1;
@@ -2910,7 +2910,7 @@ int CMultiGridDlg::SetupMMMacquire(bool skipDlg)
     useLD, useSearch, useView, useMontMap, useCamera, useMag, useBin, stateForMont);
 
   if (useMontMap > 0 && m_iSingleVsPolyMont == 0) {
-    AfxMessageBox("You selected single-image for medium mag map acquisition\n"
+    SEMAfxMessageBox("You selected single-image for medium mag map acquisition\n"
       "but set a Mont-Map state which will not be used for that.\n"
       "This makes no sense and needs to be fixed before proceeding", MB_EXCLAME);
     return 1;
@@ -2935,7 +2935,7 @@ int CMultiGridDlg::SetupMMMacquire(bool skipDlg)
   // Make sure camera is OK
   actCam = mWinApp->LookupActiveCamera(useCamera);
   if (actCam < 0) {
-    AfxMessageBox("The camera for the state to be set is not in the active list",
+    SEMAfxMessageBox("The camera for the state to be set is not in the active list",
       MB_EXCLAME);
     return 1;
   }
@@ -2991,7 +2991,7 @@ int CMultiGridDlg::SetupMMMacquire(bool skipDlg)
         str.Format("You selected to set a state at %dx but changed the mag to %d"
           " in Montage Setup\n\nDo you want to proceed with these settings?",
           MagForCamera(useCamera, useMag), MagForCamera(useCamera, montP->magIndex));
-        if (AfxMessageBox(str, MB_QUESTION) != IDYES)
+        if (SEMAfxMessageBox(str, MB_QUESTION) != IDYES)
           err = 1;
       }
     } else {
@@ -3038,7 +3038,7 @@ int CMultiGridDlg::SetupMMMacquire(bool skipDlg)
       SaveMontSetupSize(montP, useLD, mMontSetupSizesXY[2], mMontSetupSizesXY[3]);
     }
     if (mMGTasks->SaveSessionFile(str) > 0)
-      AfxMessageBox(str, MB_EXCLAME);
+      SEMAfxMessageBox(str, MB_EXCLAME);
   }
   return err;
 }
@@ -3278,7 +3278,7 @@ void CMultiGridDlg::DoStartRun(bool undoneOnly)
 int CMultiGridDlg::CheckEmptyRefineNote()
 {
   if (m_bRefineRealign && m_bRefineUseItem && m_strRefineNote.IsEmpty()) {
-    AfxMessageBox("For refining grid alignment at a Navigator item, you must have"
+    SEMAfxMessageBox("For refining grid alignment at a Navigator item, you must have"
       " an entry in the text box for the start of the item\'s Note", MB_EXCLAME);
     return 1;
   }

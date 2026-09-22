@@ -3948,23 +3948,27 @@ BOOL DLL_IM_EX SEMUnattendedMode()
   return app ? app->GetUnattended() : FALSE;
 }
 
-// Return what the default button of a message box of this type would give, i.e. what
-// pressing Enter on it would return
-static int SEMDefaultBoxReturn(UINT nType)
+// Return the answer that declines a message box of this type: Cancel where there is
+// a Cancel, No for yes/no, Abort for abort/retry/ignore, and OK only where OK is the
+// sole button and so there is nothing to decide.
+//
+// Declining rather than accepting is deliberate.  Of the message boxes in this
+// program whose answer is used, the yes/no ones uniformly treat No as the declining
+// answer, and the ok/cancel ones are largely manual calibration steps - center the
+// beam, adjust the brightness - where answering OK with no one at the microscope
+// would silently record whatever the beam happened to be.  A silently assumed value
+// is worse than the hang this avoids, because the hang is at least visible.
+static int SEMDeclineBoxReturn(UINT nType)
 {
-  UINT which = nType & MB_DEFMASK;
   switch (nType & MB_TYPEMASK) {
   case MB_OKCANCEL:
-    return which == MB_DEFBUTTON2 ? IDCANCEL : IDOK;
-  case MB_YESNO:
-    return which == MB_DEFBUTTON2 ? IDNO : IDYES;
   case MB_YESNOCANCEL:
-    return which == MB_DEFBUTTON3 ? IDCANCEL : (which == MB_DEFBUTTON2 ? IDNO : IDYES);
   case MB_RETRYCANCEL:
-    return which == MB_DEFBUTTON2 ? IDCANCEL : IDRETRY;
+    return IDCANCEL;
+  case MB_YESNO:
+    return IDNO;
   case MB_ABORTRETRYIGNORE:
-    return which == MB_DEFBUTTON3 ? IDIGNORE : (which == MB_DEFBUTTON2 ? IDRETRY :
-      IDABORT);
+    return IDABORT;
   default:
     return IDOK;
   }
@@ -3972,9 +3976,9 @@ static int SEMDefaultBoxReturn(UINT nType)
 
 // Drop-in replacement for AfxMessageBox.  When someone is at the keyboard this is
 // AfxMessageBox, unchanged.  In unattended mode it writes the text to the log instead
-// and returns what the default button would have returned, so that a run with no one
-// present cannot stop on a modal dialog.  It is safe to call at any point in startup,
-// including before the main window or the log window exist.
+// and declines, so that a run with no one present cannot stop on a modal dialog.  It
+// is safe to call at any point in startup, including before the main window or the
+// log window exist.
 int DLL_IM_EX SEMAfxMessageBox(LPCTSTR lpszText, UINT nType, UINT nIDHelp)
 {
   CSerialEMApp *app = (CSerialEMApp *)AfxGetApp();
@@ -3983,7 +3987,7 @@ int DLL_IM_EX SEMAfxMessageBox(LPCTSTR lpszText, UINT nType, UINT nIDHelp)
   if (!app || !app->GetUnattended())
     return AfxMessageBox(lpszText, nType, nIDHelp);
 
-  retval = SEMDefaultBoxReturn(nType);
+  retval = SEMDeclineBoxReturn(nType);
   message = lpszText;
 
   // Make sure there is a \r before at least one \n in a row, as TSMessageBox does
@@ -3996,12 +4000,10 @@ int DLL_IM_EX SEMAfxMessageBox(LPCTSTR lpszText, UINT nType, UINT nIDHelp)
   }
   report = "\r\nUNATTENDED: DIALOG SUPPRESSED WITH THIS MESSAGE:\r\n" + message;
 
-  // Say what was assumed, but only where there was actually a choice to make
+  // Say what was answered, but only where there was actually a choice to make
   if ((nType & MB_TYPEMASK) != MB_OK) {
-    assumed.Format("\r\nUNATTENDED: no one was asked; the answer was taken to be %s",
-      retval == IDOK ? "OK" : (retval == IDYES ? "Yes" : (retval == IDNO ? "No" :
-        (retval == IDCANCEL ? "Cancel" : (retval == IDRETRY ? "Retry" :
-          (retval == IDABORT ? "Abort" : "Ignore"))))));
+    assumed.Format("\r\nUNATTENDED: no one was present to answer, so this was declined with %s",
+      retval == IDNO ? "No" : (retval == IDCANCEL ? "Cancel" : "Abort"));
     report += assumed;
   }
   report += "\r\n* * * * * * * * * * * * * * * * * *\r\n";

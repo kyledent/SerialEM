@@ -944,7 +944,7 @@ void CMultiTSTasks::SetupAutocenter()
 
   bsCal = mWinApp->mShiftManager->GetBeamShiftCal(magInd, alpha, probe);
   if (!bsCal.xpx) {
-    AfxMessageBox("There is no beam shift calibration in the current\n"
+    SEMAfxMessageBox("There is no beam shift calibration in the current\n"
       "magnification range.\n\nCalibrate beam shift to use autocentering.", MB_EXCLAME);
     return;
   }

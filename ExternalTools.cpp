@@ -50,7 +50,7 @@ CExternalTools::~CExternalTools(void)
 void CExternalTools::AddTool(CString &title)
 {
   if (mNumToolsAdded == 25)
-    AfxMessageBox("Only 25 External Tools can be added", MB_EXCLAME);
+    SEMAfxMessageBox("Only 25 External Tools can be added", MB_EXCLAME);
   mNumToolsAdded++;
   mTitles.Add(title);
   mCommands.Add(CString());
@@ -67,7 +67,7 @@ int CExternalTools::AddCommand(int index, CString &command)
     mess.Format("The ToolCommand entry # %d is numbered wrong or\n"
       "placed wrong; only %d ExternalTool items have been entered so far", index + 1,
       mNumToolsAdded);
-    AfxMessageBox(mess, MB_EXCLAME);
+    SEMAfxMessageBox(mess, MB_EXCLAME);
     return 1;
   }
   mCommands[index] = command;
@@ -82,7 +82,7 @@ int CExternalTools::AddArgString(int index, CString &argString)
     mess.Format("The ToolArguments entry # %d is numbered wrong or\n"
       "placed wrong; only %d ExternalTool items have been entered so far", index + 1,
       mNumToolsAdded);
-    AfxMessageBox(mess, MB_EXCLAME);
+    SEMAfxMessageBox(mess, MB_EXCLAME);
     return 1;
   }
   mArgStrings[index] = argString;
@@ -105,7 +105,7 @@ void CExternalTools::AddMenuItems()
         if (mCommands[ind].IsEmpty()) {
           mess.Format("The property \"ExternalTool %s\" is does not have\n"
             "a corresponding entry \"ToolCommand %d\"", mTitles[ind], ind + 1);
-          AfxMessageBox(mess, MB_EXCLAME);
+          SEMAfxMessageBox(mess, MB_EXCLAME);
         }
         menu->ModifyMenu(nID, MF_BYCOMMAND | MF_STRING, nID, (LPCTSTR)mTitles[ind]);
       } else

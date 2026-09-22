@@ -258,7 +258,7 @@ BOOL EMbufferManager::OKtoDestroy(int inWhich, char *inMessage)
       "Do you really want to do this?\r\r(To turn off this warning,"
       " see \"Options\" in the Buffer Manager Window.)",
       buf, mModeNames[toBuf->mConSetUsed], inMessage);
-  return (AfxMessageBox(text, MB_YESNO | MB_ICONQUESTION) == IDYES);
+  return (SEMAfxMessageBox(text, MB_YESNO | MB_ICONQUESTION) == IDYES);
 }
 
 BOOL EMbufferManager::DoesBufferExist (int inWhich)
@@ -281,23 +281,23 @@ int EMbufferManager::CheckSaveConditions(KImageStore *inStoreMRC, EMimageBuffer 
   if (mWinApp->mMacroProcessor->DoingMacro())
     return 0;
   if (toBuf->GetSaveCopyFlag() < 0) {
-    if(AfxMessageBox("This image has already been saved to a file.\r\r"
+    if(SEMAfxMessageBox("This image has already been saved to a file.\r\r"
       "Are you sure you want to save it again?", MB_YESNO | MB_ICONQUESTION) == IDNO)
       return -1;
   }
   if (!mWinApp->mMontageController->DoingMontage() && toBuf->GetSaveCopyFlag() == 0 &&
     (toBuf->mCaptured > 0)) {
-      if(AfxMessageBox("This image was from a continuous capture.\r\r"
+      if(SEMAfxMessageBox("This image was from a continuous capture.\r\r"
         "Are you sure you want to save it?", MB_YESNO | MB_ICONQUESTION) == IDNO)
         return -1;
   }
   if (toBuf->GetSaveCopyFlag() == 0 && (toBuf->mCaptured < 0) && !cropped) {
-    if(AfxMessageBox("This image has been processed.\r\r"
+    if(SEMAfxMessageBox("This image has been processed.\r\r"
       "Are you sure you want to save it?", MB_YESNO | MB_ICONQUESTION) == IDNO)
       return -1;
   }
   if (toBuf->GetSaveCopyFlag() == 0 && !toBuf->mCaptured) {
-    if(AfxMessageBox("This image was read in from a file.\r\r"
+    if(SEMAfxMessageBox("This image was read in from a file.\r\r"
       "Are you sure you want to save it?", MB_YESNO | MB_ICONQUESTION) == IDNO)
       return -1;
   }
@@ -531,7 +531,7 @@ int EMbufferManager::OverwriteImage(KImageStore *inStoreMRC, int inSect)
 
   else if (KGetOneInt("Section number to overwrite:", number) ) {
     if (number > limit || number < 0) {
-      AfxMessageBox("Illegal section number; image not saved.", MB_EXCLAME);
+      SEMAfxMessageBox("Illegal section number; image not saved.", MB_EXCLAME);
       return 1;
     }
   } else
@@ -787,7 +787,7 @@ int EMbufferManager::ReadFromFile(KImageStore *inStore, int inSect, int inToBuf,
       if (number) {
         if (KGetOneInt("Section # to read in:", number)){
           if (number > limit || number < 0) {
-            AfxMessageBox("Illegal section number.", MB_EXCLAME);
+            SEMAfxMessageBox("Illegal section number.", MB_EXCLAME);
             return -1;
           }
         } else
@@ -806,7 +806,7 @@ int EMbufferManager::ReadFromFile(KImageStore *inStore, int inSect, int inToBuf,
             return -1;
         if (pieceX > param.xNframes || pieceX < 1 ||
           pieceY > param.yNframes || pieceY < 1 ) {
-            AfxMessageBox("Illegal piece number.", MB_EXCLAME);
+            SEMAfxMessageBox("Illegal piece number.", MB_EXCLAME);
             return -1;
           }
 
@@ -814,7 +814,7 @@ int EMbufferManager::ReadFromFile(KImageStore *inStore, int inSect, int inToBuf,
           int sec = FindSectionForPiece(inStore, param, pieceX - 1, pieceY - 1, number);
 
           if (sec < 0) {
-            AfxMessageBox("Piece not found in file.", MB_EXCLAME);
+            SEMAfxMessageBox("Piece not found in file.", MB_EXCLAME);
             return -1;
           }
           number = sec;

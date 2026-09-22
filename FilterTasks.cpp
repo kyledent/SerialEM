@@ -141,7 +141,7 @@ int CFilterTasks::TestCalMagStart(float start)
 {
   if (!mFiltParams->positiveLossOnly || start + mFiltParams->refineZLPOffset >= 0)
     return 0;
-  AfxMessageBox("The current scan cannot be started because\n"
+  SEMAfxMessageBox("The current scan cannot be started because\n"
     " this filter only allows positive energy shifts.\n\n"
     "You should do the \"Adjust Slit Offset\" procedure on the Filter Control Panel\n"
     "to get an energy offset big enough to accommodate half of the range to be "
@@ -240,7 +240,7 @@ void CFilterTasks::CalibrateMagShift()
 
   message += "Are you ready to proceed?";
 
-  if (AfxMessageBox(message, MB_YESNO | MB_ICONQUESTION) == IDNO)
+  if (SEMAfxMessageBox(message, MB_YESNO | MB_ICONQUESTION) == IDNO)
     return;
 
   // Get the parameters: cancel means cancel procedure
@@ -262,7 +262,7 @@ void CFilterTasks::CalibrateMagShift()
 
   if (mFiltParams->positiveLossOnly &&
     mFiltParams->refineZLPOffset < mCMSEnergyRange / 2.) {
-    AfxMessageBox("This filter only allows positive energy shifts.\n"
+    SEMAfxMessageBox("This filter only allows positive energy shifts.\n"
       "The current energy offset is less than half of the energy range you specified,\n"
       "so this procedure is unlikely to work correctly.\n\n"
       "You should do the \"Adjust Slit Offset\" procedure on the Filter Control Panel\n"
@@ -304,7 +304,7 @@ void CFilterTasks::CalibrateMagShift()
   mEnergies = new float[mNumEnergies];
   mMeanCounts = new float[mNumEnergies];
   if (!mEnergies || !mMeanCounts) {
-    AfxMessageBox("Failed to get memory for working tables", MB_EXCLAME);
+    SEMAfxMessageBox("Failed to get memory for working tables", MB_EXCLAME);
     if (mEnergies)
       delete [] mEnergies;
     if (mMeanCounts)
@@ -380,7 +380,7 @@ void CFilterTasks::CalMagShiftNextTask()
 
   // If we never found a peak high enough, quit
   if (finished && (mScanPeak < mMinPeakSize || mOverallPeak > 0. && !foundPeak)) {
-    AfxMessageBox("Cannot find a high enough peak in intensity.\n"
+    SEMAfxMessageBox("Cannot find a high enough peak in intensity.\n"
       "Check zero-loss alignment and exposure settings", MB_EXCLAME);
     StopCalMagShift();
     return;
@@ -476,7 +476,7 @@ void CFilterTasks::CalMagShiftNextTask()
 void CFilterTasks::CalMagShiftCleanup(int error)
 {
   if (error == IDLE_TIMEOUT_ERROR)
-    AfxMessageBox(_T("Time out calibrating energy shifts"), MB_EXCLAME);
+    SEMAfxMessageBox(_T("Time out calibrating energy shifts"), MB_EXCLAME);
   StopCalMagShift();
   mWinApp->ErrorOccurred(error);
 }
@@ -517,7 +517,7 @@ void CFilterTasks::StopCalMagShift()
     report.Format("Only %d of the %d mags were measured\n\n"
       "Do you actually want to use these and modify\n"
       "the rest of the existing calibrations to match?", numDone, mNumMags);
-    if (AfxMessageBox(report, MB_YESNO | MB_ICONQUESTION) == IDNO)
+    if (SEMAfxMessageBox(report, MB_YESNO | MB_ICONQUESTION) == IDNO)
       return;
   }
 
@@ -634,7 +634,7 @@ BOOL CFilterTasks::RefineZLP(bool interactive, int useTrial)
         message.Format("The energy loss is currently %.1f", mRZlpUserLoss);
       message += " eV.\n\nDo you want to use this loss as a starting offset\n"
         "and set the loss to zero when done?";
-      if (AfxMessageBox(message, MB_YESNO | MB_ICONQUESTION) == IDNO)
+      if (SEMAfxMessageBox(message, MB_YESNO | MB_ICONQUESTION) == IDNO)
         mRZlpUserLoss = 0.;
     }
   }

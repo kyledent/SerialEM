@@ -595,7 +595,7 @@ int CTSController::SetupTiltSeries(int future, int futureLDstate, int ldMagIndex
     message.Format("There is %s state currently set\n\nDo you want to restore the prior"
       " state before setting up the tilt series?", i == STATE_IMAGING ?
       "an imaging" : "a map acquire");
-    if (AfxMessageBox(message, MB_YESNO | MB_ICONQUESTION) == IDYES) {
+    if (SEMAfxMessageBox(message, MB_YESNO | MB_ICONQUESTION) == IDYES) {
       if (i == STATE_IMAGING) {
         mWinApp->mNavHelper->RestoreSavedState();
         if (mWinApp->mNavHelper->mStateDlg)
@@ -611,7 +611,7 @@ int CTSController::SetupTiltSeries(int future, int futureLDstate, int ldMagIndex
     if (item && item->mParallelTSIndex >= 0) {
       mScope->GetStagePosition(stageX, stageY, angle);
       if (sqrt(pow(stageX - item->mStageX, 2.) + pow(stageY - item->mStageY, 2.)) < 2.) {
-        if (AfxMessageBox("The current Navigator item is set up for a parallel"
+        if (SEMAfxMessageBox("The current Navigator item is set up for a parallel"
           " tilt series.\nParallel tilt series can be run only"
           " from Navigator Acquire\nat Items.  If you start a series"
           " from this dialog, it will be a\nsingle series"
@@ -943,7 +943,7 @@ int CTSController::StartTiltSeries(BOOL singleStep, int external, CMapDrawItem *
     } else {
       message += "\n\nDo you want to postpone the tilt series in "
         "order to check exposures?";
-      if (AfxMessageBox(message, MB_YESNO | MB_ICONQUESTION) == IDYES)
+      if (SEMAfxMessageBox(message, MB_YESNO | MB_ICONQUESTION) == IDYES)
         mPostponed = true;
     }
   }
@@ -952,7 +952,7 @@ int CTSController::StartTiltSeries(BOOL singleStep, int external, CMapDrawItem *
   if (mCamera->IsConSetSaving(&mCamConSets[consInd], RECORD_CONSET, mCamParams, false)) {
     str = mCamera->GetCameraFrameFolder(mCamParams, noSubDirs, movable);
     if (str.IsEmpty()) {
-      AfxMessageBox("No folder is defined for saving frames from the selected camera",
+      SEMAfxMessageBox("No folder is defined for saving frames from the selected camera",
         MB_EXCLAME);
       mPostponed = true;
     }
@@ -1061,13 +1061,13 @@ int CTSController::StartTiltSeries(BOOL singleStep, int external, CMapDrawItem *
         if (mDocWnd->GetNumStores() == 1) {
           message = "There is an open image file that already has images in it\n"
             + message + "\nDo you want to close this file and start a new one?" + str;
-          if (AfxMessageBox(message, MB_QUESTION) == IDYES)
+          if (SEMAfxMessageBox(message, MB_QUESTION) == IDYES)
             mDocWnd->DoCloseFile();
         } else {
           message = "The current image file already has images in it\n" + message +
             "\nDo you want to postpone the series so that you can either\nswitch to a "
             "different open file or open a new file?" + str;
-          if (AfxMessageBox(message, MB_QUESTION) == IDYES) {
+          if (SEMAfxMessageBox(message, MB_QUESTION) == IDYES) {
             mPostponed = true;
             LeaveInitialChecks();
             return 1;
@@ -1152,14 +1152,14 @@ int CTSController::StartTiltSeries(BOOL singleStep, int external, CMapDrawItem *
       } else if (mTSParam.doBidirectional) {
 
         // Confirm they want to overwrite a montage (single-frame was confirmed above)
-        if (mMontaging && AfxMessageBox(message + "This data WILL BE OVERWRITTEN if you"
+        if (mMontaging && SEMAfxMessageBox(message + "This data WILL BE OVERWRITTEN if you"
           " proceed with a bidirectional series\n\nAre you sure you want to continue?",
           MB_QUESTION) == IDNO) {
           mPostponed = true;
           return 1;
         }
         mBaseZ = 0;
-      } else if (AfxMessageBox(message + "Do you want to overwrite some of the data in\n"
+      } else if (SEMAfxMessageBox(message + "Do you want to overwrite some of the data in\n"
         "this file by setting the current Z value?",
         MB_YESNO | MB_ICONQUESTION) == IDYES) {
         newBaseZ = mBaseZ - 1;
@@ -1587,7 +1587,7 @@ int CTSController::CommonResume(int inSingle, int external, bool stoppingPart)
     // sure user wants to proceed if there is no reference
     CheckLDTrialMoved();
     if (mLDTrialWasMoved && !mHaveTrackRef) {
-      if (AfxMessageBox("You have moved the tracking area but have\n"
+      if (SEMAfxMessageBox("You have moved the tracking area but have\n"
         " not supplied a new tracking reference.\n\n"
         "If you proceed, the next Record will be taken\n"
         "at the current position without any tracking.\n\n"
@@ -2708,7 +2708,7 @@ void CTSController::NextAction(int param)
           error = mBufferManager->OverwriteImage(mWinApp->mStoreMRC, mOverwriteSec);
         if (error) {
           // Messages or queries have already been issued
-          //AfxMessageBox("Error writing image to file",
+          //SEMAfxMessageBox("Error writing image to file",
           //  MB_EXCLAME);
           ErrorStop();
           return;
@@ -2856,7 +2856,7 @@ void CTSController::NextAction(int param)
         if (mTerminateOnError)
           return;
         mTookExtraRec = false;
-        if (AfxMessageBox("When you resume, do you want to try to retake and save the\n"
+        if (SEMAfxMessageBox("When you resume, do you want to try to retake and save the\n"
           "last extra image again (Yes) or just go on without saving (No)?",
           MB_YESNO | MB_ICONQUESTION) == IDYES)
           mActIndex -= 2;
@@ -4574,7 +4574,7 @@ void CTSController::NormalStop()
 
   // If a pretilt has occurred, find out if we should go back
   // If so, set dosym state for previous tilt index
-  if (mPreTilted && AfxMessageBox("The stage has already tilted after the last Record "
+  if (mPreTilted && SEMAfxMessageBox("The stage has already tilted after the last Record "
     "image.\nIt would have to be tilted back to be at the tilt angle of that image.\n"
     "Do not do this unless you need to, because it may require\n"
     "additional focusing and tracking shots for several tilts.\n\n"
@@ -4585,7 +4585,7 @@ void CTSController::NormalStop()
 
   if (mCloseValvesOnStop)
     if (!mScope->SetColumnValvesOpen(false))
-      AfxMessageBox("An error occurred closing the gun valve at the end of the series.",
+      SEMAfxMessageBox("An error occurred closing the gun valve at the end of the series.",
          MB_EXCLAME);
   if (mErrorStop)
     ErrorStop();
@@ -5059,7 +5059,7 @@ void CTSController::Terminate()
 
   if (mStartedTS && mBidirSeriesPhase > BIDIR_FIRST_PART && !mDoingDoseSymmetric &&
     mMultiTSTasks->BidirCopyPending()) {
-      if (AfxMessageBox("The inversion of the file from the first\n"
+      if (SEMAfxMessageBox("The inversion of the file from the first\n"
         "part of the series is not complete.\n\n"
         "Are you sure you want to terminate the tilt series?", MB_QUESTION) != IDYES)
           return;
@@ -5068,7 +5068,7 @@ void CTSController::Terminate()
   // 5/31/25: Guenter wondered why anyone would leave file open, so get rid of choice
   // 8/12/25: But he still wanted the choice to terminate or cancel!
   if (!mDoingDoseSymmetric) {
-    if (AfxMessageBox("Are you sure you want to terminate the tilt series?", MB_QUESTION)
+    if (SEMAfxMessageBox("Are you sure you want to terminate the tilt series?", MB_QUESTION)
       == IDNO)
       return;
   }
@@ -5081,7 +5081,7 @@ void CTSController::Terminate()
       str = "Do you want to leave 90-degree rotated copies\nof the zero tilt view in "
         "buffers " + CString((char)('A' + mReadBuf + 1)) + " and " +
         CString((char)('A' + mReadBuf + 2)) + "?";
-    if (AfxMessageBox(str, MB_YESNO, MB_ICONQUESTION) == IDYES) {
+    if (SEMAfxMessageBox(str, MB_YESNO, MB_ICONQUESTION) == IDYES) {
 
       // Find minimum tilt
       for (i = 0; i < mTiltIndex; i++) {
@@ -5100,7 +5100,7 @@ void CTSController::Terminate()
       else
         err = mBufferManager->ReadFromFile(mWinApp->mStoreMRC, minIndex);
       if (err) {
-        AfxMessageBox("Error reading image back from file", MB_EXCLAME);
+        SEMAfxMessageBox("Error reading image back from file", MB_EXCLAME);
       } else {
 
           // Rotate it both ways and put in buffers.  Montage uses overview in B
@@ -5114,7 +5114,7 @@ void CTSController::Terminate()
           for (i = 0; i < 2; i++) {
             NewArray2(brray, short int, nx, ny);
             if (!brray) {
-              AfxMessageBox("Failed to get memory for rotated image", MB_EXCLAME);
+              SEMAfxMessageBox("Failed to get memory for rotated image", MB_EXCLAME);
               break;
             }
 
@@ -5152,7 +5152,7 @@ BOOL CTSController::TerminateOnExit()
   if (!mStartedTS)
     return false;
   if (mDoingDoseSymmetric && !mDoingDosymFileReorder && mReorderDoseSymFile) {
-    if (AfxMessageBox("The last tilt series file has not been reordered yet.\n\n"
+    if (SEMAfxMessageBox("The last tilt series file has not been reordered yet.\n\n"
       "Do you want to terminate the tilt series and reorder the file instead of exiting?",
       MB_QUESTION) == IDYES) {
       mBufferManager->SetSaveAsynchronously(false);
@@ -5179,7 +5179,7 @@ BOOL CTSController::TerminateOnExit()
     str += "Are you sure you want to terminate the\ntilt series";
     if (mNeedDeferredSum || inverting)
       str += ", stop these operations,";
-    if (AfxMessageBox(str + " and exit the program?", MB_YESNO,
+    if (SEMAfxMessageBox(str + " and exit the program?", MB_YESNO,
       MB_ICONQUESTION) != IDYES)
       return true;
   }
@@ -5652,7 +5652,7 @@ void CTSController::BackUpSeries()
 
   CheckLDTrialMoved();
   if (mLDTrialWasMoved && mDoingDoseSymmetric) {
-    AfxMessageBox("You cannot back up because you have changed the location of the"
+    SEMAfxMessageBox("You cannot back up because you have changed the location of the"
       " tracking area", MB_EXCLAME);
     return;
   }
@@ -5700,7 +5700,7 @@ void CTSController::BackUpSeries()
 
     // If trial was moved, issue a warning and allow full range of angles
   } else if (mLowDoseMode) {
-    AfxMessageBox("You will be able to back up, but there are no tracking \nreferences"
+    SEMAfxMessageBox("You will be able to back up, but there are no tracking \nreferences"
       " for any previous tilt angles\nbecause you have changed the location of the "
        "tracking area", MB_EXCLAME);
   }
@@ -5713,7 +5713,7 @@ void CTSController::BackUpSeries()
   backupDlg.m_fpTilts = &mTiltAngles[startIndex];
   backupDlg.m_iNumEntries = mHighestIndex - startIndex;
   if (!backupDlg.m_iNumEntries) {
-    AfxMessageBox("It is not possible to back up at this point in the tilt series",
+    SEMAfxMessageBox("It is not possible to back up at this point in the tilt series",
       MB_EXCLAME);
     return;
   }
@@ -5812,12 +5812,12 @@ void CTSController::BackUpSeries()
   }
 
   if (otherError)
-    AfxMessageBox("Error reading tilt needed for reference in the other direction",
+    SEMAfxMessageBox("Error reading tilt needed for reference in the other direction",
       MB_EXCLAME);
   if (lastError)
-    AfxMessageBox("Error reading previous tilt for reference", MB_EXCLAME);
+    SEMAfxMessageBox("Error reading previous tilt for reference", MB_EXCLAME);
   if (thisError)
-    AfxMessageBox("Error reading image for this tilt", MB_EXCLAME);
+    SEMAfxMessageBox("Error reading image for this tilt", MB_EXCLAME);
 
   // Change beam intensity or exposure back to where it was at new angle
   if (mTSParam.beamControl == BEAM_INVERSE_COSINE) {
@@ -5916,7 +5916,7 @@ void CTSController::SetExtraOutput(TiltSeriesParam *tsParam)
     if (mWinApp->mNavigator) {
       paramArray = mWinApp->mNavigator->GetTSparamArray();
       if (paramArray->GetSize() > 0)
-        AfxMessageBox("WARNING: when opened through the menu, changes to extra\n"
+        SEMAfxMessageBox("WARNING: when opened through the menu, changes to extra\n"
           "Records (except for the file number) will have NO effect\n"
           "for tilt series acquired for Navigator items, because\n"
           "already-stored parameters will be used for the items and inherited by "
@@ -6336,7 +6336,7 @@ void CTSController::EvaluateExtraRecord(bool doingParTS)
   mStoreExtra[RECORD_CONSET] = mNumExtraRecords != 0;
   if (!str.IsEmpty()) {
     if (mUserPresent)
-      AfxMessageBox(str, MB_EXCLAME);
+      SEMAfxMessageBox(str, MB_EXCLAME);
     else
       mWinApp->AppendToLog(str, LOG_OPEN_IF_CLOSED);
   }
@@ -8469,7 +8469,7 @@ void CTSController::WriteTiltXYZFile(CString *inFile)
   }
   catch(CFileException *perr) {
     perr->Delete();
-    AfxMessageBox("Error writing position data to file", MB_EXCLAME);
+    SEMAfxMessageBox("Error writing position data to file", MB_EXCLAME);
   }
   if (cFile)
     delete cFile;

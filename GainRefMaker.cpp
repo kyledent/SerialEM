@@ -222,7 +222,7 @@ void CGainRefMaker::AcquireGainRef()
     mParam->gainRefBinning <= 2) {
     mWinApp->mScope->NormalizeCondenser();
     if (!mWinApp->GetSkipGainRefWarning())
-      AfxMessageBox("The spot was normalized.\n\nCheck size and centering of beam.",
+      SEMAfxMessageBox("The spot was normalized.\n\nCheck size and centering of beam.",
         MB_EXCLAME);
   }
 
@@ -253,7 +253,7 @@ void CGainRefMaker::AcquireGainRef()
     (mParam->gainRefBinning * mParam->gainRefBinning);
   NewArray(mArray,float,arrSize);
   if (!mArray) {
-    AfxMessageBox("Failed to get memory for gain reference", MB_EXCLAME);
+    SEMAfxMessageBox("Failed to get memory for gain reference", MB_EXCLAME);
     return;
   }
   for (j = 0; j < arrSize; j++)
@@ -280,7 +280,7 @@ void CGainRefMaker::AcquireGainRef()
   fileOpt.fileType = STORE_TYPE_MRC;
   mStoreMRC = new KStoreMRC(mFileName, fileOpt);
   if (mStoreMRC == NULL || !mStoreMRC->FileOK()) {
-    AfxMessageBox("Error opening file for gain reference", MB_EXCLAME);
+    SEMAfxMessageBox("Error opening file for gain reference", MB_EXCLAME);
     if (mStoreMRC)
       delete mStoreMRC;
     mStoreMRC = NULL;
@@ -567,7 +567,7 @@ void CGainRefMaker::AcquiringRefNextTask(int param)
     nx = image->getWidth();
     ny = image->getHeight();
     if (nx != mExpectedX || ny != mExpectedY) {
-      AfxMessageBox("The acquired image is not the expected size\n\n"
+      SEMAfxMessageBox("The acquired image is not the expected size\n\n"
         "Gain reference aborted.", MB_EXCLAME);
       StopAcquiringRef();
       return;
@@ -671,7 +671,7 @@ void CGainRefMaker::AcquiringRefNextTask(int param)
   fImage->detachData();
   delete fImage;
   if (err) {
-      AfxMessageBox("Error saving gain reference to file\n\n" +
+      SEMAfxMessageBox("Error saving gain reference to file\n\n" +
         mBackedUp ? "The previous reference is being restored." : "", MB_EXCLAME);
       StopAcquiringRef();
       return;
@@ -712,7 +712,7 @@ void CGainRefMaker::AcquiringRefNextTask(int param)
   mRefExists[mCurrentCamera][mRefBinInd] = true;
   mRefTime[mCurrentCamera][mRefBinInd] = CTime::GetCurrentTime();
   mCamera->ShowReference(NEW_GAIN_REFERENCE + mParam->gainRefBinning);
-  AfxMessageBox("The gain reference has been\r\n"
+  SEMAfxMessageBox("The gain reference has been\r\n"
       "successfully acquired and saved.", MB_EXCLAME);
   StopAcquiringRef();
 }
@@ -737,14 +737,14 @@ int CGainRefMaker::GainRefBusy()
 void CGainRefMaker::ErrorCleanup(int error)
 {
   if (error == IDLE_TIMEOUT_ERROR)
-    AfxMessageBox(_T("Time out acquiring gain reference"), MB_EXCLAME);
+    SEMAfxMessageBox(_T("Time out acquiring gain reference"), MB_EXCLAME);
   StopAcquiringRef();
   mWinApp->ErrorOccurred(error);
 }
 
 void CGainRefMaker::BeamTooWeak()
 {
-  AfxMessageBox("The required exposure time is too high\n\n"
+  SEMAfxMessageBox("The required exposure time is too high\n\n"
     "Check the beam and increase beam intensity\n or reduce the target counts",
     MB_ICONEXCLAMATION);
   StopAcquiringRef();
@@ -962,12 +962,12 @@ int CGainRefMaker::GetReference(int binning, void *&gainRef, int &byteSize,
       file = new CFile(mFileName, CFile::modeRead |CFile::shareDenyWrite);
     }
     catch (CFileException *err) {
-      AfxMessageBox("Cannot open gain reference file:\n" + mFileName, MB_EXCLAME);
+      SEMAfxMessageBox("Cannot open gain reference file:\n" + mFileName, MB_EXCLAME);
       err->Delete();
       return errval;
     }
     if (!KStoreMRC::IsMRC(file)) {
-      AfxMessageBox("Gain reference file does not appear to be MRC:\n" + mFileName,
+      SEMAfxMessageBox("Gain reference file does not appear to be MRC:\n" + mFileName,
         MB_EXCLAME);
       delete file;
       return errval;
@@ -975,7 +975,7 @@ int CGainRefMaker::GetReference(int binning, void *&gainRef, int &byteSize,
 
     storeMRC = new KStoreMRC(file);
     if (storeMRC->getWidth() != nx || storeMRC->getHeight() != ny) {
-      AfxMessageBox("Image in gain reference file is not the right size:\n" + mFileName,
+      SEMAfxMessageBox("Image in gain reference file is not the right size:\n" + mFileName,
         MB_EXCLAME);
       delete storeMRC;
       return errval;
@@ -985,7 +985,7 @@ int CGainRefMaker::GetReference(int binning, void *&gainRef, int &byteSize,
     image = (KImageFloat *)storeMRC->getRect();
     delete storeMRC;
     if (!image) {
-      AfxMessageBox("Error reading gain reference file:\n" + mFileName, MB_EXCLAME);
+      SEMAfxMessageBox("Error reading gain reference file:\n" + mFileName, MB_EXCLAME);
       return errval;
     }
 
@@ -1045,7 +1045,7 @@ int CGainRefMaker::GetReference(int binning, void *&gainRef, int &byteSize,
   binnedSize = (size_t)nxBinned * nyBinned;
   NewArray(sdata,short int,binnedSize * (byteSize / 2));
   if (!sdata) {
-    AfxMessageBox("Failed to get memory for binned gain reference", MB_EXCLAME);
+    SEMAfxMessageBox("Failed to get memory for binned gain reference", MB_EXCLAME);
     return errval;
   }
 
@@ -1131,7 +1131,7 @@ BOOL CGainRefMaker::CheckDMReference(int binInd, BOOL optional)
       name.Format("Do you want to use the DigitalMicrograph gain reference\n"
         "instead of a less binned SerialEM gain reference for binning %d?",
         mParam->binnings[binInd]);
-      if (AfxMessageBox(name, MB_YESNO | MB_ICONQUESTION) == IDYES) {
+      if (SEMAfxMessageBox(name, MB_YESNO | MB_ICONQUESTION) == IDYES) {
         mUseDMRef[mCurrentCamera][binInd] = 1;
         return true;
       }
@@ -1162,7 +1162,7 @@ BOOL CGainRefMaker::CheckDMReference(int binInd, BOOL optional)
       "reference is older\n than the DigitalMicrograph gain reference\n\n"
       "Do you want to use the newer DigitalMicrograph gain reference?";
   }
-  if (AfxMessageBox(name, MB_YESNO | MB_ICONQUESTION) == IDYES) {
+  if (SEMAfxMessageBox(name, MB_YESNO | MB_ICONQUESTION) == IDYES) {
 
     // If they want to use the DM reference, clear out SEM reference
     mUseDMRef[mCurrentCamera][binInd] = 1;

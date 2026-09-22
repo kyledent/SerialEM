@@ -4083,7 +4083,7 @@ void CNavHelper::ApplyBaseMarkerShift()
   // If none, bail out
   if (!shiftInds.size()) {
     str.Format("There are no stored shifts at magnification %dx", magVal);
-    AfxMessageBox(str, MB_EXCLAME);
+    SEMAfxMessageBox(str, MB_EXCLAME);
     return;
   }
 
@@ -4114,7 +4114,7 @@ void CNavHelper::ApplyBaseMarkerShift()
   str.Format("A shift of %.2f, %.2f will be applied to all maps at\n %dx that have not "
     "been shifted before, and items marked on them.\n\nDo you want to proceed?",
     mMarkerShiftArray[useInd].shiftX, mMarkerShiftArray[useInd].shiftY, magVal);
-  if (AfxMessageBox(str, MB_QUESTION) == IDNO)
+  if (SEMAfxMessageBox(str, MB_QUESTION) == IDNO)
     return;
 
   // Do the shift; it saves parameters for undo
@@ -4322,7 +4322,7 @@ int CNavHelper::NewAcquireFile(int itemNum, int listType, ScheduledFile *sched)
             "If you do want to change modes between series, you should set the imaging\n"
             "state for this series and also set the tilt series parameters.",
             state->lowDose ? "OFF" : "ON", state->lowDose ? "ON" : "OFF");
-          AfxMessageBox(autoName, MB_OK | MB_ICONINFORMATION);
+          SEMAfxMessageBox(autoName, MB_OK | MB_ICONINFORMATION);
         }
         break;
       }
@@ -4889,13 +4889,13 @@ int CNavHelper::SetOrChangeFilename(int itemNum, int listType, ScheduledFile *sc
       label.Format("Files are already open for %d of the %d target positions\n\n"
         "Pick a different file name or close those files to overwrite them",
         numBadStores, item->mNumIStargets);
-      AfxMessageBox(label, MB_EXCLAME);
+      SEMAfxMessageBox(label, MB_EXCLAME);
       return 1;
     }
     if (numExists) {
       label.Format("Files already exist for %d of the %d target positions\n\n"
         "Do you want to overwrite them?", numExists, item->mNumIStargets);
-      if (AfxMessageBox(label, MB_QUESTION) == IDNO)
+      if (SEMAfxMessageBox(label, MB_QUESTION) == IDNO)
         return 1;
     }
 
@@ -4906,7 +4906,7 @@ int CNavHelper::SetOrChangeFilename(int itemNum, int listType, ScheduledFile *sc
     if (i >= 0) {
       label.Format("This file is already open (file #%d).\n\nPick another file name,"
         " or close the file (in which case it will be overwritten)", i + 1);
-      AfxMessageBox(label, MB_EXCLAME);
+      SEMAfxMessageBox(label, MB_EXCLAME);
       return 1;
     }
 
@@ -5501,7 +5501,7 @@ void CNavHelper::DualMapDone(int param)
   if (!(mWinApp->Montaging() && mWinApp->mMontageController->GetLastFailed())) {
     if (!mWinApp->Montaging()) {
       if (!mBufferManager->IsBufferSavable(mImBufs)) {
-        AfxMessageBox("The file into which the anchor map was to be saved has changed\n"
+        SEMAfxMessageBox("The file into which the anchor map was to be saved has changed\n"
           "and this image cannot be saved there", MB_EXCLAME);
         StopDualMap();
         return;
@@ -5535,7 +5535,7 @@ void CNavHelper::DualMapDone(int param)
 void CNavHelper::DualMapCleanup(int error)
 {
   if (error == IDLE_TIMEOUT_ERROR)
-    AfxMessageBox(_T("Time out acquiring anchor map"), MB_EXCLAME);
+    SEMAfxMessageBox(_T("Time out acquiring anchor map"), MB_EXCLAME);
   StopDualMap();
   mWinApp->ErrorOccurred(error);
 }
@@ -5794,7 +5794,7 @@ int CNavHelper::AssessAcquireForParams(NavAcqParams *navParam, NavAcqAction *acq
             "\n(file # %d, %s)\n\nYou should set a different name for the file to open,"
             "\nor close the file (in which case it will be overwritten)", (LPCTSTR)label,
             (LPCTSTR)mess2, k + 1, sched->filename);
-          AfxMessageBox(prefix + mess, MB_EXCLAME);
+          SEMAfxMessageBox(prefix + mess, MB_EXCLAME);
           delete[] seenGroups;
           return 1;
         }
@@ -5825,7 +5825,7 @@ int CNavHelper::AssessAcquireForParams(NavAcqParams *navParam, NavAcqAction *acq
               "This will not work when taking Multiple Records.\n"
               "You must set all files to open to be single-frame.",
               (LPCTSTR)label, (LPCTSTR)mess2);
-            AfxMessageBox(prefix + mess, MB_EXCLAME);
+            SEMAfxMessageBox(prefix + mess, MB_EXCLAME);
             delete[] seenGroups;
             return 1;
           }
@@ -5847,7 +5847,7 @@ int CNavHelper::AssessAcquireForParams(NavAcqParams *navParam, NavAcqAction *acq
               item->mNumIStargets, mDocWnd->GetNumStores(), MAX_STORES,
               item->mNumIStargets < MAX_STORES ? " at least" : "",
               mDocWnd->GetNumStores() + item->mNumIStargets - MAX_STORES);
-          AfxMessageBox(prefix + mess, MB_EXCLAME);
+          SEMAfxMessageBox(prefix + mess, MB_EXCLAME);
           delete[] seenGroups;
           return 1;
         }
@@ -5863,7 +5863,7 @@ int CNavHelper::AssessAcquireForParams(NavAcqParams *navParam, NavAcqAction *acq
             "are already open\n\nYou should set a different name for the files to open,"
             "\nor close the files, which will then be overwritten", numBadStores,
             item->mNumIStargets, i + 1, (LPCTSTR)item->mLabel);
-          AfxMessageBox(prefix + mess, MB_EXCLAME);
+          SEMAfxMessageBox(prefix + mess, MB_EXCLAME);
           delete[] seenGroups;
           return 1;
         }
@@ -5876,7 +5876,7 @@ int CNavHelper::AssessAcquireForParams(NavAcqParams *navParam, NavAcqAction *acq
             "\n(file # %d, %s)\n\nYou should set a different name for the file to open,"
             "\nor close the file (in which case it will be overwritten)", i + 1,
             item->mLabel, k + 1, item->mFileToOpen);
-          AfxMessageBox(prefix + mess, MB_EXCLAME);
+          SEMAfxMessageBox(prefix + mess, MB_EXCLAME);
           delete[] seenGroups;
           return 1;
         }
@@ -5884,7 +5884,7 @@ int CNavHelper::AssessAcquireForParams(NavAcqParams *navParam, NavAcqAction *acq
           mess.Format("The file set to be opened for item # %d, label %s is set up for"
             " montaging.\n\n" "This will not work when taking Multiple Records.\n"
             "You must set all files to open to be single-frame.", i + 1, item->mLabel);
-          AfxMessageBox(prefix + mess, MB_EXCLAME);
+          SEMAfxMessageBox(prefix + mess, MB_EXCLAME);
           delete[] seenGroups;
           return 1;
         }
@@ -5969,7 +5969,7 @@ int CNavHelper::AssessAcquireForParams(NavAcqParams *navParam, NavAcqAction *acq
     }
     mess += "\nDo you want to proceed anyway and just go to the\n"
       "nominal stage coordinates for those items?";
-    if (AfxMessageBox(prefix + mess, MB_YESNO | MB_ICONQUESTION) == IDNO)
+    if (SEMAfxMessageBox(prefix + mess, MB_YESNO | MB_ICONQUESTION) == IDNO)
       return 1;
   }
 

@@ -1603,7 +1603,7 @@ int CProcessImage::CorrelationToBufferA(float *array, int nxpad, int nypad, int 
   float corVal;
   NewArray2(crray, short int, nxpad, nypad);
   if (!crray) {
-    AfxMessageBox(_T("Error getting buffer to copy correlation into."), MB_EXCLAME);
+    SEMAfxMessageBox(_T("Error getting buffer to copy correlation into."), MB_EXCLAME);
     return 1;
   }
 
@@ -1844,19 +1844,19 @@ int CProcessImage::DoSetIntensity(bool doseRate, float useFactor, bool useEDM)
     error = mWinApp->mBeamAssessor->SetDoseRateWithEDM((float) delta, ldArea);
     if (error && useFactor <= 0.) {
       if (error == BEAM_STARTING_OUT_OF_RANGE || error == BEAM_ENDING_OUT_OF_RANGE)
-        AfxMessageBox("Warning: attempting to set EDM dose percent percentage beyond"
+        SEMAfxMessageBox("Warning: attempting to set EDM dose percent percentage beyond"
           " allowed range", MB_EXCLAME);
       else
-        AfxMessageBox("Error trying to change EDM dose percentage", MB_EXCLAME);
+        SEMAfxMessageBox("Error trying to change EDM dose percentage", MB_EXCLAME);
     }
   } else {
     error = mWinApp->mBeamAssessor->ChangeBeamStrength(delta, ldArea);
     if (error && useFactor <= 0.) {
       if (error == BEAM_STARTING_OUT_OF_RANGE || error == BEAM_ENDING_OUT_OF_RANGE)
-        AfxMessageBox("Warning: attempting to set beam strength beyond"
+        SEMAfxMessageBox("Warning: attempting to set beam strength beyond"
           " calibrated range", MB_EXCLAME);
       else
-        AfxMessageBox("Error trying to change beam strength", MB_EXCLAME);
+        SEMAfxMessageBox("Error trying to change beam strength", MB_EXCLAME);
     }
   }
   return error;
@@ -2572,7 +2572,7 @@ void CProcessImage::FixXRaysInBuffer(BOOL doImage)
   NewArray2(brray, short int, nx, ny);
   float critFac = param->unsignedImages && mCamera->GetDivideBy2() ? 2.f : 1.f;
   if (!brray) {
-    AfxMessageBox("Failed to get memory for corrected image", MB_EXCLAME);
+    SEMAfxMessageBox("Failed to get memory for corrected image", MB_EXCLAME);
     return;
   }
   int binning = imBuf->mBinning;
@@ -3307,7 +3307,7 @@ void CProcessImage::OnListRelativeRotations()
     }
   }
   if (mess.IsEmpty())
-    AfxMessageBox("No relative rotations are available", MB_OK | MB_ICONINFORMATION);
+    SEMAfxMessageBox("No relative rotations are available", MB_OK | MB_ICONINFORMATION);
   else
     mWinApp->AppendToLog("\r\n\"p\" (mag * pixel size) is expected to be similar "
       "at all magnifications, re-check pixel size calibrations of outliers");
@@ -3324,7 +3324,7 @@ void CProcessImage::OnPixelsizeAddToRotation()
     return;
   int vecInd = LookupFoundPixelSize(camera, magInd);
   if (vecInd < 0) {
-    AfxMessageBox("The pixel size has not been measured for this camera and mag"
+    SEMAfxMessageBox("The pixel size has not been measured for this camera and mag"
       " since the program was started", MB_EXCLAME);
     return;
   }
@@ -3386,14 +3386,14 @@ bool CProcessImage::OverlayImages(EMimageBuffer *redBuf, EMimageBuffer *grnBuf,
     if (!imbufs[i]->mImage) {
       str.Format("Cannot overlay these images.\r\n"
         "There is no image in the buffer for the %s channel", color[i]);
-      AfxMessageBox(str, MB_EXCLAME);
+      SEMAfxMessageBox(str, MB_EXCLAME);
       return false;
     }
 
     if (imbufs[i]->mImage->getMode() != kGray) {
       str.Format("Cannot overlay these images.\r\n"
         "The one for the %s channel is already a color image", color[i]);
-      AfxMessageBox(str, MB_EXCLAME);
+      SEMAfxMessageBox(str, MB_EXCLAME);
       return false;
     }
     imbufs[i]->UpdatePixMap();
@@ -3404,20 +3404,20 @@ bool CProcessImage::OverlayImages(EMimageBuffer *redBuf, EMimageBuffer *grnBuf,
       firstBuf = imbufs[i];
     } else if (xsize != imbufs[i]->mImage->getWidth() ||
       ysize != imbufs[i]->mImage->getHeight()) {
-      AfxMessageBox("Cannot overlay these images; they are not all the same size",
+      SEMAfxMessageBox("Cannot overlay these images; they are not all the same size",
         MB_EXCLAME);
       return false;
     }
   }
 
   if (xsize < 0) {
-    AfxMessageBox("There is no image in any of the buffers to overlay", MB_EXCLAME);
+    SEMAfxMessageBox("There is no image in any of the buffers to overlay", MB_EXCLAME);
     return false;
   }
 
   NewArray2(array, unsigned char, 3 * xsize, ysize);
   if (!array) {
-    AfxMessageBox("Failed to get memory for overlaying the images", MB_EXCLAME);
+    SEMAfxMessageBox("Failed to get memory for overlaying the images", MB_EXCLAME);
     return false;
   }
   for (ix = 0; ix < 3 * xsize * ysize; ix++)
@@ -3462,7 +3462,7 @@ void CProcessImage::OnProcessMakecoloroverlay()
     return;
   i = mOverlayChannels.GetLength();
   if (i != 3) {
-    AfxMessageBox("You did not enter 3 letters or 0", MB_EXCLAME);
+    SEMAfxMessageBox("You did not enter 3 letters or 0", MB_EXCLAME);
     if (i > 3)
       mOverlayChannels.Truncate(3);
     else if (i == 2)
@@ -3477,7 +3477,7 @@ void CProcessImage::OnProcessMakecoloroverlay()
     if (bufind == (int)'0' - (int)'A')
       imbuf[i] = NULL;
     else if (bufind < 0 || bufind >= MAX_BUFFERS) {
-      AfxMessageBox("You did not enter 3 letters in range of buffer numbers, or 0",
+      SEMAfxMessageBox("You did not enter 3 letters in range of buffer numbers, or 0",
         MB_EXCLAME);
       mOverlayChannels = "ABA";
       return;
@@ -3521,12 +3521,12 @@ void CProcessImage::OnProcessCropAverage()
     mWinApp->mMainView->GetMapItemsForImageCoords(imBuf, true);
 
   if (!itemArray) {
-    AfxMessageBox("An error occurred getting the Navigator item array", MB_EXCLAME);
+    SEMAfxMessageBox("An error occurred getting the Navigator item array", MB_EXCLAME);
     return;
   }
   mode = image->getType();
   if (sliceModeIfReal(mode) < 0) {
-    AfxMessageBox("You cannot average a color image", MB_EXCLAME);
+    SEMAfxMessageBox("You cannot average a color image", MB_EXCLAME);
     return;
   }
   mrc_getdcsize(mode, &dsize, &csize);
@@ -3538,7 +3538,7 @@ void CProcessImage::OnProcessCropAverage()
     (int)floor((double)B3DMIN(imBuf->mUserPtY, imBuf->mLineEndY));
   boxXsize = 2 * ((boxXsize + 1) / 2);
   if (boxXsize < 10 || boxYsize < 10 || boxXsize > nx || boxYsize > ny) {
-    AfxMessageBox("The box size or the image is too small", MB_EXCLAME);
+    SEMAfxMessageBox("The box size or the image is too small", MB_EXCLAME);
     return;
   }
   xpeakLimit = B3DNINT(findLimitFrac * boxXsize);
@@ -3569,7 +3569,7 @@ void CProcessImage::OnProcessCropAverage()
         sliceFree(boxSlices[i]);
       for (i = 0; i < (int)xformSlices.size(); i++)
         sliceFree(xformSlices[i]);
-      AfxMessageBox("Failed to get memory for boxing out items", MB_EXCLAME);
+      SEMAfxMessageBox("Failed to get memory for boxing out items", MB_EXCLAME);
       image->UnLock();
       return;
     }
@@ -3592,7 +3592,7 @@ void CProcessImage::OnProcessCropAverage()
   NewArray(refArray, float, corrDim);
   NewArray(boxArray, float, corrDim);
   if (!refArray || !boxArray || !sumArray || !tmpArray || !finalArray) {
-    AfxMessageBox("Failed to get arrays for averaging", MB_EXCLAME);
+    SEMAfxMessageBox("Failed to get arrays for averaging", MB_EXCLAME);
     error = 1;
   }
   XCorrSetCTF(sigma1, sigma2, radius1, radius2, ctf, nxPad, nyPad, &ctfDelta);

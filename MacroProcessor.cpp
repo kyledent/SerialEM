@@ -286,7 +286,7 @@ CMacroProcessor::CMacroProcessor(int index)
     if (!mScrpLangDoneEvent[i]) {
       mess.Format("Cannot run external scripting language%d; failed to make event"
         " for signaling to it", i ? " in background": "");
-      AfxMessageBox(mess);
+      SEMAfxMessageBox(mess);
     }
   }
 }
@@ -515,7 +515,7 @@ void CMacroProcessor::OnScriptSetIndentSize()
 void CMacroProcessor::OntShowIndentButtons()
 {
   mShowIndentButtons = !mShowIndentButtons;
-  AfxMessageBox("Resize open script editor(s) to make this change take effect",
+  SEMAfxMessageBox("Resize open script editor(s) to make this change take effect",
     MB_ICONINFORMATION | MB_OK);
 }
 
@@ -600,7 +600,7 @@ void CMacroProcessor::OnScriptLoadNewPackage()
 
   // Find out if want to save
   if (!oldFile.IsEmpty())
-    saveCurrent = AfxMessageBox("Save current scripts to current file before loading a"
+    saveCurrent = SEMAfxMessageBox("Save current scripts to current file before loading a"
       " new package file?", MB_QUESTION) == IDYES;
   if (mDocWnd->GetTextFileName(true, true, filename, NULL, &path))
     return;
@@ -765,7 +765,7 @@ void CMacroProcessor::OnMacroFKeyRun(UINT nID)
   if (!mFKeyMapping[mapInd].IsEmpty()) {
     index = FindMacroByNameOrTextNum(mFKeyMapping[mapInd]);
     if (index < 0) {
-      AfxMessageBox("The script " + mFKeyMapping[mapInd] + " can no longer be found",
+      SEMAfxMessageBox("The script " + mFKeyMapping[mapInd] + " can no longer be found",
         MB_EXCLAME);
       return;
     }
@@ -1165,7 +1165,7 @@ void CMacroProcessor::OnRunBackgroundScript()
   mWinApp->SetBackgroundScript(str);
   ind = FindMacroByNameOrTextNum(str);
   if (ind < 0) {
-    AfxMessageBox("Cannot find that script by its name", MB_EXCLAME);
+    SEMAfxMessageBox("Cannot find that script by its name", MB_EXCLAME);
     return;
   }
   DoRunBackgroundScript(ind);
@@ -1858,7 +1858,7 @@ void CMacroProcessor::Resume()
   // If there was an error or incomplete action, let user choose whether to redo
   if (mAskRedoOnResume) {
     GetNextLine(&mMacros[mCurrentMacro], lastind, stopCom);
-    if (AfxMessageBox("The script stopped on the following line:\n\n" + stopCom +
+    if (SEMAfxMessageBox("The script stopped on the following line:\n\n" + stopCom +
       "\nDo you want to repeat this command or not?",
       MB_YESNO | MB_ICONQUESTION) == IDYES)
       mCurrentIndex = mLastIndex;
@@ -2566,12 +2566,12 @@ MacroFunction *CMacroProcessor::FindCalledFunction(CString strLine, bool scannin
     for (ind = 1; ind < MAX_MACRO_TOKENS; ind++) {
       colonItemInd = strItems[ind].Find("::");
       if (colonItemInd == 0) {
-        AfxMessageBox("There must be a script name or number before the :: in this "
+        SEMAfxMessageBox("There must be a script name or number before the :: in this "
           "call:\n\n" + strLine, MB_EXCLAME);
         return NULL;
       }
       if (colonItemInd == strItems[ind].GetLength() - 2) {
-        AfxMessageBox("There must be a function name after the :: in this "
+        SEMAfxMessageBox("There must be a function name after the :: in this "
           "call:\n\n" + strLine, MB_EXCLAME);
         return NULL;
       }
@@ -2615,10 +2615,10 @@ MacroFunction *CMacroProcessor::FindCalledFunction(CString strLine, bool scannin
         if (func->name == funcName) {
           if (retFunc) {
             if (macroNum == mac)
-              AfxMessageBox("Two functions in a script have the same name for this "
+              SEMAfxMessageBox("Two functions in a script have the same name for this "
               "call:\n\n" + strLine,  MB_EXCLAME);
             else
-              AfxMessageBox("Two functions have the same name and you need \nto specify "
+              SEMAfxMessageBox("Two functions have the same name and you need \nto specify "
               "the script name or number for this call:\n\n" + strLine,  MB_EXCLAME);
             return NULL;
           }
@@ -2631,7 +2631,7 @@ MacroFunction *CMacroProcessor::FindCalledFunction(CString strLine, bool scannin
       break;
   }
   if (!retFunc)
-    AfxMessageBox("No function has a matching name for this call:\n\n" + strLine,
+    SEMAfxMessageBox("No function has a matching name for this call:\n\n" + strLine,
           MB_EXCLAME);
   return retFunc;
 }
@@ -3884,7 +3884,7 @@ int CMacroProcessor::EvaluateIfStatement(CString *strItems, int maxItems, CStrin
   int leftInds[MAX_LOOP_DEPTH];
 
   if (SeparateParentheses(strItems, maxItems, mParseQuotes)) {
-    AfxMessageBox("Too many items on line after separating out parentheses in script"
+    SEMAfxMessageBox("Too many items on line after separating out parentheses in script"
       " line:\n\n" + line, MB_EXCLAME);
     return 1;
   }
@@ -3919,7 +3919,7 @@ int CMacroProcessor::EvaluateIfStatement(CString *strItems, int maxItems, CStrin
     }
 
     if (level) {
-      AfxMessageBox("Unbalanced parentheses while evaluating an expression in script"
+      SEMAfxMessageBox("Unbalanced parentheses while evaluating an expression in script"
         " line:\n\n" + line, MB_EXCLAME);
         return 1;
     }
@@ -3967,7 +3967,7 @@ int CMacroProcessor::EvaluateBooleanClause(CString * strItems, int maxItems, CSt
 
     // Check for one end or other of clause/line
     if (opind == indstr || opind == maxItems - 1 || strItems[opind + 1].IsEmpty()) {
-      AfxMessageBox("AND/OR operator at start of line or clause or at end of line "
+      SEMAfxMessageBox("AND/OR operator at start of line or clause or at end of line "
         "in script line:\n\n" + line, MB_EXCLAME);
       return 1;
     }
@@ -4005,7 +4005,7 @@ int CMacroProcessor::EvaluateComparison(CString * strItems, int maxItems, CStrin
     if (*str == "==" || *str == "!=" || *str == ">=" || *str == "<=" || *str == "<" ||
       *str == ">") {
       if (opind >= 0) {
-        AfxMessageBox("More than one comparison operator in clause in script line:\n\n" +
+        SEMAfxMessageBox("More than one comparison operator in clause in script line:\n\n" +
            line, MB_EXCLAME);
          return 1;
       }
@@ -4013,7 +4013,7 @@ int CMacroProcessor::EvaluateComparison(CString * strItems, int maxItems, CStrin
     }
   }
   if (opind < 0) {
-    AfxMessageBox("No comparison operator for IF statement clause in script line:\n\n" +
+    SEMAfxMessageBox("No comparison operator for IF statement clause in script line:\n\n" +
       line, MB_EXCLAME);
     return 1;
   }
@@ -4025,7 +4025,7 @@ int CMacroProcessor::EvaluateComparison(CString * strItems, int maxItems, CStrin
     numItems -= 2;
   }
   if (!opind || opind == numItems - 1) {
-    AfxMessageBox("Comparison operator at beginning or end of IF statement/clause:\n\n" +
+    SEMAfxMessageBox("Comparison operator at beginning or end of IF statement/clause:\n\n" +
       line, MB_EXCLAME);
     return 1;
   }
@@ -4037,7 +4037,7 @@ int CMacroProcessor::EvaluateComparison(CString * strItems, int maxItems, CStrin
     numItems - 1 - opind, line, 0, numRight, ind))
     return 1;
   if (numLeft > 1 || numRight > 1) {
-    AfxMessageBox("Items being compared do not reduce to a single number in script line:"
+    SEMAfxMessageBox("Items being compared do not reduce to a single number in script line:"
       "\n\n" + line, MB_EXCLAME);
     return 1;
   }
@@ -4794,7 +4794,7 @@ int CMacroProcessor::SkipToBlockEnd(int type, CString line, int *numPops,
     }
   }
   if (!line.IsEmpty())
-    AfxMessageBox("No appropriate statement found to skip forward to from script "
+    SEMAfxMessageBox("No appropriate statement found to skip forward to from script "
       "line:\n\n" + line, MB_EXCLAME);
   return 1;
 }
@@ -4822,7 +4822,7 @@ int CMacroProcessor::SkipToLabel(CString label, CString line, int &numPops,
       if (strItems[0] == label) {
         if (numPops >= 0)
           return 0;
-        AfxMessageBox("Trying to skip into a higher block level in script line:\n\n" +
+        SEMAfxMessageBox("Trying to skip into a higher block level in script line:\n\n" +
           line, MB_EXCLAME);
         return 1;
       }
@@ -4838,7 +4838,7 @@ int CMacroProcessor::SkipToLabel(CString label, CString line, int &numPops,
         delTryLevel--;
     }
   }
-  AfxMessageBox("No label found to skip forward to from script line:\n\n" + line,
+  SEMAfxMessageBox("No label found to skip forward to from script line:\n\n" + line,
     MB_EXCLAME);
   return 1;
 }

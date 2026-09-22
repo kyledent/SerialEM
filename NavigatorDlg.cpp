@@ -1129,7 +1129,7 @@ int CNavigatorDlg::ChangeItemRegistration(void)
   if (!KGetOneInt("New Registration number for current item:", reg))
     return 1;
   if (ChangeItemRegistration(mCurrentItem, reg, str)) {
-    AfxMessageBox(str);
+    SEMAfxMessageBox(str);
     return 1;
   }
   return 0;
@@ -1717,7 +1717,7 @@ void CNavigatorDlg::OnButState()
   if (*indexp >= 0) {
     state = mHelper->ExistingStateParam(*indexp, true);
     if (!state)
-      AfxMessageBox("Existing stored state for this item could not be found, creating"
+      SEMAfxMessageBox("Existing stored state for this item could not be found, creating"
       " a new one", MB_EXCLAME);
   }
   if (!state) {
@@ -1881,7 +1881,7 @@ void CNavigatorDlg::OnListItemDrag(int oldIndex, int newIndex)
       if (numPoints > 1) {
         if ((oldIndex == navInd[0] && newIndex >= navInd[1]) || 
           (oldIndex != navInd[0] && newIndex <= navInd[0])) {
-          AfxMessageBox("The assigned center target must remain first in the group of "
+          SEMAfxMessageBox("The assigned center target must remain first in the group of "
             "parallel tilt series targets.", MB_EXCLAME);
           if (oldIndex == navInd[0] && newIndex >= navInd[1]) {
             newIndex = navInd[1] - 1;
@@ -2078,7 +2078,7 @@ void CNavigatorDlg::ProcessDKey(void)
       B3DCHOICE(numPt, numPt, numPoly ? numPoly : numMap),
       B3DCHOICE(numPt, "points", numPoly ? "polygons" : "maps"),
       start + 1, end + 1);
-    if (AfxMessageBox(str, MB_QUESTION) == IDNO)
+    if (SEMAfxMessageBox(str, MB_QUESTION) == IDNO)
       return;
     allItems = true;
 
@@ -2814,14 +2814,14 @@ void CNavigatorDlg::ShiftToMarker(void)
       return;
 
     if (!BufferStageToImage(imBuf, aMat, delX, delY)) {
-      AfxMessageBox("The currently active image does not have enough information\n"
+      SEMAfxMessageBox("The currently active image does not have enough information\n"
         "to convert the marker point to a stage coordinate.", MB_EXCLAME);
       return;
     }
 
     registration = imBuf->mRegistration ? imBuf->mRegistration : mItem->mRegistration;
     if (registration != mItem->mRegistration) {
-      AfxMessageBox("The currently active image is not at the same registration\n"
+      SEMAfxMessageBox("The currently active image is not at the same registration\n"
         "as the currently selected Navigator item.", MB_EXCLAME);
       return;
     }
@@ -2914,12 +2914,12 @@ int CNavigatorDlg::ShiftItemsByAlign(void)
   float shiftX, shiftY;
   ScaleMat aMat, aInv;
   if (!BufferStageToImage(mImBufs, aMat, delX, delY)) {
-    AfxMessageBox("The image in buffer A does not have enough information\n"
+    SEMAfxMessageBox("The image in buffer A does not have enough information\n"
       "to convert its alignment shift to a stage shift.", MB_EXCLAME);
     return 1;
   }
   if (mImBufs->mRegistration != mCurrentRegistration) {
-    AfxMessageBox("The image in buffer A is not at the current registration\n"
+    SEMAfxMessageBox("The image in buffer A is not at the current registration\n"
       , MB_EXCLAME);
     return 1;
   }
@@ -3292,7 +3292,7 @@ void CNavigatorDlg::OnDeleteitem()
     return;
   }
   if (mItem->IsMap() && !mItem->mImported && !mInRangeDelete &&
-    AfxMessageBox("This item is a map image\n\n"
+    SEMAfxMessageBox("This item is a map image\n\n"
     "It includes critical information about the file\n and coordinate scaling that "
     "would be very hard to recreate.\n\n Are you sure you want to delete the item?",
     MB_YESNO | MB_ICONQUESTION) == IDNO)
@@ -3428,7 +3428,7 @@ void CNavigatorDlg::OnMoveItem()
       if (RawStageIsRevisable(false))
         mess += "\n\nIf you move to the exact center of the current image, the map\n"
         "will be assigned a new raw stage position at the current stage position";
-      if (AfxMessageBox(mess, MB_QUESTION) == IDNO)
+      if (SEMAfxMessageBox(mess, MB_QUESTION) == IDNO)
         return;
     }
     mRawStageIsMovable = false;
@@ -3515,13 +3515,13 @@ BOOL CNavigatorDlg::UserMousePoint(EMimageBuffer *imBuf, float inX, float inY,
   // If adding targets in ParallelTSDlg, require that the buffer is a map
   if (mHelper->mParallelTSDlg->IsOpen() && mHelper->mParallelTSDlg->IsAddingToNav()
     && !FindItemWithMapID(imBuf->mMapID)) {
-    AfxMessageBox("Targets must be added on a map", MB_EXCLAME);
+    SEMAfxMessageBox("Targets must be added on a map", MB_EXCLAME);
     return false;
   }
   if (mHelper->mParallelTSDlg->IsOpen() && mHelper->mParallelTSDlg->IsAddingTargets()) {
     if (!mHelper->mParallelTSDlg->AreaMapInBuf(imBuf)) {
       mHelper->mParallelTSDlg->Update();
-      AfxMessageBox("Targets must be added to the defined area map", MB_EXCLAME);
+      SEMAfxMessageBox("Targets must be added to the defined area map", MB_EXCLAME);
       return false;
     } else {
       mHelper->mParallelTSDlg->IncrementNumTargetsAdded();
@@ -4667,7 +4667,7 @@ void CNavigatorDlg::PolygonFromCorners(void)
   UpdateListString(mCurrentItem);
   mWinApp->RestoreViewFocus();
   Redraw();
-  if (AfxMessageBox("Do you want to delete the corner points used for\n"
+  if (SEMAfxMessageBox("Do you want to delete the corner points used for\n"
     "the polygon from the Navigator table?", MB_YESNO | MB_ICONQUESTION) == IDYES) {
       for (int i = (int)mItemArray.GetSize() - 1; i >= 0; i--) {
         item = mItemArray[i];
@@ -4810,7 +4810,7 @@ int CNavigatorDlg::FullMontage(bool skipDlg, float overlapFac, int source)
   midX = 0.5f * (minX + maxX);
   midY = 0.5f * (minY + maxY);
   if (maxX - minX < 10 || maxY - minY < 10) {
-    AfxMessageBox("Your grid limits for the full montage are set less than 10 microns"
+    SEMAfxMessageBox("Your grid limits for the full montage are set less than 10 microns"
       " apart\n\nCannot set up a full montage with these limits", MB_EXCLAME);
     delete itmp;
     return 1;
@@ -4907,7 +4907,7 @@ int CNavigatorDlg::SetupMontage(CMapDrawItem *item, CMontageSetupDlg *montDlg,
 
   // Check number - it should be OK but just in case
   if (item->mNumPoints < 3) {
-    AfxMessageBox("There must be at least 3 points to define a montage area",
+    SEMAfxMessageBox("There must be at least 3 points to define a montage area",
       MB_EXCLAME);
     return 1;
   }
@@ -4962,7 +4962,7 @@ int CNavigatorDlg::SetupMontage(CMapDrawItem *item, CMontageSetupDlg *montDlg,
       mFrameLimitX, mFrameLimitY, 1);
     if (!skipSetupDlg && (conSet->right - conSet->left < askLimitRatio * mFrameLimitX ||
       conSet->bottom - conSet->top < askLimitRatio * mFrameLimitY) &&
-      AfxMessageBox("The " + modeNames[consetNum] + " area is significantly smaller than "
+      SEMAfxMessageBox("The " + modeNames[consetNum] + " area is significantly smaller than "
       "the camera frame size."
       "\n\nDo you want to keep the montage frame size from being bigger than this area?"
       "\n (Otherwise the frame might be as big as the full camera field).",
@@ -4997,9 +4997,9 @@ int CNavigatorDlg::SetupMontage(CMapDrawItem *item, CMontageSetupDlg *montDlg,
       if (forMulti) {
         str.Format("The magnification of the current or selected state (%d) is too high"
           " for a full grid montage", MagForCamera(iCam, magIndex));
-        AfxMessageBox(str, MB_EXCLAME);
+        SEMAfxMessageBox(str, MB_EXCLAME);
       } else {
-        AfxMessageBox(err == 2 ? "The amount of overlap between frames required to do a\n"
+        SEMAfxMessageBox(err == 2 ? "The amount of overlap between frames required to do a\n"
           "montage with stage movement is too high (more than half the frame size) at this"
           " magnification.\nOpen the Montage Setup dialog from the File menu,\nselect"
           " \"Move stage\", reduce the minimum overlap in microns, press OK, and Cancel in"
@@ -5021,7 +5021,7 @@ int CNavigatorDlg::SetupMontage(CMapDrawItem *item, CMontageSetupDlg *montDlg,
     if (assess)
       SEMAppendToLog(str);
     else
-      AfxMessageBox(str, MB_EXCLAME);
+      SEMAfxMessageBox(str, MB_EXCLAME);
   }
 
   // Call with argument to indicate frame set up.  It takes care of restoring current
@@ -5400,7 +5400,7 @@ void CNavigatorDlg::SetupSuperMontage(BOOL skewed)
   EMimageBuffer *imBuf = mWinApp->mActiveView->GetActiveImBuf();
   mWinApp->RestoreViewFocus();
   if (!BufferStageToImage(imBuf, imMat, imDelX, imDelY)) {
-    AfxMessageBox("The currently active image does not have enough information\n"
+    SEMAfxMessageBox("The currently active image does not have enough information\n"
       "to convert the marker point to a stage coordinate.", MB_EXCLAME);
     return;
   }
@@ -5441,12 +5441,12 @@ void CNavigatorDlg::SetupSuperMontage(BOOL skewed)
     yOverlap = montSizeY / 2;
 
   if (imBuf->mMiniOffsets)
-    adjust = (AfxMessageBox("Do you want to adjust positions based on the\n"
+    adjust = (SEMAfxMessageBox("Do you want to adjust positions based on the\n"
     "aligned positions of pieces in this montage?\n(Do not answer yes if the pieces are"
     " not well lined up\n in the region covered by the supermontage.)",
     MB_YESNO | MB_ICONQUESTION) == IDYES);
 
-  acquire = (AfxMessageBox("Do you want to turn on Acquire for all these new points?",
+  acquire = (SEMAfxMessageBox("Do you want to turn on Acquire for all these new points?",
     MB_YESNO | MB_ICONQUESTION) == IDYES);
 
   // Get matrix for getting from camera pixels to stage coordinates; add binning
@@ -5569,7 +5569,7 @@ void CNavigatorDlg::PolygonSupermontage(void)
   montSizeX *= montP->binning;
   montSizeY *= montP->binning;
 
-  acquire = (AfxMessageBox("Do you want to turn on Acquire for all these new points?",
+  acquire = (SEMAfxMessageBox("Do you want to turn on Acquire for all these new points?",
     MB_YESNO | MB_ICONQUESTION) == IDYES);
 
   // Manage map and supermont IDs
@@ -5583,7 +5583,7 @@ void CNavigatorDlg::PolygonSupermontage(void)
   }
 
   if (!montP->skipOutsidePoly) {
-    if (AfxMessageBox("Do you want to turn on the option in Montage Setup to skip "
+    if (SEMAfxMessageBox("Do you want to turn on the option in Montage Setup to skip "
       "montage pieces outside of this polygon?", MB_YESNO | MB_ICONQUESTION) == IDYES) {
       montP->skipOutsidePoly = true;
       montP->insideNavItem = -1;
@@ -5685,7 +5685,7 @@ void CNavigatorDlg::DeleteGroup(bool collapsedGroup)
       (LPCTSTR)label, (LPCTSTR)lastlab);
   }
   if ((!doSelection || num > 2) &&
-    AfxMessageBox(message, MB_ICONQUESTION | MB_YESNO) != IDYES)
+    SEMAfxMessageBox(message, MB_ICONQUESTION | MB_YESNO) != IDYES)
     return;
   for (i = end; i >= start; i--) {
     item = mItemArray[i];
@@ -5940,7 +5940,7 @@ void CNavigatorDlg::AddGridOfPoints(bool likeLast)
           }
         }
         if (errmin > 9000) {
-          AfxMessageBox("Cannot sort points into equal numbers on two lines", MB_EXCLAME);
+          SEMAfxMessageBox("Cannot sort points into equal numbers on two lines", MB_EXCLAME);
           mLastGridPatternPoly = -1;
           return;
         }
@@ -6015,7 +6015,7 @@ void CNavigatorDlg::AddGridOfPoints(bool likeLast)
             }
           }
           if (!poly) {
-            AfxMessageBox("The last grid filled a map or polygon, but neither\n"
+            SEMAfxMessageBox("The last grid filled a map or polygon, but neither\n"
               "the current point nor the middle of the grid that\n"
               "would extend from the current point as a corner are\n"
               "inside any map or polygon.", MB_EXCLAME);
@@ -6125,7 +6125,7 @@ void CNavigatorDlg::AddGridOfPoints(bool likeLast)
             item = mItemArray[i];
             if (item->mLabel == label) {
               if (item->IsNotPolygon() && item->IsNotMap()) {
-                AfxMessageBox("This item is not a polygon or map", MB_EXCLAME);
+                SEMAfxMessageBox("This item is not a polygon or map", MB_EXCLAME);
                 mLastGridPatternPoly = -1;
                 return;
               }
@@ -6134,19 +6134,19 @@ void CNavigatorDlg::AddGridOfPoints(bool likeLast)
             }
           }
           if (!poly) {
-            AfxMessageBox("No item was found with that label", MB_EXCLAME);
+            SEMAfxMessageBox("No item was found with that label", MB_EXCLAME);
             mLastGridPatternPoly = -1;
             return;
           }
           if (poly->mRegistration != registration) {
-            AfxMessageBox("This polygon is not at the same registration as the points",
+            SEMAfxMessageBox("This polygon is not at the same registration as the points",
               MB_EXCLAME);
             mLastGridPatternPoly = -1;
             return;
           }
           if (!(InsideContour(poly->mPtX, poly->mPtY, poly->mNumPoints, xcen, ycen) ||
             InsideContour(poly->mPtX, poly->mPtY, poly->mNumPoints, xcorner, ycorner))) {
-            AfxMessageBox("Neither the middle of the points in the group\n"
+            SEMAfxMessageBox("Neither the middle of the points in the group\n"
               "nor the corner point is inside the polygon", MB_EXCLAME);
             mLastGridPatternPoly = -1;
             return;
@@ -6215,7 +6215,7 @@ void CNavigatorDlg::AddGridOfPoints(bool likeLast)
       }
       if (inSpacing <= 0.05) {
         inSpacing = 1;
-        AfxMessageBox("The spacing between points must be positive", MB_EXCLAME);
+        SEMAfxMessageBox("The spacing between points must be positive", MB_EXCLAME);
         mLastGridPatternPoly = -1;
         return;
       }
@@ -6253,7 +6253,7 @@ void CNavigatorDlg::AddGridOfPoints(bool likeLast)
   if (likeLast) {
     acquire = mLastGridSetAcquire;
   } else {
-    acquire = (AfxMessageBox("Do you want to turn on Acquire for all these new points?",
+    acquire = (SEMAfxMessageBox("Do you want to turn on Acquire for all these new points?",
       MB_YESNO | MB_ICONQUESTION) == IDYES);
     refresh = true;
     mLastGridSetAcquire = acquire;
@@ -6530,7 +6530,7 @@ int CNavigatorDlg::MakeGridOrFoundPoints(int jstart, int jend, int jdir, int kst
       longRange = B3DMAX(rotXrange, rotYrange);
       shortRange = B3DMIN(rotXrange, rotYrange);
       if (longRange <= 0. || shortRange <= 0) {
-        AfxMessageBox((mAddingFoundHoles ? "The set of points" : "The polygon") +
+        SEMAfxMessageBox((mAddingFoundHoles ? "The set of points" : "The polygon") +
           CString(" is too small to be analyzed for division into groups"),  MB_EXCLAME);
         mLastGridPatternPoly = -1;
         return 0;
@@ -6598,7 +6598,7 @@ int CNavigatorDlg::MakeGridOrFoundPoints(int jstart, int jend, int jdir, int kst
             kdir = -kdir;
           }
           if (!anyPoints) {
-            AfxMessageBox("No points are sufficiently inside the polygon", MB_EXCLAME);
+            SEMAfxMessageBox("No points are sufficiently inside the polygon", MB_EXCLAME);
             mLastGridPatternPoly = -1;
             return 0;
           }
@@ -6694,7 +6694,7 @@ int CNavigatorDlg::MakeGridOrFoundPoints(int jstart, int jend, int jdir, int kst
      label.Format("There are %d groups with %.1f points per group\n\n"
        "Do you want to keep this set of groups?", numJgroups,
        (float)(mItemArray.GetSize() - mNumberBeforeAdd) / numJgroups);
-      if (AfxMessageBox(label, MB_QUESTION) == IDNO) {
+      if (SEMAfxMessageBox(label, MB_QUESTION) == IDNO) {
         for (k = mNumberBeforeAdd; k < mItemArray.GetSize(); k++) {
           item = mItemArray[k];
           DeleteItem(item);
@@ -7000,7 +7000,7 @@ void CNavigatorDlg::TransformPts()
               "have the same registration point number, %d\n\n"
               "You must correct this before transforming points", item->mLabel,
               item1->mLabel, pt);
-            AfxMessageBox(report, MB_EXCLAME);
+            SEMAfxMessageBox(report, MB_EXCLAME);
             return;
           }
           item1 = item;
@@ -7011,7 +7011,7 @@ void CNavigatorDlg::TransformPts()
               "have the same registration point number, %d\n\n"
               "You must correct this before transforming points", item->mLabel,
               item2->mLabel, pt);
-            AfxMessageBox(report, MB_EXCLAME);
+            SEMAfxMessageBox(report, MB_EXCLAME);
             return;
           }
           item2 = item;
@@ -7197,7 +7197,7 @@ void CNavigatorDlg::TransformPts()
       report += "\nYou should probably stop and examine the\n"
         "registration point numbering and locations.\n\n"
         "Do you want to stop before transforming items?";
-      if (AfxMessageBox(report, MB_YESNO | MB_ICONQUESTION) == IDYES)
+      if (SEMAfxMessageBox(report, MB_YESNO | MB_ICONQUESTION) == IDYES)
         break;
     } else if (magFarOff) {
       report.Format("Warning: the fit from registration %d has a scale change of %.3f,"
@@ -7435,7 +7435,7 @@ int CNavigatorDlg::RotateMap(EMimageBuffer *imBuf, BOOL redraw)
     imBuf->mLoadHeight, sizingFrac, rMat);
   mWinApp->SetStatusText(SIMPLE_PANE, "");
   if (err) {
-    AfxMessageBox("Insufficient memory to rotate the map!", MB_EXCLAME);
+    SEMAfxMessageBox("Insufficient memory to rotate the map!", MB_EXCLAME);
     return 2;
   }
 
@@ -7466,7 +7466,7 @@ ScaleMat *CNavigatorDlg::XformForStageStretch(bool usingIt)
       "  and implies an underlying stretch of %.4f along an axis at %.1f degrees.\n\n"
       "Are you sure you want to use this transformation to calibrate stage stretch?",
       mLastTransformPairs, smagMean, 2. * str, alpha / DTOR);
-    if (AfxMessageBox(mess, MB_YESNO | MB_ICONQUESTION) == IDYES) {
+    if (SEMAfxMessageBox(mess, MB_YESNO | MB_ICONQUESTION) == IDYES) {
       mShiftManager->SetStageStretchXform(mMatSaved[0]);
       mWinApp->SetCalibrationsNotSaved(true);
     }
@@ -7954,7 +7954,7 @@ void CNavigatorDlg::ImportMap(void)
     // For TIFF or other IMOD type file
     storeIMOD = new KStoreIMOD(cFilename);
     if (!(storeIMOD && storeIMOD->FileOK())) {
-      AfxMessageBox("Error: File is not an image file of a type that can be "
+      SEMAfxMessageBox("Error: File is not an image file of a type that can be "
           "read by the program.", MB_EXCLAME);
       if (storeIMOD)
         delete storeIMOD;
@@ -8029,10 +8029,10 @@ void CNavigatorDlg::ImportMap(void)
     else
       storeMRC = new KStoreMRC(file);
     if (!(storeMRC && storeMRC->FileOK())) {
-      AfxMessageBox("Some error occurred trying to access this file", MB_EXCLAME);
+      SEMAfxMessageBox("Some error occurred trying to access this file", MB_EXCLAME);
       err = 1;
     } else if (storeMRC->CheckMontage(&montP)) {
-      AfxMessageBox("This file is a montage and cannot be imported at this time.\n\n"
+      SEMAfxMessageBox("This file is a montage and cannot be imported at this time.\n\n"
         "Try opening it, reading the image under a new registration, and making a map.",
         MB_EXCLAME);
       err = 1;
@@ -8190,7 +8190,7 @@ void CNavigatorDlg::ImportMap(void)
         } else {
           stringval.Format("Could not make overlay from the two imported maps; "
             "error code %d", overfail);
-          AfxMessageBox(stringval, MB_EXCLAME);
+          SEMAfxMessageBox(stringval, MB_EXCLAME);
         }
       }
 
@@ -8668,7 +8668,7 @@ int CNavigatorDlg::AskIfSave(CString reason)
     reason += "\r\n(Turn on Autosave in Navigator Options submenu to avoid this message)";
     suggested = true;
   }
-  UINT action = AfxMessageBox(reason, MB_QUESTION);
+  UINT action = SEMAfxMessageBox(reason, MB_QUESTION);
   if (action == IDCANCEL)
     return 1;
   else if (action == IDNO) {
@@ -8710,7 +8710,7 @@ int CNavigatorDlg::SaveAndClearTable(bool askIfSave)
 {
   int retval = 0, ans = IDYES;
   if (mItemArray.GetSize() && mNavFilename.IsEmpty()) {
-    ans = AfxMessageBox("Do you want to save the Navigator entries before loading a "
+    ans = SEMAfxMessageBox("Do you want to save the Navigator entries before loading a "
       "different file?", MB_YESNOCANCEL | MB_ICONQUESTION);
     if (ans == IDCANCEL)
       return -1;
@@ -8799,7 +8799,7 @@ void CNavigatorDlg::OpenAndWriteFile(bool autosave)
 
     // If writing as XML, need to go through the autodoc structure, get mutex, etc
     if (!AdocAcquireMutex()) {
-      AfxMessageBox("Could not acquire mutex for writing Navigator file as XML",
+      SEMAfxMessageBox("Could not acquire mutex for writing Navigator file as XML",
         MB_EXCLAME);
       return;
     }
@@ -8807,7 +8807,7 @@ void CNavigatorDlg::OpenAndWriteFile(bool autosave)
     adocInd = AdocNew();
     if (adocInd < 0) {
       AdocReleaseMutex();
-      AfxMessageBox("Error creating new autodoc structure for writing Navigator file as "
+      SEMAfxMessageBox("Error creating new autodoc structure for writing Navigator file as "
         "XML", MB_EXCLAME);
       return;
     }
@@ -8934,10 +8934,10 @@ void CNavigatorDlg::OpenAndWriteFile(bool autosave)
     if (adocErr) {
       str.Format("%d errors occurred setting Navigator data into autodoc structure before"
         " writing it as XML", adocErr);
-      AfxMessageBox(str, MB_EXCLAME);
+      SEMAfxMessageBox(str, MB_EXCLAME);
     }
     if (AdocWrite((LPCTSTR)filename))
-      AfxMessageBox("An error occurred writing Navigator file as an XML file",MB_EXCLAME);
+      SEMAfxMessageBox("An error occurred writing Navigator file as an XML file",MB_EXCLAME);
     AdocClear(adocInd);
     AdocReleaseMutex();
   } else {
@@ -8949,7 +8949,7 @@ void CNavigatorDlg::OpenAndWriteFile(bool autosave)
 #define ADOC_ARG fp
     fp = fopen((LPCTSTR)filename, "w");
     if (!fp) {
-      AfxMessageBox("An error occurred opening a new file for saving the Navigator file",
+      SEMAfxMessageBox("An error occurred opening a new file for saving the Navigator file",
         MB_EXCLAME);
       return;
     }
@@ -9062,7 +9062,7 @@ void CNavigatorDlg::OpenAndWriteFile(bool autosave)
 
     if (adocErr) {
       str.Format("%d errors occurred writing Navigator data into file", adocErr);
-      AfxMessageBox(str, MB_EXCLAME);
+      SEMAfxMessageBox(str, MB_EXCLAME);
     }
     fclose(fp);
 #undef ADOC_PUT
@@ -9198,7 +9198,7 @@ int CNavigatorDlg::LoadNavFile(bool checkAutosave, bool mergeFile, CString *inFi
       RemoveAutosaveFile();
       return 1;
     }
-    if (AfxMessageBox("There is an autosaved Navigator file from your previous session:"
+    if (SEMAfxMessageBox("There is an autosaved Navigator file from your previous session:"
       "\n" + mParam->autosaveFile + "\n\nDo you want to recover this file?",
       MB_YESNO | MB_ICONQUESTION) == IDNO) {
       RemoveAutosaveFile();
@@ -10596,7 +10596,7 @@ void CNavigatorDlg::AcquireAreas(int source, bool dlgClosing, bool useTempParams
       mWinApp->AppendToLog("WARNING: Skipping stage move when possible; relying on your"
         " script to move stage or run Realign to Item");
     else
-      loop = AfxMessageBox("WARNING: You have selected to skip the stage move to "
+      loop = SEMAfxMessageBox("WARNING: You have selected to skip the stage move to "
       "item when possible.  Your script must either run Realign to Item or do the stage "
         "move explicitly.\n\nAre you sure you want to proceed?", MB_QUESTION);
     mParam->warnedOnSkipMove = true;
@@ -10666,7 +10666,7 @@ void CNavigatorDlg::AcquireAreas(int source, bool dlgClosing, bool useTempParams
       loop = mWinApp->mMultiGridTasks->OpenFileForFinalAcq();
       mIgnoreUpdates = false;
     } else
-      AfxMessageBox("There is no open " + CString(doingMultishot ? "single-frame " : "")
+      SEMAfxMessageBox("There is no open " + CString(doingMultishot ? "single-frame " : "")
         + "image file and\nno file set to open on first acquire item.", MB_EXCLAME);
     if (loop) {
       ManageAcquireDlgCleanup(fromMenu, dlgClosing);
@@ -11962,7 +11962,7 @@ int CNavigatorDlg::ResumeFromPause()
     str.Format("The current file was a %s file when you paused and is now a %s file\n\n"
       "Are you sure you want to resume?", mMontCurrentAtPause ? "montage" : "single-frame"
       , mMontCurrentAtPause ? "single-frame" : "montage");
-    if (AfxMessageBox(str, MB_QUESTION) == IDNO)
+    if (SEMAfxMessageBox(str, MB_QUESTION) == IDNO)
       return 1;
   }
   mResumedFromPause = true;
@@ -12004,13 +12004,13 @@ int CNavigatorDlg::EndAcquireWithMessage(void)
       if (!mWinApp->mMultiGridTasks->GetDoingMulGridSeq() &&
         !mWinApp->mMultiGridTasks->GetSuspendedMulGrid() && mAcquireEnded / 2 != 1) {
         mWinApp->FlashTaskbar();
-        AfxMessageBox(report, MB_EXCLAME);
+        SEMAfxMessageBox(report, MB_EXCLAME);
       }
       if (mNumAcqFilesLeftOpen) {
         report.Format("%d files were left open for reuse\n\nDo you want to close them?",
           mNumAcqFilesLeftOpen);
         if (mWinApp->mMultiGridTasks->GetDoingMulGridSeq() ||
-          AfxMessageBox(report, MB_QUESTION) == IDYES) {
+          SEMAfxMessageBox(report, MB_QUESTION) == IDYES) {
           for (ind = mDocWnd->GetNumStores() - 1; ind >= 0; ind--) {
             montp = mDocWnd->GetStoreMontParam(ind);
             if (montp && montp->reusability) {
@@ -12827,7 +12827,7 @@ void CNavigatorDlg::FinishSingleDeletion(CMapDrawItem *item, int delIndex, int l
     && item->IsPoint() && item->mGroupID > 0;
 
   if (isPTSTarget && item->mMapID == mWinApp->mParallelTSHelper->GetCenterPtID()) {
-    AfxMessageBox("The center target for a parallel tilt series cannot be deleted or "
+    SEMAfxMessageBox("The center target for a parallel tilt series cannot be deleted or "
       "reordered. Abort the parallel tilt series area if you wish to change the center "
       "point", MB_EXCLAME);
     return;

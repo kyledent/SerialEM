@@ -188,14 +188,14 @@ void CDistortionTasks::CalibrateDistortion()
     if (which == IDYES) {
       if (mShiftManager->ResetImageShift(false, false) ||
         mScope->WaitForStageReady(10000)) {
-        AfxMessageBox("Timeout trying to reset image shifts", MB_EXCLAME);
+        SEMAfxMessageBox("Timeout trying to reset image shifts", MB_EXCLAME);
         return;
       }
     }
   }
 
   if (mScope->WaitForStageReady(1000)) {
-    AfxMessageBox("Stage is not ready to use, cannot proceed", MB_EXCLAME);
+    SEMAfxMessageBox("Stage is not ready to use, cannot proceed", MB_EXCLAME);
     return;
   }
 
@@ -344,7 +344,7 @@ void CDistortionTasks::SPNextTask(int param)
 void CDistortionTasks::SPCleanUp(int error)
 {
   if (error == IDLE_TIMEOUT_ERROR)
-    AfxMessageBox(_T("Time out in stage-move pairs routine"), MB_EXCLAME);
+    SEMAfxMessageBox(_T("Time out in stage-move pairs routine"), MB_EXCLAME);
   StopStagePairs();
   mWinApp->ErrorOccurred(error);
 }

@@ -133,7 +133,7 @@ void CAutoTuning::CalibrateAstigmatism(void)
   CString str = TuningCalMessageStart("Astigmatism", "a beam tilt of", mAstigBeamTilt);
   str += "\n\nYou may need to remove the objective aperture if it is in;\n"
     "stop the procedure if it intrudes.\n\nAre you ready to proceed?";
-  if (AfxMessageBox(str, MB_QUESTION) != IDYES)
+  if (SEMAfxMessageBox(str, MB_QUESTION) != IDYES)
     return;
   GeneralSetup();
   mSavedDefocus = mScope->GetDefocus();
@@ -479,7 +479,7 @@ int CAutoTuning::ComaFreeAlignment(bool calibrate, int actionType)
     str = TuningCalMessageStart("Coma", "beam tilts up to", mMaxComaBeamTilt);
     str += "\n\nThe objective aperture must not be in for this procedure.\n\n"
       "Are you ready to proceed?";
-    if (AfxMessageBox(str, MB_QUESTION) != IDYES)
+    if (SEMAfxMessageBox(str, MB_QUESTION) != IDYES)
       return 1;
   }
 
@@ -1961,7 +1961,7 @@ int CAutoTuning::CheckAndSetupCtfAcquireParams(const char *operation, bool fromS
     "astigmatism in the image can be determined.\n\n"
     "For each parameter, you will have the choice\n"
     "of setting a specific value or using the current Record setting";
-  AfxMessageBox(str, MB_OK | MB_ICONINFORMATION);
+  SEMAfxMessageBox(str, MB_OK | MB_ICONINFORMATION);
   if (fromSetup)
     return 0;
   return SetupCtfAcquireParams(true);

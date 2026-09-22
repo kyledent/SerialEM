@@ -145,7 +145,7 @@ void CCalibCameraTiming::CalibrateTiming(int setNum, float exposure, bool confir
       " high counts (but not saturated exposures) with\nthe selected binning "
       "(default %d) and exposure time (default %.2f seconds)\n\nAre you ready to proceed?"
       , chan, mExposure);
-    if (AfxMessageBox(report, MB_YESNO | MB_ICONQUESTION) == IDNO)
+    if (SEMAfxMessageBox(report, MB_YESNO | MB_ICONQUESTION) == IDNO)
       return;
 
     // Get parameters, check limits
@@ -376,7 +376,7 @@ void CCalibCameraTiming::CalTimeNextTask()
   // If a set of range shots are done, get mean, and see if startup delay long enough
   if (mRangeIndex >= 0 && (mCalIndex == mNumRangeShots || meanRatio > 0.99)) {
     if (mQuickFlyback && meanRatio > 0.99) {
-      AfxMessageBox("Got an image with no blanking at the beginning of quick flyback "
+      SEMAfxMessageBox("Got an image with no blanking at the beginning of quick flyback "
         "timing\n\nYou should just try again with the same exposure time");
       StopCalTiming();
       mWinApp->ErrorOccurred(1);
@@ -501,7 +501,7 @@ void CCalibCameraTiming::CalTimeNextTask()
               "existing values (%.1f and %.2f) in the table of flyback times?", mFlyback,
               estStartup, mFlybackArray[mMatchedFlybackInd].flybackTime,
               mFlybackArray[mMatchedFlybackInd].startupDelay);
-          if (!mConfirmOK || AfxMessageBox(oneVal, MB_QUESTION) == IDYES) {
+          if (!mConfirmOK || SEMAfxMessageBox(oneVal, MB_QUESTION) == IDYES) {
             if (mMatchedFlybackInd >= 0) {
               oneVal.Format("Replacing existing values of %1.f and %.2f in the table of "
                 "flyback times", mFlybackArray[mMatchedFlybackInd].flybackTime,
@@ -641,7 +641,7 @@ void CCalibCameraTiming::CalTimeNextTask()
 void CCalibCameraTiming::CalTimeCleanup(int param)
 {
   if (param == IDLE_TIMEOUT_ERROR)
-    AfxMessageBox(_T("Time out trying to get image for camera timing"), MB_EXCLAME);
+    SEMAfxMessageBox(_T("Time out trying to get image for camera timing"), MB_EXCLAME);
   StopCalTiming();
   mWinApp->ErrorOccurred(param);
 }
@@ -683,7 +683,7 @@ void CCalibCameraTiming::CalibrateDeadTime()
     "The beam and the binning should be set up so that a " + modeNames[2] +
     "\nimage with 0.1 second exposure gives moderate counts.\n\n"
     "Are you ready to proceed?", mNumDeadExp * 2);
-  if (AfxMessageBox(report, MB_YESNO | MB_ICONQUESTION) == IDNO)
+  if (SEMAfxMessageBox(report, MB_YESNO | MB_ICONQUESTION) == IDNO)
     return;
 
   // Get parameters, check limits
@@ -749,7 +749,7 @@ void CCalibCameraTiming::CalDeadNextTask()
 void CCalibCameraTiming::CalDeadCleanup(int param)
 {
   if (param == IDLE_TIMEOUT_ERROR)
-    AfxMessageBox(_T("Time out trying to get image for measuring shutter dead time"),
+    SEMAfxMessageBox(_T("Time out trying to get image for measuring shutter dead time"),
       MB_EXCLAME);
   StopCalDead();
   mWinApp->ErrorOccurred(param);

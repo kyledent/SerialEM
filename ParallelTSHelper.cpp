@@ -141,7 +141,7 @@ int CParallelTSHelper::StartShiftToTargets(IntVec targetMapIDs, int actionType)
 
   err = AppendNewTargets(targetMapIDs, mess);
   if (err) {
-    AfxMessageBox(mess, MB_EXCLAME);
+    SEMAfxMessageBox(mess, MB_EXCLAME);
     return err;
   }
   mDoingISToTargets = true;
@@ -172,7 +172,7 @@ int CParallelTSHelper::StartShiftToTargets(IntVec targetMapIDs, int actionType)
     mWinApp->UpdateWindowSettings();
     mess = "ADJUSTING IS";
   } else {
-    AfxMessageBox("Invalid flag for Parallel Tilt Series action", MB_EXCLAME);
+    SEMAfxMessageBox("Invalid flag for Parallel Tilt Series action", MB_EXCLAME);
     return -1;
   }
 
@@ -425,7 +425,7 @@ void CParallelTSHelper::ISToTargetNextTask(int param)
     if (mNavHelper->RealignToItem(mCurISTargetItem, 0, 
       alignParams->resetISthresh, alignParams->maxNumResetIS, 0, 0,
       mParTSopts->extractVirtPrevs == 1 ? PREVIEW_CONSET : -1)) {
-      AfxMessageBox("Realign to first IS target failed");
+      SEMAfxMessageBox("Realign to first IS target failed");
       mLastActionFailed = true;
       StopParallelTSShift(true);
       ClearTargets(true);
@@ -455,7 +455,7 @@ void CParallelTSHelper::ISToTargetNextTask(int param)
         mess = "";
         index = SaveTargetMap(mess, mapSaved);
         if (index) {
-          AfxMessageBox(mess, MB_EXCLAME);
+          SEMAfxMessageBox(mess, MB_EXCLAME);
           StopParallelTSShift();
           return;
         }
@@ -463,7 +463,7 @@ void CParallelTSHelper::ISToTargetNextTask(int param)
         if (!mapSaved) {
           if (!mess.IsEmpty()) {
             str.Format("Map was not saved: %s", mess);
-            AfxMessageBox(str, MB_EXCLAME);
+            SEMAfxMessageBox(str, MB_EXCLAME);
           }
           return;
         }
@@ -471,7 +471,7 @@ void CParallelTSHelper::ISToTargetNextTask(int param)
     }
 
     if (!mInitialStateSaved && SaveInitialState(mess)) {
-      AfxMessageBox(mess, MB_EXCLAME);
+      SEMAfxMessageBox(mess, MB_EXCLAME);
       StopParallelTSShift(true);
       ClearTargets(true);
       return;
@@ -488,7 +488,7 @@ void CParallelTSHelper::ISToTargetNextTask(int param)
     }
     
     if (!skipSave && SaveTarget(mess)) {
-      AfxMessageBox(mess, MB_EXCLAME);
+      SEMAfxMessageBox(mess, MB_EXCLAME);
       StopParallelTSShift(true);
       ClearSavedTargets();
       return;
@@ -503,7 +503,7 @@ void CParallelTSHelper::ISToTargetNextTask(int param)
       return;
     }
     if (!mInitialStateSaved && SaveInitialState(mess)) {
-      AfxMessageBox(mess, MB_EXCLAME);
+      SEMAfxMessageBox(mess, MB_EXCLAME);
       StopParallelTSShift(true);
       ClearTargets(true);
       return;
@@ -521,7 +521,7 @@ void CParallelTSHelper::ISToTargetNextTask(int param)
         index = FitPlane(mPretilt, mXpitch, residual, mess);
         if (index) {
           str.Format("Plane fit on points failed: %s", mess);
-          AfxMessageBox(str, MB_EXCLAME);
+          SEMAfxMessageBox(str, MB_EXCLAME);
         }
         StopParallelTSShift();
         ClearTargets(true);
@@ -547,7 +547,7 @@ void CParallelTSHelper::ISToTargetNextTask(int param)
     // If returned error code is < 0, the whole procedure should be aborted. 
     // If > 0, then just the given target should be skippped.
     if (index) {
-      AfxMessageBox(mess, MB_EXCLAME);
+      SEMAfxMessageBox(mess, MB_EXCLAME);
       if (index < 0) {
         StopParallelTSShift(true);
         ClearSavedTargets();
@@ -572,7 +572,7 @@ void CParallelTSHelper::ISToTargetNextTask(int param)
       mScope->GotoLowDoseArea(RECORD_CONSET);
     } else if (!mWinApp->LowDoseMode() && mScope->GetMagIndex() != mMagIndex &&
       !mScope->SetMagIndex(mMagIndex)) {
-      AfxMessageBox("Failed to switch to the desired magnification", MB_EXCLAME);
+      SEMAfxMessageBox("Failed to switch to the desired magnification", MB_EXCLAME);
       StopParallelTSShift(true);
       ClearSavedTargets();
       return;
@@ -593,7 +593,7 @@ void CParallelTSHelper::ISToTargetNextTask(int param)
           mShiftManager->GetPixelSize(mWinApp->GetCurrentCamera(), mMagIndex);
         CMapDrawItem *mapItem = mWinApp->mNavigator->FindItemWithMapID(mAreaMapID);
         if (!mapItem) {
-          AfxMessageBox("The Parallel Tilt Series area map was deleted", MB_EXCLAME);
+          SEMAfxMessageBox("The Parallel Tilt Series area map was deleted", MB_EXCLAME);
           StopParallelTSShift(true);
           ClearSavedTargets();
           return;
@@ -857,7 +857,7 @@ int CParallelTSHelper::SaveInitialState(CString &err)
       "area with a View defocus offset bigger than %.0f microns.\n\n"
       "This procedure should be run closer to focus.\n"
       "Press Abort to end it, or continue if you know what you are doing.", focusLim);
-    AfxMessageBox(err, MB_EXCLAME);
+    SEMAfxMessageBox(err, MB_EXCLAME);
   }
 
   mScope->GetImageShift(mBaseISX, mBaseISY);

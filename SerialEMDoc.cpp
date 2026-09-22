@@ -1785,7 +1785,7 @@ bool CSerialEMDoc::FileAlreadyOpen(CString filename, CString message)
   if (i < 0)
     return false;
   str.Format("This file is already open (image file #%d).\n\n%s", i+1, (LPCTSTR)message);
-  AfxMessageBox(str, MB_EXCLAME);
+  SEMAfxMessageBox(str, MB_EXCLAME);
   return true;
 }
 
@@ -1924,7 +1924,7 @@ void CSerialEMDoc::ReadSetPropCalFiles()
     mCurrentSettingsPath = strCwd + mSettingsName;
     if (!CFile::GetStatus((LPCTSTR)mCurrentSettingsPath, status)) {
       if (mSettingsName.Compare(SETTINGS_NAME))
-        AfxMessageBox(mCurrentSettingsPath + " does not exist; trying "
+        SEMAfxMessageBox(mCurrentSettingsPath + " does not exist; trying "
           SETTINGS_NAME" instead", MB_EXCLAME);
       mCurrentSettingsPath = strCwd + "\\" + SETTINGS_NAME;
     }
@@ -1934,13 +1934,13 @@ void CSerialEMDoc::ReadSetPropCalFiles()
       err = mParamIO->ReadSettings(mCurrentSettingsPath);
       mSettingsReadable = !err;
       if (err > 0)
-        AfxMessageBox("Error reading local settings file", MB_EXCLAME);
+        SEMAfxMessageBox("Error reading local settings file", MB_EXCLAME);
     }
     mOriginalCwd.Format("%s", cwd);
     free(cwd);
     mSettingsOpen = true;
   } else
-    AfxMessageBox("Error getting current working directory", MB_EXCLAME);
+    SEMAfxMessageBox("Error getting current working directory", MB_EXCLAME);
 
   if (mSettingsReadable) {
     mRecentSettings->Add((LPCTSTR)mCurrentSettingsPath);
@@ -1954,9 +1954,9 @@ void CSerialEMDoc::ReadSetPropCalFiles()
     strSys = mSystemPath + "\\" + SETTINGS_NAME;
     if (CFile::GetStatus((LPCTSTR)strSys, status)) {
       if (mParamIO->ReadSettings(strSys, true)) {
-        AfxMessageBox("Error reading settings file in " + origSys, MB_EXCLAME);
+        SEMAfxMessageBox("Error reading settings file in " + origSys, MB_EXCLAME);
       } else {
-        AfxMessageBox("Settings read from settings file in " + origSys +
+        SEMAfxMessageBox("Settings read from settings file in " + origSys +
           ", not local file", MB_EXCLAME);
         settingsReadable = true;
         mOriginalSettingsPath = strSys;
@@ -1971,7 +1971,7 @@ void CSerialEMDoc::ReadSetPropCalFiles()
   // If local file not read in full, try for system file
   if (!settingsReadable && mSysSettingsReadable) {
     if (mParamIO->ReadSettings(strSys, true)) {
-      AfxMessageBox("Error reading system settings file", MB_EXCLAME);
+      SEMAfxMessageBox("Error reading system settings file", MB_EXCLAME);
       mSysSettingsReadable = false;
     } else
       mOriginalSettingsPath = strSys;
@@ -1979,9 +1979,9 @@ void CSerialEMDoc::ReadSetPropCalFiles()
 
   // Give message about results
   if (!settingsReadable && mSysSettingsReadable)
-    AfxMessageBox("Settings read from system default file, not local file", MB_EXCLAME);
+    SEMAfxMessageBox("Settings read from system default file, not local file", MB_EXCLAME);
   else if (!settingsReadable)
-    AfxMessageBox("Neither system default nor local settings file found", MB_EXCLAME);
+    SEMAfxMessageBox("Neither system default nor local settings file found", MB_EXCLAME);
 
   // Read properties; but first set gain reference path to system path
   // Try the current path which may have come from settings file, then try the
@@ -1994,20 +1994,20 @@ void CSerialEMDoc::ReadSetPropCalFiles()
     if (CFile::GetStatus((LPCTSTR)strSys, status)) {
       if (mParamIO->ReadProperties(strSys)) {
         if (trial)
-          AfxMessageBox("Error reading properties file", MB_EXCLAME);
+          SEMAfxMessageBox("Error reading properties file", MB_EXCLAME);
       } else {
         UtilSplitPath(status.m_szFullName, mFullSystemDir, fname);
         break;
       }
     } else if (trial)
-      AfxMessageBox("No properties file found", MB_EXCLAME);
+      SEMAfxMessageBox("No properties file found", MB_EXCLAME);
     mSystemPath = defaultSysPath;
 
     // 12/5/14: Stop doing this.  Report the problem and leave it
     //mSysPathForSettings = mSystemPath;
   }
   if (trial == 1) {
-    AfxMessageBox("Because of problems reading properties from " + firstSys + ",\n"
+    SEMAfxMessageBox("Because of problems reading properties from " + firstSys + ",\n"
       "properties were read from " + strSys + " instead\n\n"
       "You should either fix that first property file,\n"
       "or stop trying to access that file by changing the\n"
@@ -2030,22 +2030,22 @@ void CSerialEMDoc::ReadSetPropCalFiles()
   strSys = mSystemPath + "\\" + mCalibrationName;
   if (CFile::GetStatus((LPCTSTR)strSys, status)) {
     if (mParamIO->ReadCalibration(strSys))
-      AfxMessageBox("Error reading calibration file", MB_EXCLAME);
+      SEMAfxMessageBox("Error reading calibration file", MB_EXCLAME);
   } else
-    AfxMessageBox("No calibration file found", MB_EXCLAME);
+    SEMAfxMessageBox("No calibration file found", MB_EXCLAME);
 
   // Read short-term calibrations unless ignoring them
   strSys = mSystemPath + "\\" + mShortTermName;
   if (CFile::GetStatus((LPCTSTR)strSys, status)) {
     if (mParamIO->ReadShortTermCal(strSys, mIgnoreShortTerm))
-      AfxMessageBox("Error reading short-term calibration file", MB_EXCLAME);
+      SEMAfxMessageBox("Error reading short-term calibration file", MB_EXCLAME);
   }
 
   // Read flyback times if they exist
   strSys = CString(defaultSysPath) + "\\" + mFlybackName;
   if (CFile::GetStatus((LPCTSTR)strSys, status)) {
     if (mParamIO->ReadFlybackTimes(strSys))
-      AfxMessageBox("Error reading flyback time file", MB_EXCLAME);
+      SEMAfxMessageBox("Error reading flyback time file", MB_EXCLAME);
   }
 
   // Read basic mode file if non-empty
@@ -2175,7 +2175,7 @@ void CSerialEMDoc::ReadNewSettingsFile(CString newSettings)
 
   // If error, leave things as they were
   if (err > 0) {
-    AfxMessageBox("Error reading settings file; retaining previous file if any",
+    SEMAfxMessageBox("Error reading settings file; retaining previous file if any",
         MB_EXCLAME);
   } else {
     // Commit to change. if just sparse, mark as open but unreadable
@@ -2203,7 +2203,7 @@ void CSerialEMDoc::OnSettingsReadagain()
   PreSettingsRead();
 
   if (mParamIO->ReadSettings(mCurrentSettingsPath)) {
-    AfxMessageBox("Error rereading settings file", MB_EXCLAME);
+    SEMAfxMessageBox("Error rereading settings file", MB_EXCLAME);
     mSettingsReadable = false;
   }
 
@@ -2296,7 +2296,7 @@ void CSerialEMDoc::OnSettingsReaddefaults()
   PreSettingsRead();
   CString strSys = mSystemPath + "\\" + mSystemSettingsName;
   if (mParamIO->ReadSettings(strSys))
-    AfxMessageBox("Error reading system settings file", MB_EXCLAME);
+    SEMAfxMessageBox("Error reading system settings file", MB_EXCLAME);
   PostSettingsRead();
 }
 
@@ -2354,7 +2354,7 @@ int CSerialEMDoc::OfferToSaveSettings(CString strWhy)
     return 0;
   CString message = "Do you want to save your settings "
     "before proceeding\n to " + strWhy;
-  result = AfxMessageBox(message, MB_ICONQUESTION | MB_YESNOCANCEL);
+  result = SEMAfxMessageBox(message, MB_ICONQUESTION | MB_YESNOCANCEL);
   if (result == IDNO)
     return 0;
   if (result == IDCANCEL)
@@ -2382,7 +2382,7 @@ void CSerialEMDoc::PreSettingsRead()
 int CSerialEMDoc::CheckBgkdScript()
 {
   if (mWinApp->RunningBkgdMacro()) {
-    AfxMessageBox("You cannot load settings while a background script is running\n\n"
+    SEMAfxMessageBox("You cannot load settings while a background script is running\n\n"
       "Please stop the script with the entry in the script menu and try again",
       MB_EXCLAME);
     return 1;
@@ -2539,7 +2539,7 @@ int CSerialEMDoc::SaveSettingsOnExit()
   CString str, str2;
   SaveShortTermCal();
   if (mWinApp->GetAdministrator() && mWinApp->CalibrationsNotSaved()) {
-    result = AfxMessageBox("There are unsaved calibrations.\n"
+    result = SEMAfxMessageBox("There are unsaved calibrations.\n"
       "Do you want to save them before exiting?", MB_ICONQUESTION | MB_YESNOCANCEL);
     if (result == IDCANCEL)
       return 1;
@@ -2560,9 +2560,9 @@ int CSerialEMDoc::SaveSettingsOnExit()
     }
     if (result) {
       str += ")\n\nDo you want to save them before exiting?";
-      result = AfxMessageBox(str, MB_QUESTION);
+      result = SEMAfxMessageBox(str, MB_QUESTION);
       if (result == IDYES)
-        AfxMessageBox("You need to turn on Administrator mode in the Calibration menu "
+        SEMAfxMessageBox("You need to turn on Administrator mode in the Calibration menu "
         "in order to enable saving calibrations", MB_OK | MB_ICONINFORMATION);
       if (result != IDNO)
         return 1;
@@ -2670,7 +2670,7 @@ void CSerialEMDoc::OnFileSetCurrentDirectory()
   if (dlg.DoModal() != IDOK)
     return;
   if (_chdir((LPCTSTR)dlg.GetPath())) {
-    AfxMessageBox("Failed to change to that directory", MB_EXCLAME);
+    SEMAfxMessageBox("Failed to change to that directory", MB_EXCLAME);
     return;
   }
   SetInitialDirToCurrentDir();
@@ -2698,7 +2698,7 @@ int CSerialEMDoc::AppendToLogBook(CString inString, CString title)
   catch(CFileException *perr) {
     perr->Delete();
     CString message = "Error writing to logbook: " + name;
-    AfxMessageBox(message, MB_EXCLAME);
+    SEMAfxMessageBox(message, MB_EXCLAME);
     retval = -1;
   }
   if (cFile) {

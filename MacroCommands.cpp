@@ -9058,7 +9058,7 @@ int CMacCmd::Pause(void)
     doPause = doPause || CMD_IS(PAUSE);
     if (doPause) {
       report += "\n\nDo you want to proceed with the script?";
-      index = AfxMessageBox(report, doAbort ? MB_EXCLAME : MB_QUESTION);
+      index = SEMAfxMessageBox(report, doAbort ? MB_EXCLAME : MB_QUESTION);
     } else {
       if (doAbort || (!mNoLineWrapInMessageBox && !mMonospacedMessageBox))
         index = SEMMessageBox(report, doAbort ? MB_EXCLAME : MB_QUESTION);
@@ -9085,7 +9085,7 @@ int CMacCmd::OKBox(void)
     SEMThreeChoiceBox(report, "OK", "", "", MB_OK | MB_ICONINFORMATION, 0, 0, 0,
       mNoLineWrapInMessageBox, mMonospacedMessageBox);
   else
-    AfxMessageBox(report, MB_OK | MB_ICONINFORMATION);
+    SEMAfxMessageBox(report, MB_OK | MB_ICONINFORMATION);
   return 0;
 }
 

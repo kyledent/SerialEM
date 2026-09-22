@@ -2454,7 +2454,7 @@ int CMultiGridTasks::StartGridRuns(int LMneedsLD, int MMMneedsLD, int finalNeeds
         str += " and ";
       str += "the condenser aperture is the size to be used for grid maps";
     }
-    if (!str.IsEmpty() && AfxMessageBox("Apertures may not be set right for the selected"
+    if (!str.IsEmpty() && SEMAfxMessageBox("Apertures may not be set right for the selected"
       " acquisitions:\n" + str + ".\n\nAre you sure you want to proceed?", MB_QUESTION) ==
       IDNO)
       return 1;
@@ -2504,7 +2504,7 @@ int CMultiGridTasks::StartGridRuns(int LMneedsLD, int MMMneedsLD, int finalNeeds
   if (numFail) {
     str.Format("The selected grids include %d grids where something failed "
       "previously\n\nAre you sure you want to proceed with them?", numFail);
-    if (AfxMessageBox(str, MB_QUESTION) == IDNO)
+    if (SEMAfxMessageBox(str, MB_QUESTION) == IDNO)
       return 1;
     for (grid = 0; grid < mNumGridsToRun; grid++)
       ChangeStatusFlag(grid, MGSTAT_FLAG_FAILED, 0);
@@ -2519,7 +2519,7 @@ int CMultiGridTasks::StartGridRuns(int LMneedsLD, int MMMneedsLD, int finalNeeds
       str.Format("All %d contour groups from autocontouring will be\nconverted to "
         "polygons because the autocontouring dialog was never opened\n\n"
         "Is this OK?", acParam->numGroups);
-      if (AfxMessageBox(str, MB_QUESTION) == IDNO)
+      if (SEMAfxMessageBox(str, MB_QUESTION) == IDNO)
         return 0;
     }
     if (mNavHelper->mAutoContouringDlg->IsOpen() || !mHaveAutoContGroups)
@@ -2804,7 +2804,7 @@ int CMultiGridTasks::StartGridRuns(int LMneedsLD, int MMMneedsLD, int finalNeeds
         str += ".\n\nDo you want to apply the marker shift?\n"
           "(Answer No if the LD shift offset supercedes the marker shift;\n"
           "or Yes if the marker shift is needed even with the LD shift offset.)";
-        if (AfxMessageBox(str, MB_QUESTION) == IDNO)
+        if (SEMAfxMessageBox(str, MB_QUESTION) == IDNO)
           mSkipMarkerShifts = 1;
         else
           mSkipMarkerShifts = -1;
@@ -2822,7 +2822,7 @@ int CMultiGridTasks::StartGridRuns(int LMneedsLD, int MMMneedsLD, int finalNeeds
         " you need to select Autocontouring so that there are items to acquire");
       return 1;
     }
-    if (AfxMessageBox("To do both grid maps and medium mag maps in the\n"
+    if (SEMAfxMessageBox("To do both grid maps and medium mag maps in the\n"
       " same run, the script must make items at which to acquire the maps.\n\n"
       "Will the script do this?", MB_QUESTION) == IDNO)
       return 1;
@@ -2831,7 +2831,7 @@ int CMultiGridTasks::StartGridRuns(int LMneedsLD, int MMMneedsLD, int finalNeeds
     (mapActions[NAACT_HOLE_FINDER].flags & NAA_FLAG_RUN_IT) != 0;
   if (mParams.acquireMMMs && mParams.runFinalAcq) {
     if ((mapActions[NAACT_RUN_POSTMACRO].flags & NAA_FLAG_RUN_IT) != 0) {
-      if (AfxMessageBox("To do both medium mag maps and final acquisition\n"
+      if (SEMAfxMessageBox("To do both medium mag maps and final acquisition\n"
         " in the same run, the script you run after mapping must add items to acquire."
         "\n\nWill the script do this?", MB_QUESTION) == IDNO)
         return 1;
@@ -2842,13 +2842,13 @@ int CMultiGridTasks::StartGridRuns(int LMneedsLD, int MMMneedsLD, int finalNeeds
         return 1;
       }
       if (!mapParams->runHoleCombiner && finalParams->nonTSacquireType == ACQUIRE_MULTISHOT
-        && AfxMessageBox("You selected Multiple Records for final\nacquisition but did not"
+        && SEMAfxMessageBox("You selected Multiple Records for final\nacquisition but did not"
           " set the option to use the hole combiner.\n\nDo you really want to proceed?",
           MB_QUESTION) == IDNO)
         return 1;
       /*if (!finalParams->useMapHoleVectors &&
         finalParams->nonTSacquireType == ACQUIRE_MULTISHOT && mNumGridsToRun > 1) {
-        AfxMessageBox("You are trying to do Multiple Records on \n"
+        SEMAfxMessageBox("You are trying to do Multiple Records on \n"
           "more than one grid and did not select to use map hole vectors for shifts",
           MB_EXCLAME);
         return 1;
@@ -2893,7 +2893,7 @@ int CMultiGridTasks::StartGridRuns(int LMneedsLD, int MMMneedsLD, int finalNeeds
           "selected for image shifts vectors to come from settings\n"
           "but there are saved settings for only %d of the grids",
           gridsDoingMulShot.size(), numMSparam);
-        AfxMessageBox(str, MB_EXCLAME);
+        SEMAfxMessageBox(str, MB_EXCLAME);
         return 1;
       }
 
@@ -2944,7 +2944,7 @@ int CMultiGridTasks::StartGridRuns(int LMneedsLD, int MMMneedsLD, int finalNeeds
             jcd = mCartInfo->GetAt(mJcdIndsToRun[grid]);
             str.Format("The Multiple Record settings for grids %d and %d have the same"
               " vectors", err, jcd.id);
-            AfxMessageBox(str, MB_EXCLAME);
+            SEMAfxMessageBox(str, MB_EXCLAME);
             return 1;
           }
         }
@@ -3002,7 +3002,7 @@ int CMultiGridTasks::StartGridRuns(int LMneedsLD, int MMMneedsLD, int finalNeeds
         if (ind == IDNO)
           subXfStamp = -1;
         if (ind != IDCANCEL && backXformable) {
-          if (AfxMessageBox("Do you want to use the new transform to refine\n"
+          if (SEMAfxMessageBox("Do you want to use the new transform to refine\n"
             " vectors that have already been transformed?", MB_QUESTION) == IDYES) {
             backXfStamp = ind == IDYES ? minStamp : -1;
           }
@@ -3389,7 +3389,7 @@ int CMultiGridTasks::CheckStatesInRange(int *stateNums, CString *names, int numS
     if (stateNums[ind] >= (int)mStateArray->GetSize()) {
       str.Format("State # %d (%s) for %s is no longer in the array of states",
         stateNums[ind], (LPCTSTR)names[ind], (LPCTSTR)mess);
-      AfxMessageBox(str, MB_EXCLAME);
+      SEMAfxMessageBox(str, MB_EXCLAME);
       return 1;
     }
   }
@@ -4824,7 +4824,7 @@ int CMultiGridTasks::CheckShiftsForLMmode(int magInd)
         "state for grid map", mMGdlg->m_comboLMMstate))
         return -1;
     } else if (mParams.LMMstateNum < 0 || mParams.LMMstateNum >= mStateArray->GetSize()) {
-      AfxMessageBox("The state number for grid mapping is out of range", MB_EXCLAME);
+      SEMAfxMessageBox("The state number for grid mapping is out of range", MB_EXCLAME);
       return -1;
     }
     state = mStateArray->GetAt(mParams.LMMstateNum);
@@ -6274,7 +6274,7 @@ void CMultiGridTasks::IdentifyGridOnStage(int stageID, int &stageInd, bool getLo
       }
     }
     if (stageInd < 0 && newID >= 0)
-      AfxMessageBox("That number is not in the inventory", MB_EXCLAME);
+      SEMAfxMessageBox("That number is not in the inventory", MB_EXCLAME);
   }
   if (mNavHelper->mMultiGridDlg)
     mNavHelper->mMultiGridDlg->NewGridOnStage(stageInd);

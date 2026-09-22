@@ -305,7 +305,7 @@ int CShiftManager::SetAlignShifts(float newX, float newY, BOOL incremental,
       // Otherwise, proceed with stage move if at end of shift
     } else if (mMouseEnding && (delX || delY)) {
       if (mScope->StageBusy() > 0) {
-        AfxMessageBox(_T("Stage is busy - shift cancelled"));
+        SEMAfxMessageBox(_T("Stage is busy - shift cancelled"));
         imposeShift = false;
         // return 3;
       }
@@ -792,7 +792,7 @@ int CShiftManager::AutoAlign(int bufIndex, int inSmallPad, BOOL doImShift, int c
     if (mImBufs[0].GetTiltAngle(tiltA) && mImBufs[toBuf].GetTiltAngle(tiltC)) {
       stretch = cos(DTOR * tiltC) / cos(DTOR * tiltA);
     } else if (conical) {
-      AfxMessageBox(_T("Tilt angle must be available for\nboth images to do "
+      SEMAfxMessageBox(_T("Tilt angle must be available for\nboth images to do "
         "conical tilt alignment"), MB_EXCLAME);
       return 1;
     }

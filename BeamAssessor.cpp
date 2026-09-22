@@ -134,12 +134,12 @@ void CBeamAssessor::CalIntensityCCD()
   probe = mScope->ReadProbeMode();
 
   if (mWinApp->LowDoseMode()) {
-    AfxMessageBox("Beam intensity calibration cannot be done in Low Dose mode");
+    SEMAfxMessageBox("Beam intensity calibration cannot be done in Low Dose mode");
     return;
   }
 
   if (mNumTables >= MAX_INTENSITY_TABLES || mFreeIndex > 0.9 * MAX_INTENSITY_ARRAYS) {
-    AfxMessageBox("No more space for intensity calibrations", MB_EXCLAME);
+    SEMAfxMessageBox("No more space for intensity calibrations", MB_EXCLAME);
     return;
   }
 
@@ -173,7 +173,7 @@ void CBeamAssessor::CalIntensityCCD()
     if (IntensityCalibrated())
       message += "\nIt will replace an existing calibration there.";
   }
-  if (AfxMessageBox(message, MB_OKCANCEL | MB_ICONINFORMATION) == IDCANCEL)
+  if (SEMAfxMessageBox(message, MB_OKCANCEL | MB_ICONINFORMATION) == IDCANCEL)
     return;
 
   mStartIntensity = mScope->GetIntensity();
@@ -182,17 +182,17 @@ void CBeamAssessor::CalIntensityCCD()
   if (!FEIscope && !(JEOLscope && mScope->GetJeolHasBrightnessZoom())) {
     message.Format("Make sure that Brightness %s is turned off",
       HitachiScope ? "Link" : "Zoom");
-    AfxMessageBox(message,  MB_EXCLAME);
+    SEMAfxMessageBox(message,  MB_EXCLAME);
   } else {
     mUsersIntensityZoom = mScope->GetIntensityZoom();
     mScope->SetIntensityZoom(false);
   }
   if (!mCalMagInd || !mCalSpotSize) {
-    AfxMessageBox("Error getting spot size or mag index", MB_EXCLAME);
+    SEMAfxMessageBox("Error getting spot size or mag index", MB_EXCLAME);
     return;
   }
   if (aboveCross != GetAboveCrossover(mCalSpotSize, mStartIntensity, probe)) {
-    AfxMessageBox("The beam now seems to be on the other side of crossover, cannot"
+    SEMAfxMessageBox("The beam now seems to be on the other side of crossover, cannot"
       " proceed.", MB_EXCLAME);
     return;
   }
@@ -341,7 +341,7 @@ void CBeamAssessor::CalIntensityImage(int param)
             " of %.1f for starting this calibration with this camera\n\n"
             "Condense the beam or use a larger condenser aperture", doseRate,
             mMinDoseRate);
-          AfxMessageBox(report, MB_EXCLAME);
+          SEMAfxMessageBox(report, MB_EXCLAME);
           mStoppingCal = true;
           break;
         }
@@ -410,7 +410,7 @@ void CBeamAssessor::CalIntensityImage(int param)
      SEMTrace('c', "%d %.1f %7.1f %8.3f %8.3f %8.5f %.5f %.5f %.5f %.5f %.5f", mBinning,
        mExposure, meanCounts, testCurrent, mCurrents[0], mTestIntensity, testInterval,
        targetInterval, mTestIncrement, mCalIntensities[0], mCalTable->crossover);
-     AfxMessageBox("The counts increased even though intensity was changed in the "
+     SEMAfxMessageBox("The counts increased even though intensity was changed in the "
         "direction away from crossover.\r\n\r\nYou need to either redo the "
         "crossover calibration or start farther from crossover", MB_EXCLAME);
       break;
@@ -436,7 +436,7 @@ void CBeamAssessor::CalIntensityImage(int param)
       if (!(testInterval >= targetLo && testInterval <= targetHi)) {
         mNumFail++;
         if (mNumFail > 4) {
-          AfxMessageBox("Failed to find proper interval between\n"
+          SEMAfxMessageBox("Failed to find proper interval between\n"
             "intensities too many times", MB_EXCLAME);
           mStoppingCal = true;
           break;
@@ -582,7 +582,7 @@ void CBeamAssessor::CalIntensityCCDCleanup(int error)
     return;
 
   if (error == IDLE_TIMEOUT_ERROR)
-    AfxMessageBox(_T("Time out trying to get image for beam intensity calibration"),
+    SEMAfxMessageBox(_T("Time out trying to get image for beam intensity calibration"),
       MB_EXCLAME);
 
   if (mStoppingCal) {
@@ -641,7 +641,7 @@ void CBeamAssessor::CalIntensityCCDCleanup(int error)
       "  there are %d calibrations, while %d were expected.\r\n  Please report this "
       "situation and the steps leading up to it to the SerialEM developer.", newAp,
       mNumExpectedCals);
-    AfxMessageBox(report, MB_EXCLAME);
+    SEMAfxMessageBox(report, MB_EXCLAME);
     mWinApp->AppendToLog("WARNING: " + report);
   }
   mFreeIndex += mCalTable->numIntensities;
@@ -1533,7 +1533,7 @@ int CBeamAssessor::CalibrateElectronDose(BOOL interactive)
   if (!(imBuf->mImage && imBuf->mBinning && (imBuf->mCaptured == 1 ||
     imBuf->mCaptured == BUFFER_CALIBRATION) && imBuf->mMagInd)) {
     if (interactive)
-      AfxMessageBox("To calibrate electron dose, Buffer A must contain an \n"
+      SEMAfxMessageBox("To calibrate electron dose, Buffer A must contain an \n"
       "image acquired from a camera with calibrated gain.\n\n"
       "To proceed, acquire an image.", MB_EXCLAME);
     return 1;
@@ -1542,7 +1542,7 @@ int CBeamAssessor::CalibrateElectronDose(BOOL interactive)
 
   if (!camParam->countsPerElectron) {
     if (interactive)
-      AfxMessageBox("The SerialEM properties file does not contain a gain in \n"
+      SEMAfxMessageBox("The SerialEM properties file does not contain a gain in \n"
       "counts per electron for the camera from which this image was taken\n\n"
       "Dose cannot be calibrated with this image", MB_EXCLAME);
     return 1;
@@ -1551,7 +1551,7 @@ int CBeamAssessor::CalibrateElectronDose(BOOL interactive)
   if (imBuf->mCamera >= 0 && imBuf->mConSetUsed >= 0 && camParam->OneViewType &&
     allConSets[imBuf->mConSetUsed + imBuf->mCamera * MAX_CONSETS].correctDrift) {
     if (interactive)
-      AfxMessageBox("It appears that this image was taken with drift correction "
+      SEMAfxMessageBox("It appears that this image was taken with drift correction "
         "turned on.\n\nBlank images with drift correction can lose frames and give"
         " a bad dose estimate.\n\nYou need to take another image without this"
         " setting", MB_EXCLAME);
@@ -1578,7 +1578,7 @@ int CBeamAssessor::CalibrateElectronDose(BOOL interactive)
     dtp->dose *= 100. / extra->mEDMPercent;
 
   if (GetElectronDose(spotSize, intensity, imBuf->mExposure)) {
-    if (!interactive || AfxMessageBox("To calibrate electron dose, Buffer A must contain"
+    if (!interactive || SEMAfxMessageBox("To calibrate electron dose, Buffer A must contain"
       " an image\nof the blank beam (with no specimen).\n\n"
       "Does the image in Buffer A meet these requirements?", MB_YESNO | MB_ICONQUESTION)
       == IDYES) {
@@ -1638,10 +1638,10 @@ int CBeamAssessor::CalibrateElectronDose(BOOL interactive)
     }
     if (interactive) {
       if (indTab < 0)
-        AfxMessageBox("There is no beam intensity calibration for this spot size on this"
+        SEMAfxMessageBox("There is no beam intensity calibration for this spot size on this"
           " side of crossover", MB_EXCLAME);
       else
-        AfxMessageBox("The beam intensity is outside the directly calibrated\n"
+        SEMAfxMessageBox("The beam intensity is outside the directly calibrated\n"
           "range for this spot size" + addon +"\n\n"
           "You need to take a picture with brightness set\n"
           "in the calibrated range for this spot size.", MB_EXCLAME);
@@ -1680,12 +1680,12 @@ void CBeamAssessor::CalibrateBeamShift()
       "because of the mismatch in mag indexes between TEM and EFTEM.\n\n"
       "Drop the mag to %d in EFTEM mode to do a calibration for LM",
       MagOrEFTEMmag(true, i));
-    AfxMessageBox(str, MB_EXCLAME);
+    SEMAfxMessageBox(str, MB_EXCLAME);
     return;
   }
 
   CString *modeNames = mWinApp->GetModeNames();
-  if (AfxMessageBox("Beam shift calibration takes pictures with the "
+  if (SEMAfxMessageBox("Beam shift calibration takes pictures with the "
     + modeNames[SHIFT_CAL_CONSET] + " parameter set.\n\n"
     "You must have the spot condensed so that its diameter is less\n"
     "than half of the size of a " + modeNames[SHIFT_CAL_CONSET] + " image.\n\n"
@@ -1872,7 +1872,7 @@ void CBeamAssessor::ShiftCalCleanup(int error)
   str.Format("Time out trying to get image for %s beam shift calibration",
     mRefiningShiftCal ? "refining" : "");
   if (error == IDLE_TIMEOUT_ERROR)
-    AfxMessageBox(str, MB_EXCLAME);
+    SEMAfxMessageBox(str, MB_EXCLAME);
   StopShiftCalibration();
   mWinApp->ErrorOccurred(error);
 }
@@ -2002,7 +2002,7 @@ void CBeamAssessor::RefineShiftCalImage()
       fabs(newIStoBS.xpy - mIStoBScal.xpy) / dist > tooBigCrit ||
       fabs(newIStoBS.ypx - mIStoBScal.ypx) / dist > tooBigCrit ||
       fabs(newIStoBS.ypy - mIStoBScal.ypy) / dist > tooBigCrit) {
-      AfxMessageBox("The new matrix has changed too much from the previous one\n\n"
+      SEMAfxMessageBox("The new matrix has changed too much from the previous one\n\n"
         "Stopping because something seems to be wrong", MB_EXCLAME);
       StopShiftCalibration();
       return;
@@ -2095,7 +2095,7 @@ void CBeamAssessor::CalibrateSpotIntensity()
   CString *modeNames = mWinApp->GetModeNames();
   CString message;
   if (mWinApp->LowDoseMode()) {
-    AfxMessageBox("Spot intensity calibration cannot be done in Low Dose mode");
+    SEMAfxMessageBox("Spot intensity calibration cannot be done in Low Dose mode");
     return;
   }
 
@@ -2108,7 +2108,7 @@ void CBeamAssessor::CalibrateSpotIntensity()
     " image at spot size %d.\n\nAre you ready to proceed?",
     (LPCTSTR)modeNames[SPOT_CAL_CONSET], (LPCTSTR)modeNames[SPOT_CAL_CONSET],
     (LPCTSTR)modeNames[SPOT_CAL_CONSET], HitachiScope ? mNumSpotsToCal : 1);
-  if (AfxMessageBox(message, MB_ICONQUESTION | MB_YESNO) == IDNO)
+  if (SEMAfxMessageBox(message, MB_ICONQUESTION | MB_YESNO) == IDNO)
     return;
 
   for (int ind = 1; ind <= mNumSpotsToCal; ind++)
@@ -2172,7 +2172,7 @@ void CBeamAssessor::SpotCalImage(int param)
 void CBeamAssessor::SpotCalCleanup(int error)
 {
   if (error == IDLE_TIMEOUT_ERROR)
-    AfxMessageBox(_T("Time out trying to get image for spot intensity calibration"),
+    SEMAfxMessageBox(_T("Time out trying to get image for spot intensity calibration"),
       MB_EXCLAME);
   StopSpotCalibration();
   mWinApp->ErrorOccurred(error);
@@ -2206,7 +2206,7 @@ void CBeamAssessor::StopSpotCalibration()
   if (numDone > 1) {
 
     if (numDone < mNumSpotsToCal)
-      saveData = AfxMessageBox("Not all the spots were done.\n\nDo you want to replace"
+      saveData = SEMAfxMessageBox("Not all the spots were done.\n\nDo you want to replace"
       " existing calibrations with the data that were acquired?",
       MB_ICONQUESTION | MB_YESNO) != IDNO;
 
@@ -2274,7 +2274,7 @@ void CBeamAssessor::CalibrateCrossover(void)
   HighFocusCalArray *focusMagCals;
  	int spotSave = mScope->GetSpotSize();
   int probe = mScope->ReadProbeMode();
-  if (AfxMessageBox("To calibrate crossover, the program will go to each spot\n"
+  if (SEMAfxMessageBox("To calibrate crossover, the program will go to each spot\n"
     "size and ask you to bring the beam to crossover.\n\n"
     "You should make sure you are at eucentric focus and\n"
     " go to a high mag (~100K) to do this.", MB_OKCANCEL | MB_ICONINFORMATION) != IDOK)
@@ -2282,7 +2282,7 @@ void CBeamAssessor::CalibrateCrossover(void)
   for (spotSize = minSpot; spotSize <= mScope->GetNumSpotSizes(); spotSize++) {
       if (SetAndCheckSpotSize(spotSize))
         return;
-      if (AfxMessageBox("Adjust brightness to bring the beam to crossover",
+      if (SEMAfxMessageBox("Adjust brightness to bring the beam to crossover",
         MB_OKCANCEL | MB_ICONINFORMATION) != IDOK)
         break;
       intensity = mScope->GetIntensity();
@@ -2395,7 +2395,7 @@ void CBeamAssessor::CalibrateCrossover(void)
     "illumination calibrations\nwere shifted by the changes in crossover.";
 
   if (numBeamChg || changed || numWarn || focChanged || parIllumChanged)
-    AfxMessageBox(message, MB_EXCLAME);
+    SEMAfxMessageBox(message, MB_EXCLAME);
 }
 
 // Given a known value for the current C2 aperture on a Titan, scale the illuminated areas
@@ -2534,7 +2534,7 @@ int CBeamAssessor::RequestApertureSize(void)
     if ((!mNumC2Apertures && newAp >= 10 && newAp <= 500) ||
       numberInList(newAp, mC2Apertures, mNumC2Apertures, 0))
       return newAp;
-    if (AfxMessageBox("That aperture size does not seem to be valid (check property "
+    if (SEMAfxMessageBox("That aperture size does not seem to be valid (check property "
       "C2ApertureSizes)\n\nPress OK to try again or Cancel to skip entering an aperture",
       MB_OKCANCEL | MB_ICONEXCLAMATION) == IDCANCEL)
       break;
@@ -2592,7 +2592,7 @@ void CBeamAssessor::InitialSetupForAperture(void)
 // Start the calibration: get the biggest aperture in and save original values
 void CBeamAssessor::CalibrateIllumAreaLimits(void)
 {
-  if (AfxMessageBox("This procedure will measure the limits of illuminated\n"
+  if (SEMAfxMessageBox("This procedure will measure the limits of illuminated\n"
     "area at each spot size in both probe modes\n\n"
     "You MUST have the largest condenser (C2) aperture in for this measurement!\n\n"
     "Are you ready to proceed?", MB_QUESTION) == IDNO)
@@ -2739,7 +2739,7 @@ void CBeamAssessor::StopCalIllumAreaLimits()
 void CBeamAssessor::CalIllumAreaCleanup(int error)
 {
   if (error == IDLE_TIMEOUT_ERROR)
-    AfxMessageBox(_T("Time out trying to drop screen before calibrating IA limits"),
+    SEMAfxMessageBox(_T("Time out trying to drop screen before calibrating IA limits"),
       MB_EXCLAME);
   StopCalIllumAreaLimits();
   mWinApp->ErrorOccurred(error);
@@ -2856,7 +2856,7 @@ void CBeamAssessor::CalibrateAlphaBeamShifts(void)
   for (alpha = 0; alpha < numToCal; alpha++) {
     if (!mScope->SetAlpha(alpha))
       break;
-    if (AfxMessageBox("Center the beam at this alpha setting and adjust beam tilt if "
+    if (SEMAfxMessageBox("Center the beam at this alpha setting and adjust beam tilt if "
       "desired", MB_OKCANCEL | MB_ICONINFORMATION) != IDOK)
       break;
     mScope->GetBeamShift(bsx, bsy);
@@ -2900,7 +2900,7 @@ void CBeamAssessor::CalibrateSpotBeamShifts(void)
   for (spot = firstSpot; spot * iDir <= lastSpot * iDir; spot += iDir) {
     if (SetAndCheckSpotSize(spot))
       return;
-    if (AfxMessageBox("Center the beam at this spot size",
+    if (SEMAfxMessageBox("Center the beam at this spot size",
       MB_OKCANCEL | MB_ICONINFORMATION) != IDOK)
       break;
     mScope->GetBeamShift(shifts[spot][0], shifts[spot][1]);
@@ -2934,7 +2934,7 @@ int CBeamAssessor::SetAndCheckSpotSize(int newSize, BOOL normalize)
     str.Format("Failed to set spot size %d\n\n%sheck the SerialEM property "
       "NumberOfSpotSizes", newSize,
       FEIscope ? "Check if the holder is in; if not, then\nc" : "C");
-    AfxMessageBox(str, MB_EXCLAME);
+    SEMAfxMessageBox(str, MB_EXCLAME);
     return 1;
   }
   return 0;
@@ -2985,7 +2985,7 @@ int CBeamAssessor::CheckCalForZeroIntensities(BeamTable &table, const char *mess
   if (postMessType == 3)
     str += "\r\nThis calibration will be removed when calibrations are saved again.";
   mWinApp->AppendToLog(str);
-  AfxMessageBox(str, MB_EXCLAME);
+  SEMAfxMessageBox(str, MB_EXCLAME);
   return 1;
 }
 
@@ -3085,13 +3085,13 @@ void CBeamAssessor::StartBeamSizeCalibration()
   CString mess;
 
   if (mWinApp->LowDoseMode()) {
-    AfxMessageBox("The beam size calibration cannot be done in Low Dose mode");
+    SEMAfxMessageBox("The beam size calibration cannot be done in Low Dose mode");
     return;
   }
   magInd = mScope->FastMagIndex();
   if (mLowerMagForSizeCal > 0 && B3DABS(magInd - mLowerMagForSizeCal) < 2 && 
     mSizeCal.spotSize == mScope->GetSpotSize()) {
-    if (AfxMessageBox("Do you want to finish the previously started beam size "
+    if (SEMAfxMessageBox("Do you want to finish the previously started beam size "
       "calibration?", MB_QUESTION) == IDYES) {
       mSizeCal.intensity[mStoppedBeamCalStep / 2] = mScope->GetIntensity();
       NormalizeForSizeCal(true);
@@ -3109,7 +3109,7 @@ void CBeamAssessor::StartBeamSizeCalibration()
   mSizeCal.probeOrAlpha = -999;
   mWinApp->mMultiTSTasks->GetProbeOrAlpha(mSizeCal.probeOrAlpha);
   if (!mSizeCal.crossover) {
-    AfxMessageBox("There is no crossover calibration" + 
+    SEMAfxMessageBox("There is no crossover calibration" + 
       CString(FEIscope ? " for this probe mode" : "") + 
       "; this must exist to do this calibration");
     return;
@@ -3122,11 +3122,11 @@ void CBeamAssessor::StartBeamSizeCalibration()
     "4. Trial parameters and beam conditions should be set to make\r\n"
     "    the beam somewhat smaller than the field of view and not saturated";
   SEMAppendToLog(mess);
-  if (AfxMessageBox(mess + "\r\nAre you ready to proceed?", MB_QUESTION) == IDNO)
+  if (SEMAfxMessageBox(mess + "\r\nAre you ready to proceed?", MB_QUESTION) == IDNO)
     return;
 
   if (mSizeCal.intensity[0] < mSizeCal.crossover &&
-    AfxMessageBox("The intensity is less than the calibrated crossover intensity.\n"
+    SEMAfxMessageBox("The intensity is less than the calibrated crossover intensity.\n"
       "Is this correct, i.e., is the beam really below crossover?\n"
       "(If not, go redo the crossover calibration.)", MB_QUESTION) == IDNO)
     return;
@@ -3137,7 +3137,7 @@ void CBeamAssessor::StartBeamSizeCalibration()
     "measurement:", sizeRange, 1))
     return;
   if (sizeRange < 2.) {
-    AfxMessageBox("The size range must be at least 2", MB_EXCLAME);
+    SEMAfxMessageBox("The size range must be at least 2", MB_EXCLAME);
     return;
   }
   mSizeRangeForCal = sizeRange;
@@ -3169,7 +3169,7 @@ void CBeamAssessor::BeamSizeCalNextTask()
   ind = mWinApp->mProcessImage->FindBeamCenter(imBuf, xcen, ycen, radius, xcenUse,
     ycenUse, radUse, fracUse, binning, numQuad, shiftX, shiftY, fitErr);
   if (ind) {
-    AfxMessageBox(ind < 0 ? "No beam edges were detected in this image" :
+    SEMAfxMessageBox(ind < 0 ? "No beam edges were detected in this image" :
       "An error occurred analyzing the image for beam edges");
     StopBeamSizeCal();
     return;
@@ -3218,7 +3218,7 @@ void CBeamAssessor::BeamSizeCalNextTask()
     if (numQuad < 4) {
       mess.Format("The beam edge was detected in only %d quadrants\n"
         "of the image in buffer A; it should be fully\ncontained in the image", numQuad);
-      AfxMessageBox(mess, MB_EXCLAME);
+      SEMAfxMessageBox(mess, MB_EXCLAME);
       StopBeamSizeCal();
       return;
     }
@@ -3228,7 +3228,7 @@ void CBeamAssessor::BeamSizeCalNextTask()
     mess.Format("Beam diameter measured to be %.3f um, with a fit error %.3f um\n\n"
       "Is this a valid value for the beam size in this image?",
       mSizeCal.beamSize[calInd], fitErr * binning * pixel);
-    if (AfxMessageBox(mess, MB_QUESTION) == IDNO) {
+    if (SEMAfxMessageBox(mess, MB_QUESTION) == IDNO) {
       StopBeamSizeCal();
       return;
     }
@@ -3257,7 +3257,7 @@ void CBeamAssessor::BeamSizeCalNextTask()
       // If mag couldn't go low enough, reduce target size
       if (magInd < lowestMag) {
         if (mBeamSizeCalStep < 2) {
-          AfxMessageBox("You must start with a smaller beam size or request\n"
+          SEMAfxMessageBox("You must start with a smaller beam size or request\n"
             "a smaller range to avoid reducing the range\n"
             "to stay out of LM on the first step", MB_EXCLAME);
           StopBeamSizeCal();
@@ -3352,7 +3352,7 @@ void CBeamAssessor::StopBeamSizeCal()
   mStoppedBeamCalStep = mBeamSizeCalStep;
   mBeamSizeCalStep = -1;
   if (mLowerMagForSizeCal > 0) {
-    AfxMessageBox("You can complete this calibration if you adjust the\n"
+    SEMAfxMessageBox("You can complete this calibration if you adjust the\n"
       " conditions and restart it within one mag step of the current mag");
   } else {
     mScope->SetMagIndex(mUpperMagForSizeCal);
@@ -3366,7 +3366,7 @@ void CBeamAssessor::StopBeamSizeCal()
 void CBeamAssessor::CalBeamSizeCleanup(int error)
 {
   if (error == IDLE_TIMEOUT_ERROR)
-    AfxMessageBox(_T("Time out trying to get image for beam size calibration"),
+    SEMAfxMessageBox(_T("Time out trying to get image for beam size calibration"),
       MB_EXCLAME);
   StopBeamSizeCal();
   mWinApp->ErrorOccurred(error);
