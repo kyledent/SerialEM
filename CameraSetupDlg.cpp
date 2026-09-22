@@ -3550,7 +3550,7 @@ void CCameraSetupDlg::OnSetSaveFolder()
           if (subdirsOK || str.FindOneOf("/\\") < 0) {
             mCamera->SetCameraFrameFolder(mParam, str);
           } else
-            AfxMessageBox("You can enter only a single folder name without \\ or /");
+            SEMAfxMessageBox("You can enter only a single folder name without \\ or /");
         }
       }
       FixButtonFocus(m_butSetSaveFolder);
@@ -3588,7 +3588,7 @@ void CCameraSetupDlg::OnDESetSaveFolder()
         if (str.FindOneOf("/\\") < 0 || mSTEMcamera)
           mCamera->SetCameraFrameFolder(mParam, str);
         else
-          AfxMessageBox("You can enter only a single folder name without \\ or /");
+          SEMAfxMessageBox("You can enter only a single folder name without \\ or /");
       }
     }
   } else {
@@ -3853,7 +3853,7 @@ void CCameraSetupDlg::OnUseCorrDblSamp()
   ManageDose();
   m_butUseHwROI_OvDiff.EnableWindow(mCamera->CanK3DoDarkMode(mParam, m_bUseCorrDblSamp));
   if (m_bUseCorrDblSamp && !mWarnedOnCDS) {
-    AfxMessageBox("Check the other camera parameter sets; exposure or frame time may have"
+    SEMAfxMessageBox("Check the other camera parameter sets; exposure or frame time may have"
       " changed", MB_OK | MB_ICONINFORMATION);
     mWarnedOnCDS = true;
   }
@@ -3967,7 +3967,7 @@ void CCameraSetupDlg::ManageDEvariableMaxFPS()
     m_eRight, m_bUseHwROI_OvDiff, m_iDEMode);
   if (changedOrErr == -6) {
     if (!mWarnedDENotSelected)
-      AfxMessageBox("This DE camera is not the current camera and the\n"
+      SEMAfxMessageBox("This DE camera is not the current camera and the\n"
         "frames per second cannot be determined for these settings\n"
         "unless it is set as the current camera", MB_EXCLAME);
     mWarnedDENotSelected = true;

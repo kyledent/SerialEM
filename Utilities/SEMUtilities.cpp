@@ -560,7 +560,7 @@ char UtilCheckIllegalChars(CString &filename, int slashOrDriveOK, CString descri
       bad = filename.GetAt(ind);
   }
   if (bad && !descrip.IsEmpty())
-    AfxMessageBox(descrip + " contains the character " + CString(bad) +
+    SEMAfxMessageBox(descrip + " contains the character " + CString(bad) +
       ", which is not allowed in filenames", MB_EXCLAME);
   return bad;
 }

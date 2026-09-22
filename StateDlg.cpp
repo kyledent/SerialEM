@@ -406,7 +406,7 @@ void CStateDlg::OnButDelState()
   mWinApp->RestoreViewFocus();
   if (!SetCurrentParam())
     return;
-  if (AfxMessageBox("Are you sure you want to delete this state?",
+  if (SEMAfxMessageBox("Are you sure you want to delete this state?",
     MB_YESNO | MB_ICONQUESTION) != IDYES)
     return;
   delete mParam;

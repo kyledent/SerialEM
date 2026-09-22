@@ -110,7 +110,7 @@ void CNavRotAlignDlg::OnOK()
     mImBufs[1].mTimeStamp != mOrigTimeStamp ||
     mCurrentReg != mNav->GetCurrentRegistration() ||
     !mNav->BufferStageToImage(&mImBufs[1], aMat, delX, delY)) {
-    AfxMessageBox(mWinApp->mNavigator ? "You have changed the current registration or "
+    SEMAfxMessageBox(mWinApp->mNavigator ? "You have changed the current registration or "
       "the image in the A or B buffer.\nThe transformation cannot be applied" :
       "You cannot use this dialog after closing the Navigator", MB_EXCLAME);
   } else {
@@ -132,7 +132,7 @@ void CNavRotAlignDlg::OnButApplyIs()
   ScaleMat rMat;
   if (mImBufs->mTimeStamp != mRotTimeStamp || mImBufs[1].mTimeStamp != mOrigTimeStamp ||
     !mImBufs[1].mMagInd || !mImBufs[1].mBinning) {
-      AfxMessageBox(((!mImBufs[1].mMagInd || !mImBufs[1].mBinning) ?
+      SEMAfxMessageBox(((!mImBufs[1].mMagInd || !mImBufs[1].mBinning) ?
         "There is not enough information to determine the shift on the scope" :
       "You have changed the the image in the A or B buffer.") +
       CString("\n\nThe image shift cannot be applied"), MB_EXCLAME);
@@ -171,7 +171,7 @@ void CNavRotAlignDlg::OnButAlignToMap()
   mWinApp->RestoreViewFocus();
   if (!mWinApp->mNavigator ||
     mImBufs[mBufManager->GetBufToReadInto()].mMapID != mRefMapID) {
-    AfxMessageBox(mWinApp->mNavigator ? "The image being aligned to has changed.\n"
+    SEMAfxMessageBox(mWinApp->mNavigator ? "The image being aligned to has changed.\n"
       "You need to reopen this dialog to proceed" :
       "You cannot use this dialog after closing the Navigator", MB_EXCLAME);
     OnCancel();
@@ -185,12 +185,12 @@ void CNavRotAlignDlg::OnButAlignToMap()
       mess.Format("You have changed the current registration or the registration of the "
         "image to be aligned.\n\nYou need an image at registration %d to proceed",
         mCurrentReg);
-      AfxMessageBox(mess, MB_EXCLAME);
+      SEMAfxMessageBox(mess, MB_EXCLAME);
       return;
     }
     if (mImBufs[topBuf].mCaptured == BUFFER_PROCESSED ||
       mImBufs[topBuf].mCaptured == BUFFER_FFT) {
-      AfxMessageBox("You cannot align a processed image; you need a new image to proceed"
+      SEMAfxMessageBox("You cannot align a processed image; you need a new image to proceed"
         , MB_EXCLAME);
       return;
     }

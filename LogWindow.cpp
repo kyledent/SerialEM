@@ -612,7 +612,7 @@ int CLogWindow::ReadAndAppend(CString readFile)
   if (mSaveFile == oldSave)
     return 0;
   if (readFile.IsEmpty() && mPrunedLength &&
-    AfxMessageBox("The log window has already been pruned.\n"
+    SEMAfxMessageBox("The log window has already been pruned.\n"
     "The pruned part will not be included in the appended\n"
     "log and will stay in " + (oldSave.IsEmpty() ? mTempPruneName : oldSave) +
     "\n\nAre you sure you want to proceed with Read and Append?", MB_QUESTION) ==

@@ -425,7 +425,7 @@ void CMainFrame::DoClose(bool afterScript)
     }
 
     if (mWinApp->mFalconHelper->GetStackingFrames()) {
-      if (AfxMessageBox("It SEEMS that camera frames are still being stacked or aligned\n"
+      if (SEMAfxMessageBox("It SEEMS that camera frames are still being stacked or aligned\n"
         "Do you really want to exit?", MB_QUESTION) != IDYES) {
         mClosingProgram = false;
         return;
@@ -433,7 +433,7 @@ void CMainFrame::DoClose(bool afterScript)
     }
 
     if (mWinApp->DoingTasks() && !mWinApp->GetJustNavAcquireOpen()) {
-      if (AfxMessageBox("The program is doing an operation\nDo you really want to "
+      if (SEMAfxMessageBox("The program is doing an operation\nDo you really want to "
         "stop it and exit?", MB_QUESTION) != IDYES) {
         mClosingProgram = false;
         return;
@@ -475,7 +475,7 @@ void CMainFrame::DoClose(bool afterScript)
     }
 
     if (mWinApp->mExternalTools->CheckIfGraphsOpen()) {
-      if (AfxMessageBox("Do want to close all graphs before exiting?",
+      if (SEMAfxMessageBox("Do want to close all graphs before exiting?",
         MB_QUESTION) == IDYES)
         mWinApp->mExternalTools->CloseAllGraphs();
     }
@@ -494,7 +494,7 @@ void CMainFrame::DoClose(bool afterScript)
     }
 
     if (mWinApp->mBufferManager->CheckAsyncSaving()) {
-      if (AfxMessageBox("Do want to save that image somewhere before exiting?",
+      if (SEMAfxMessageBox("Do want to save that image somewhere before exiting?",
         MB_QUESTION) == IDYES) {
         if (wasLD)
           mWinApp->mLowDoseDlg.SetLowDoseMode(true);
@@ -537,7 +537,7 @@ void CMainFrame::DoClose(bool afterScript)
       mWinApp->mFalconHelper->CheckFalconConfig(-3, magInd, "Failed to restore initial "
       "state of Intermediate frame saving; check the FEI dialog");
     else if (!mWinApp->mCamera->IsCameraFaux())
-      AfxMessageBox("Remember to turn off Intermediate frame saving in the FEI dialog",
+      SEMAfxMessageBox("Remember to turn off Intermediate frame saving in the FEI dialog",
         MB_EXCLAME);
   }
 
@@ -555,7 +555,7 @@ void CMainFrame::DoClose(bool afterScript)
       && !skipReset) {
       if (mWinApp->mShiftManager->ResetImageShift(false, false) ||
         mWinApp->mScope->WaitForStageReady(10000))
-        AfxMessageBox("Timeout trying to reset image shifts while exiting", MB_EXCLAME);
+        SEMAfxMessageBox("Timeout trying to reset image shifts while exiting", MB_EXCLAME);
     }
     if (mWinApp->GetEFTEMMode() && !mWinApp->GetKeepEFTEMstate())
       mWinApp->SetEFTEMMode(false);

@@ -1698,7 +1698,7 @@ void CTSSetupDialog::ConstrainBidirAngle(bool warningIfShift, bool anglesChanged
       mess.Format("The starting angle for bidirectional tilting should be at least\n"
         "%.0f degrees from either end; it has been changed to %.1f", minSegment,
         m_fBidirAngle);
-      AfxMessageBox(mess, MB_EXCLAME);
+      SEMAfxMessageBox(mess, MB_EXCLAME);
     }
   }
 

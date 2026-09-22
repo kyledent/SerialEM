@@ -114,7 +114,7 @@ void CMultiCombinerDlg::OnCombineType()
 void CMultiCombinerDlg::OnUndoCombine()
 {
   if (!mCombiner->OKtoUndoCombine()) {
-    AfxMessageBox("It is no longer possible to undo the last hole-combining", MB_EXCLAME);
+    SEMAfxMessageBox("It is no longer possible to undo the last hole-combining", MB_EXCLAME);
     UpdateEnables();
     return;
   }
@@ -144,7 +144,7 @@ void CMultiCombinerDlg::OnCombinePoints()
 {
   int error = mCombiner->CombineItems(m_iCombineType, m_bTurnOffOutside);
   if (error)
-    AfxMessageBox("Error trying to combine hole for multiple Records:\n" +
+    SEMAfxMessageBox("Error trying to combine hole for multiple Records:\n" +
       CString(mWinApp->mNavHelper->mCombineHoles->GetErrorMessage(error)), MB_EXCLAME);
   UpdateEnables();
   mWinApp->RestoreViewFocus();

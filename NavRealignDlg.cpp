@@ -205,7 +205,7 @@ void CNavRealignDlg::OnOK()
   b3dUInt32 disable = mWinApp->mShiftManager->GetDisableAutoTrim();
   UpdateData(true);
   if (m_strMapLabel.IsEmpty() && mForRealignOnly < 0 && m_iTemplateOrFindHole == 0) {
-    AfxMessageBox("You must enter a label for the Navigator map to align to", MB_EXCLAME);
+    SEMAfxMessageBox("You must enter a label for the Navigator map to align to", MB_EXCLAME);
     return;
   }
   setOrClearFlags(&disable, NOTRIM_REALIGN_ITEM, m_bDisableTrim ? 1 : 0);
@@ -289,7 +289,7 @@ void CNavRealignDlg::OnMakeTemplateMap()
   index = mWinApp->mNavigator->GetNumberOfItems() - 1;
   item = mWinApp->mNavigator->GetOtherNavItem(index);
   if (!item) {
-    AfxMessageBox("Warning: Cannot get the map item just created for changing its label",
+    SEMAfxMessageBox("Warning: Cannot get the map item just created for changing its label",
       MB_EXCLAME);
     return;
   }
@@ -309,7 +309,7 @@ void CNavRealignDlg::OnMakeTemplateMap()
       // But avoid duplicates
     } else if (str != item->mLabel && mWinApp->mNavigator->FindItemWithString(str,
       false, true)) {
-      AfxMessageBox("This entry would be a duplicate of the label for another item; "
+      SEMAfxMessageBox("This entry would be a duplicate of the label for another item; "
         "try again", MB_EXCLAME);
     } else {
       break;

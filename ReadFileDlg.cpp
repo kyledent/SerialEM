@@ -122,7 +122,7 @@ void CReadFileDlg::ReadSection(int delta)
   newsec = m_iSection + delta;
   limit = mWinApp->Montaging() ? param->zMax : (mWinApp->mStoreMRC->getDepth() - 1);
   if (newsec < 0 || newsec > limit) {
-    AfxMessageBox("Section number out of range for current file", MB_EXCLAME);
+    SEMAfxMessageBox("Section number out of range for current file", MB_EXCLAME);
     newsec = B3DMAX(0, B3DMIN(limit, newsec));
   } else
     readOK = true;

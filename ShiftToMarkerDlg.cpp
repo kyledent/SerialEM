@@ -153,7 +153,7 @@ void CShiftToMarkerDlg::OnButRemoveShift()
   str.Format("Are you sure you want to remove shift of %.2f, %.2f from %dx to %dx?",
     markShft.shiftX, markShft.shiftY, MagForCamera(cam, markShft.fromMagInd),
     MagForCamera(cam, markShft.toMagInd));
-  if (AfxMessageBox(str, MB_QUESTION) == IDYES) {
+  if (SEMAfxMessageBox(str, MB_QUESTION) == IDYES) {
     mMarkerShiftArr->RemoveAt(ind);
     FillListBox();
   }

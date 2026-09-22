@@ -839,7 +839,7 @@ void CMultiShotDlg::OnButIsToPt()
   CString mess;
   int answer, itemInd, numInGroup, groupStart, groupEnd;
   if (nav->m_bCollapseGroups) {
-    AfxMessageBox("This function will not work right if groups are collapsed\n\n"
+    SEMAfxMessageBox("This function will not work right if groups are collapsed\n\n"
       "Turn off \"Collapse groups\" in the Navigator window and try again");
     return;
   }
@@ -847,7 +847,7 @@ void CMultiShotDlg::OnButIsToPt()
     itemInd = nav->GetCurrentIndex();
     numInGroup = nav->LimitsOfContiguousGroup(itemInd, groupStart, groupEnd);
     if (numInGroup == 1) {
-      AfxMessageBox("There is only one point in the current Navigator group\n\n"
+      SEMAfxMessageBox("There is only one point in the current Navigator group\n\n"
         "You will be reponsible for selecting the next point\n"
         "BEFORE pressing this button again");
       mNavPointIncrement = 0;
@@ -861,7 +861,7 @@ void CMultiShotDlg::OnButIsToPt()
       if (!mWarnedIStoNav) {
         mess += "After moving to the current point with IS, the next Navigator\n"
           "point will be selected each time you press this button";
-        AfxMessageBox(mess);
+        SEMAfxMessageBox(mess);
         mWarnedIStoNav = true;
       }
       nav->SetCurrentSelection(groupStart);
@@ -939,7 +939,7 @@ int CMultiShotDlg::DoSaveIS(CString &str)
           "area with a View defocus offset bigger than %.0f microns.\n\n"
           "This procedure should be run closer to focus.\n"
           "Press Abort to end it, or continue if you know what you are doing.", focusLim);
-        AfxMessageBox(str,  MB_EXCLAME);
+        SEMAfxMessageBox(str,  MB_EXCLAME);
     }
 
   } else if (!mDoingAutoStepAdj) {
@@ -952,7 +952,7 @@ int CMultiShotDlg::DoSaveIS(CString &str)
           "(more than ISoffsetCalStageLimit = %f).\n\n"
           "There must be no stage movement during this procedure.",
           stageX - mRecordStageX, stageY - mRecordStageY, ISlimit);
-        AfxMessageBox(str,  MB_EXCLAME);
+        SEMAfxMessageBox(str,  MB_EXCLAME);
     }
   }
 
@@ -1520,7 +1520,7 @@ void CMultiShotDlg::OnButUseNavPts()
     mess.Format("Using this group of Navigator points will set the custom hole "
       "vectors because the number of points is not what would be needed for a %s pattern."
       "\n\nAre you sure you want to do this?", m_bHexGrid ? "hexagonal" : "regular");
-    if (AfxMessageBox(mess, MB_QUESTION) == IDNO)
+    if (SEMAfxMessageBox(mess, MB_QUESTION) == IDNO)
       return;
   } else if (mWinApp->mNavHelper->ConfirmReplacingShiftVectors(2, B3DCHOICE(type > 1, 2, hexInd)))
     return;

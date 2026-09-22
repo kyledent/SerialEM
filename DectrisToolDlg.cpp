@@ -89,7 +89,7 @@ void CDectrisToolDlg::OnButAcquireFlatfield()
   if (index > 0)
     return;
   if (index < 0) {
-    AfxMessageBox("The call to start a DECTRIS flatfield acquisition returned with an"
+    SEMAfxMessageBox("The call to start a DECTRIS flatfield acquisition returned with an"
       " error", MB_EXCLAME);
     return;
   }
@@ -135,7 +135,7 @@ void CDectrisToolDlg::OnButInitDetector()
 void CDectrisToolDlg::OnButToggleHv()
 {
   if (mDTD.dectrisPlugFuncs->RequestHVToggle())
-    AfxMessageBox("The request to toggle the HV returned with an error", MB_EXCLAME);
+    SEMAfxMessageBox("The request to toggle the HV returned with an error", MB_EXCLAME);
   mWinApp->RestoreViewFocus();
 }
 

@@ -62,7 +62,7 @@ BOOL CDectrisSettingsDlg::OnInitDialog()
   // Get the settings
   if (mDectrisPlugFuncs->GetDectrisAdvancedSettings(&mSettings,
     sizeof(DectrisAdvancedSettings))) {
-    AfxMessageBox("The request to the plugin for the current advanced settings returned"
+    SEMAfxMessageBox("The request to the plugin for the current advanced settings returned"
       " with an error", MB_EXCLAME);
     OnCancel();
     return false;
@@ -99,7 +99,7 @@ void CDectrisSettingsDlg::OnOK()
   // Apply the settings
   if (mDectrisPlugFuncs->SetDectrisAdvancedSettings(&mSettings,
     sizeof(DectrisAdvancedSettings))) {
-    AfxMessageBox("The call to set the advanced settings returned with an error",
+    SEMAfxMessageBox("The call to set the advanced settings returned with an error",
       MB_EXCLAME);
   }
   CBaseDlg::OnOK();

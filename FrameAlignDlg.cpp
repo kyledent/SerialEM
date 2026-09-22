@@ -523,7 +523,7 @@ void CFrameAlignDlg::OnButDeleteSet()
   ControlSet *consp;
   bool anyChanged = false;
   int newSel = B3DMAX(0, mCurParamInd - 1);
-  if (AfxMessageBox("Are you sure you want to delete the current parameter set?",
+  if (SEMAfxMessageBox("Are you sure you want to delete the current parameter set?",
     MB_QUESTION) == IDNO)
     return;
   mParams->RemoveAt(mCurParamInd);
@@ -553,7 +553,7 @@ void CFrameAlignDlg::OnButDeleteSet()
   LoadParamToDialog();
   m_butDeleteSet.EnableWindow(mParams->GetSize() > 1);
   if (anyChanged)
-    AfxMessageBox("Some other camera parameter sets were using this alignment set\n"
+    SEMAfxMessageBox("Some other camera parameter sets were using this alignment set\n"
     "and have been shifted to the previous alignment set", MB_ICONINFORMATION | MB_OK);
 }
 
@@ -726,7 +726,7 @@ void CFrameAlignDlg::OnKillfocusEditSubsetStart()
       m_iSubsetStart = oldStart;
       m_iSubsetEnd = oldEnd;
       UpdateData(false);
-      AfxMessageBox(mess, MB_EXCLAME);
+      SEMAfxMessageBox(mess, MB_EXCLAME);
   }
 }
 

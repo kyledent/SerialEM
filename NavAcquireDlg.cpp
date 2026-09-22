@@ -543,13 +543,13 @@ void CNavAcquireDlg::OnOK()
   }
   if (OptionsToAcquireType() == ACQUIRE_TAKE_MAP && m_bEarlyReturn) {
     if (!m_iEarlyFrames && mWinApp->GetHasK2OrK3Camera()) {
-      AfxMessageBox("You must have a non-zero value for the number\n"
+      SEMAfxMessageBox("You must have a non-zero value for the number\n"
         "of early return frames when acquiring maps", MB_EXCLAME);
       mPostponed = 0;
       return;
     }
     if (!mWinApp->GetHasK2OrK3Camera()) {
-      AfxMessageBox("You cannot do early returns when acquiring maps from Falcon or DE"
+      SEMAfxMessageBox("You cannot do early returns when acquiring maps from Falcon or DE"
         " cameras", MB_EXCLAME);
       mPostponed = 0;
       return;
@@ -627,7 +627,7 @@ int CNavAcquireDlg::CheckActionOrder(int * order)
         realigned = act;
       if (act == NAACT_REALIGN_ITEM) {
         if (realigned >= 0) {
-          if (AfxMessageBox("It is illogical to have Realign to Item after Align to\n"
+          if (SEMAfxMessageBox("It is illogical to have Realign to Item after Align to\n"
             "Template/Center on Hole because the Realign to Item will undo the\n"
             "alignment established by the Align to Template/Center on Hole.\n\n"
             "Are you sure you want to proceed?", MB_QUESTION) == IDNO)
@@ -637,7 +637,7 @@ int CNavAcquireDlg::CheckActionOrder(int * order)
       }
 
       if ((act == NAACT_ROUGH_EUCEN || act == NAACT_EUCEN_BY_FOCUS) && realigned >= 0) {
-        if (AfxMessageBox("It is illogical to have " + mActions[act].name + " after\n"
+        if (SEMAfxMessageBox("It is illogical to have " + mActions[act].name + " after\n"
           + mActions[realigned].name + " because the " + mActions[act].name +
           "\nwill undo the alignment established by the " + mActions[realigned].name +
           ".\n\n"
@@ -646,7 +646,7 @@ int CNavAcquireDlg::CheckActionOrder(int * order)
       }
 
       if ((mActions[act].flags & NAA_FLAG_OTHER_SITE) && realigned > 0) {
-        if (AfxMessageBox("It is illogical to have " + mActions[act].name + " after\n"
+        if (SEMAfxMessageBox("It is illogical to have " + mActions[act].name + " after\n"
           + mActions[realigned].name + " because moving to another location\n"
           " for " + mActions[act].name + " will undo the alignment\n"
           "established by the " + mActions[realigned].name + ".\n\n"
@@ -679,7 +679,7 @@ void CNavAcquireDlg::OnReadParams()
     filename = "WARNING: Error reading Navigator Acquire parameters file";
     if (!direc.IsEmpty())
       filename += "\n" + direc;
-    AfxMessageBox(filename);
+    SEMAfxMessageBox(filename);
   }
 
   if (!mAnyTSpoints && mAnyAcquirePoints)
@@ -1649,7 +1649,7 @@ int CNavAcquireDlg::CheckNearestItemText()
   if (!m_bRunAtOther || !m_strGotoItem.IsEmpty() ||
     !(mActions[mCurActSelected].flags & NAA_FLAG_RUN_IT))
     return 0;
-  AfxMessageBox("You must fill in the starting text for the " +
+  SEMAfxMessageBox("You must fill in the starting text for the " +
     CString(m_iGotoLabelNote ? "note" : "label") +
     "\nor turn off \"Run at nearest item\"", MB_EXCLAME);
   return 1;

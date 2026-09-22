@@ -91,7 +91,7 @@ void CTaskAreaOptionDlg::OnRrefineTrial()
       "is not at about the same height as the Record area.\n\n"
       "Are you sure you want to use the Trial area?",
       mWinApp->mComplexTasks->GetMinFEFineField());
-    if (AfxMessageBox(message, MB_YESNO | MB_ICONQUESTION) == IDNO) {
+    if (SEMAfxMessageBox(message, MB_YESNO | MB_ICONQUESTION) == IDNO) {
       m_iRefine = 1;
       UpdateData(false);
     }
@@ -109,7 +109,7 @@ void CTaskAreaOptionDlg::OnResetisTrial()
       " a Trial image is much smaller than this and if the stage is not well-behaved.\n\n"
       "Are you sure you want to use the Trial area?",
       mWinApp->mComplexTasks->GetMinRSRAField());
-    if (AfxMessageBox(message, MB_YESNO | MB_ICONQUESTION) == IDNO) {
+    if (SEMAfxMessageBox(message, MB_YESNO | MB_ICONQUESTION) == IDNO) {
       m_iResetIS = 1;
       UpdateData(false);
     }

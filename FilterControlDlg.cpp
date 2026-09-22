@@ -570,7 +570,7 @@ void CFilterControlDlg::OnOffsetSlit()
   UpdateSettings();
   if (spectMode != 1)
     mWinApp->mScope->SetSpectroscopyMode(1);
-  AfxMessageBox("Center the zero-loss peak in the slit with this energy shift.\n\n"
+  SEMAfxMessageBox("Center the zero-loss peak in the slit with this energy shift.\n\n"
     "Do not change the energy shift\n\nWhen you are done, press OK then try Refine ZLP",
     MB_ICONINFORMATION | MB_OK);
 

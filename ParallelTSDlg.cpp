@@ -1277,7 +1277,7 @@ void CParallelTSDlg::OnLDSearchElseView()
   else {
     if (mScope->GetMagIndex() != mMapMagIndex &&
       !mScope->SetMagIndex(mMapMagIndex)) {
-      AfxMessageBox("Failed to set the desired map magnification", MB_EXCLAME);
+      SEMAfxMessageBox("Failed to set the desired map magnification", MB_EXCLAME);
       return;
     }
     mWinApp->UserRequestedCapture(VIEW_CONSET);
@@ -1293,7 +1293,7 @@ void CParallelTSDlg::OnLDViewElseTrial()
   else {
     if (mScope->GetMagIndex() != mMapMagIndex &&
       !mScope->SetMagIndex(mMapMagIndex)) {
-      AfxMessageBox("Failed to set the desired map magnification", MB_EXCLAME);
+      SEMAfxMessageBox("Failed to set the desired map magnification", MB_EXCLAME);
       return;
     }
     mWinApp->UserRequestedCapture(TRIAL_CONSET);
@@ -1307,7 +1307,7 @@ void CParallelTSDlg::OnPreview()
   if (!mWinApp->LowDoseMode()) {
     if (mScope->GetMagIndex() != mAcqMagIndex &&
       !mScope->SetMagIndex(mAcqMagIndex)) {
-      AfxMessageBox("Failed to set the desired acquire magnification", MB_EXCLAME);
+      SEMAfxMessageBox("Failed to set the desired acquire magnification", MB_EXCLAME);
       return;
     }
   }
@@ -1320,7 +1320,7 @@ void CParallelTSDlg::OnMontage()
   if (!mWinApp->LowDoseMode()) {
     if (mScope->GetMagIndex() != mMapMagIndex &&
       !mScope->SetMagIndex(mMapMagIndex)) {
-      AfxMessageBox("Failed to set the desired map magnification", MB_EXCLAME);
+      SEMAfxMessageBox("Failed to set the desired map magnification", MB_EXCLAME);
       return;
     }
   }
@@ -1334,7 +1334,7 @@ void CParallelTSDlg::OnSaveAreaMap()
   CString mess;
 
   if (mParallelTSHelper->SaveAreaMap(mess)) {
-    AfxMessageBox(mess, MB_EXCLAME);
+    SEMAfxMessageBox(mess, MB_EXCLAME);
   } else {
     mHasAreaMap = true;
   }
@@ -1445,12 +1445,12 @@ void CParallelTSDlg::OnFinalizeArea()
     if (mParallelTSHelper->GetNumSavedTargets() < MIN_NUM_POINTS_FOR_PTSADJUST) {
       err.Format("There must be at least %d points to create an adjusting transform.",
         MIN_NUM_POINTS_FOR_PTSADJUST);
-      AfxMessageBox(err, MB_EXCLAME);
+      SEMAfxMessageBox(err, MB_EXCLAME);
       return;
     }
     
     if (GetUpdatedAdjustingTransform(err)) {
-      AfxMessageBox(err, MB_EXCLAME);
+      SEMAfxMessageBox(err, MB_EXCLAME);
       return;
     }
 
@@ -1483,7 +1483,7 @@ void CParallelTSDlg::OnFinalizeArea()
       }
       if (!(mParTSopts->flags & PTSFLAG_SKIP_REFINE) &&
         mParallelTSHelper->GetNumSavedTargets() < 2) {
-        AfxMessageBox("There must be at least two IS targets to create a parallel tilt "
+        SEMAfxMessageBox("There must be at least two IS targets to create a parallel tilt "
           "series item.", MB_EXCLAME);
         return;
       }
@@ -1493,7 +1493,7 @@ void CParallelTSDlg::OnFinalizeArea()
     }
     
     if (mParallelTSHelper->ConvertToParTSItem(err, item)) {
-      AfxMessageBox(err, MB_EXCLAME);
+      SEMAfxMessageBox(err, MB_EXCLAME);
       return;
     }
 
@@ -1562,7 +1562,7 @@ void CParallelTSDlg::OnAbortArea()
       mMakingNewXform ? "adjustments" : 
       (mParTSopts->extractVirtPrevs == 0 ? "refinements and delete target maps" : 
         "refinements"));
-    ind = AfxMessageBox(label, MB_QUESTION);
+    ind = SEMAfxMessageBox(label, MB_QUESTION);
     if (ind == IDNO) {
       Update();
       ManagePanels();
@@ -1580,7 +1580,7 @@ void CParallelTSDlg::OnAbortArea()
 
     mapIDs = mParallelTSHelper->GetPreviewMapIDs();
     if (mapIDs.size() > 0) {
-      ind = AfxMessageBox("Are you sure you want to delete all of this area's targets and "
+      ind = SEMAfxMessageBox("Are you sure you want to delete all of this area's targets and "
         "target maps from the Navigator?", MB_QUESTION);
       if (ind == IDNO) {
         Update();
@@ -1777,7 +1777,7 @@ void CParallelTSDlg::OnSavemap()
 {
   CString mess;
   if (mParallelTSHelper->SaveMap(mess)) {
-    AfxMessageBox(mess, MB_EXCLAME);
+    SEMAfxMessageBox(mess, MB_EXCLAME);
   }
   Update();
 }

@@ -443,7 +443,7 @@ void CMacroEditer::DoSave()
   catch(CFileException *perr) {
     perr->Delete();
     CString message = "Error writing script to file " + mSaveFile[m_iMacroNumber];
-    AfxMessageBox(message, MB_EXCLAME);
+    SEMAfxMessageBox(message, MB_EXCLAME);
     mSaveFile[m_iMacroNumber] = "";
     mFileName[m_iMacroNumber] = "";
   }
@@ -493,7 +493,7 @@ void CMacroEditer::OnLoadmacro()
     SetTitle();
   }
   catch (CFileException *err) {
-    AfxMessageBox("Error: Cannot read from the selected file.", MB_EXCLAME);
+    SEMAfxMessageBox("Error: Cannot read from the selected file.", MB_EXCLAME);
     err->Delete();
   }
   catch (CMemoryException *err) {
@@ -504,7 +504,7 @@ void CMacroEditer::OnLoadmacro()
     memErr = 1;
   }
   if (memErr)
-    AfxMessageBox("Error getting memory for strings", MB_EXCLAME);
+    SEMAfxMessageBox("Error getting memory for strings", MB_EXCLAME);
 
   if (buffer)
     delete buffer;
@@ -535,7 +535,7 @@ void CMacroEditer::OnFindInMacro()
   if (sel1 < 0)
     sel1 = macro.Find(find, 0);
   if (sel1 < 0) {
-    AfxMessageBox("Text not found", MB_EXCLAME);
+    SEMAfxMessageBox("Text not found", MB_EXCLAME);
     return;
   }
   sel2 = sel1 + mLastFindString.GetLength();
@@ -568,7 +568,7 @@ void CMacroEditer::OnButToMacroLine()
   if (!KGetOneInt("Script line number to go to:", line))
     return;
   if (line < 1 || line > m_editMacro.GetLineCount()) {
-    AfxMessageBox("Line number out of range");
+    SEMAfxMessageBox("Line number out of range");
     return;
   }
   SelectAndShowLine(line);
@@ -641,7 +641,7 @@ void CMacroEditer::OnButRemoveIndent()
   while (currentInd < endInd) {
     ind = m_strMacro.Find(indentStr, currentInd);
     if (ind != currentInd) {
-      AfxMessageBox("Not all lines in the selected region are indented by the indentation"
+      SEMAfxMessageBox("Not all lines in the selected region are indented by the indentation"
         " size");
       return;
     }

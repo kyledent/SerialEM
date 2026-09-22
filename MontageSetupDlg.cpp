@@ -395,7 +395,7 @@ BOOL CMontageSetupDlg::OnInitDialog()
       !(mParam.useSearchInLowDose && mLdp[SEARCH_AREA].magIndex)) {
       if (mLowDoseMode && mParam.magIndex != mLdp[RECORD_CONSET].magIndex &&
         !mParam.warnedMagChange) {
-        if (AfxMessageBox("These parameters have been used at one magnification in "
+        if (SEMAfxMessageBox("These parameters have been used at one magnification in "
           "regular mode\n\nDo you really want to use them at a different magnification"
           " in Low Dose mode?", MB_QUESTION) == IDYES) {
           mParam.warnedMagChange = true;
@@ -1020,11 +1020,11 @@ void CMontageSetupDlg::OnOK()
       magIndex >= lowestM ? "NavigatorMaxMontageIS" : "NavigatorMaxLMMontageIS");
     if (m_bMoveStage) {
       mess += "Do you want to proceed with this block size for image shift?";
-      if (AfxMessageBox(mess, MB_QUESTION) == IDNO)
+      if (SEMAfxMessageBox(mess, MB_QUESTION) == IDNO)
         return;
     } else {
       mess += "Do you want to use stage movement instead for this montage?";
-      if (AfxMessageBox(mess, MB_YESNO | MB_ICONQUESTION) == IDYES) {
+      if (SEMAfxMessageBox(mess, MB_YESNO | MB_ICONQUESTION) == IDYES) {
         m_bMoveStage = true;
         UpdateData(false);
         OnMovestage();

@@ -303,7 +303,7 @@ void CTSVariationsDlg::OnButTsvAddSeries()
       " exposure times are constrained to a multiple of %.4f sec\n\n"
       "If this is not OK, change the parameter settings or the selected camera",
       baseTime);
-    if (AfxMessageBox(mess, MB_OKCANCEL | MB_ICONINFORMATION) == IDCANCEL)
+    if (SEMAfxMessageBox(mess, MB_OKCANCEL | MB_ICONINFORMATION) == IDCANCEL)
       return;
   } else if (IS_FALCON2_3_4(camParam)) {
     baseTime = mWinApp->mCamera->GetFalconReadoutInterval(camParam);
@@ -323,7 +323,7 @@ void CTSVariationsDlg::OnButTsvAddSeries()
       mVaries[j++] = mVaries[i];
   mNumVaries = j;
   if (mNumVaries > MAX_TS_VARIES - 2) {
-    AfxMessageBox("Cannot add a series because there are too many\n"
+    SEMAfxMessageBox("Cannot add a series because there are too many\n"
       "scheduled changes for the program's array", MB_EXCLAME);
     FillListBox();
     return;
@@ -343,7 +343,7 @@ void CTSVariationsDlg::OnButTsvAddSeries()
     if (angle > mTopAngle + 2.)
       break;
     if (mNumVaries + (fixedFrames ? 1 : 0) >= MAX_TS_VARIES) {
-      AfxMessageBox("The series is incomplete because there are too many\n"
+      SEMAfxMessageBox("The series is incomplete because there are too many\n"
         "scheduled changes for the program's array", MB_EXCLAME);
       break;
     }

@@ -236,7 +236,7 @@ void CZbyGSetupDlg::StartCalibration(int which)
     return;
 
   if (mScope->GetTiltAngle() > 5.) {
-    AfxMessageBox("This calibration cannot be run with the stage tilted above 5 degrees");
+    SEMAfxMessageBox("This calibration cannot be run with the stage tilted above 5 degrees");
     return;
   }
 

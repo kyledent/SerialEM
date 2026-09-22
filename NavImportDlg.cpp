@@ -131,7 +131,7 @@ void CNavImportDlg::OnOK()
         (c == '0' || c == '1' || c == '2');
     }
     if (!channelsOK) {
-      AfxMessageBox("The entry for images to use for the 3 colors must be 3 digits,\r\n"
+      SEMAfxMessageBox("The entry for images to use for the 3 colors must be 3 digits,\r\n"
         "each one must be 0, 1, or 2,\r\n"
         "and 1 and 2 must both be included in the entry", MB_EXCLAME);
       return;

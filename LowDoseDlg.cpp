@@ -775,7 +775,7 @@ void CLowDoseDlg::OnCopyArea(UINT nID)
   if (area < 0 || area >= MAX_LOWDOSE_SETS || from < 0 || area == from)
     return;
 
-  if (AfxMessageBox("Are you sure you want to copy parameters from the " +
+  if (SEMAfxMessageBox("Are you sure you want to copy parameters from the " +
     mModeNames[fromCons] + " area to the " + mModeNames[consInd] + " area?",
     MB_YESNO | MB_ICONQUESTION) == IDNO)
     return;
@@ -1050,7 +1050,7 @@ int CLowDoseDlg::DoSetViewShift(int automatic)
         " in the " + refText + " area,\ntake a " + areaText + " image, and"
         " shift it with the mouse to center the same feature.\n\n"
         "Then press the Set button.";
-      AfxMessageBox(mess, MB_OK | MB_ICONINFORMATION);
+      SEMAfxMessageBox(mess, MB_OK | MB_ICONINFORMATION);
       return 1;
     }
 
@@ -1065,7 +1065,7 @@ int CLowDoseDlg::DoSetViewShift(int automatic)
         "To use the corresponding points, press No then press the \n"
         "\"Clear Alignment\" button to clear out the shift in A\n"
         "(and clear the alignment for B also if it has a shift).";
-      if (AfxMessageBox(mess, MB_QUESTION) == IDNO)
+      if (SEMAfxMessageBox(mess, MB_QUESTION) == IDNO)
         return 1;
       shiftType = 1;
     }
@@ -1077,7 +1077,7 @@ int CLowDoseDlg::DoSetViewShift(int automatic)
         "To use marker points, press the \"Clear Alignment\" button\n"
         "for %s and press \"Set\" again.", bufferText[shiftType - 3],
         bufferText[shiftType - 3]);
-      AfxMessageBox(mess, MB_EXCLAME);
+      SEMAfxMessageBox(mess, MB_EXCLAME);
       return 1;
     }
   }
@@ -1147,7 +1147,7 @@ int CLowDoseDlg::DoSetViewShift(int automatic)
         "To recover from this and check the offset, press \"Reset Image Shift\", then "
         "take a new %s image and center a feature, then take a new %s image.",
         refText, refText, areaText);
-      AfxMessageBox(mess, MB_EXCLAME);
+      SEMAfxMessageBox(mess, MB_EXCLAME);
     } else if (mWinApp->mCamera->CameraReady()) {
       mess.Format("Full %s shift offset is set to %.3f, %.3f image shift units",
         areaText, mViewShiftX[ifSearch], mViewShiftY[ifSearch]);

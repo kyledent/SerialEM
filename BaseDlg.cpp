@@ -268,7 +268,7 @@ void CBaseDlg::MinMaxFloat(UINT nID, float &value, float minVal, float maxVal,
   str.Format("%g", value);
   SetDlgItemText(nID, (LPCTSTR)str);
   str.Format("%s must be between %g and %g", descrip, minVal, maxVal);
-  AfxMessageBox(str, MB_EXCLAME);
+  SEMAfxMessageBox(str, MB_EXCLAME);
 }
 
 // Replacement for DDV_MinMaxInt
@@ -283,7 +283,7 @@ void CBaseDlg::MinMaxInt(UINT nID, int &value, int minVal, int maxVal,
   if (inRange)
     return;
   str.Format("%s must be between %d and %d", descrip, minVal, maxVal);
-  AfxMessageBox(str, MB_EXCLAME);
+  SEMAfxMessageBox(str, MB_EXCLAME);
 }
 
 // Replacement function for DDX_Text with a float variable to improve on what MFC does and
@@ -309,7 +309,7 @@ BOOL CBaseDlg::Ddx_MinMaxFloat(CDataExchange *pDX, UINT nID, float &member, floa
       }
     }
     if (!nchar) {
-      AfxMessageBox(str, MB_EXCLAME);
+      SEMAfxMessageBox(str, MB_EXCLAME);
       pDX->Fail();
       return FALSE;
     }
@@ -341,7 +341,7 @@ BOOL CBaseDlg::Ddx_MinMaxInt(CDataExchange *pDX, UINT nID, int &member, int minV
       }
     }
     if (!nchar) {
-      AfxMessageBox(str, MB_EXCLAME);
+      SEMAfxMessageBox(str, MB_EXCLAME);
       pDX->Fail();
       return FALSE;
     }
