@@ -27,6 +27,8 @@
 #include <afxcmn.h>			// MFC support for Windows Common Controls
 #endif // _AFX_NO_AFXCMN_SUPPORT
 
+#include <algorithm>      // for std::sort, used in ParallelTSDlg/Helper
+
 #define DLL_IM_EX _declspec(dllexport)
 
 //{{AFX_INSERT_LOCATION}}

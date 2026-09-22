@@ -5269,7 +5269,7 @@ int CTSController::TSMessageBox(CString message, UINT type, BOOL terminate, int 
   // least one \n in a row, print message and return
   mLastNoBoxMessage = "";
   mCallFromThreeChoice = false;
-  if (mWinApp->mCamera->GetNoMessageBoxOnError() < 0 ||
+  if (mWinApp->GetUnattended() || mWinApp->mCamera->GetNoMessageBoxOnError() < 0 ||
     (macProc->DoingMacro() && (macProc->GetNoMessageBoxOnError() || tryLevel > 0)) ||
     (!DoingTiltSeries() && mWinApp->mNavHelper->GetNoMessageBoxOnError()) || mgTask) {
     for (int ind = 0; ind < message.GetLength(); ind++) {
@@ -5281,7 +5281,11 @@ int CTSController::TSMessageBox(CString message, UINT type, BOOL terminate, int 
     }
     if (mgTask) {
       mWinApp->mMultiGridTasks->ExternalTaskError(message);
-    } else if (macProc->DoingMacro() || !mWinApp->mNavHelper->GetNoMessageBoxOnError())
+    } else if (mWinApp->GetUnattended() && !macProc->DoingMacro() &&
+      !mWinApp->mNavHelper->GetNoMessageBoxOnError() && !DoingTiltSeries())
+      // Nothing is running, so saying that a script stopped would be untrue
+      valve = "\r\nUNATTENDED: DIALOG SUPPRESSED WITH THIS MESSAGE:\r\n";
+    else if (macProc->DoingMacro() || !mWinApp->mNavHelper->GetNoMessageBoxOnError())
       valve.Format("\r\nSCRIPT %s WITH THIS MESSAGE:\r\n", (macProc->DoingMacro() &&
       (tryLevel > 0 || macProc->GetRunningScrpLang())) ? "ERROR" : "STOPPING");
     else

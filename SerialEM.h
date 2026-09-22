@@ -502,6 +502,8 @@ bool DLL_IM_EX SEMIsIgnoringFunctionCalled();
 LensRelaxData DLL_IM_EX *SEMLookupJeolRelaxData(int normInd);
 double DLL_IM_EX SEMRecentVoltage();
 CString DLL_IM_EX SEMLastNoBoxMessage();
+BOOL DLL_IM_EX SEMUnattendedMode();
+int DLL_IM_EX SEMAfxMessageBox(LPCTSTR lpszText, UINT nType = MB_OK, UINT nIDHelp = 0);
 void DLL_IM_EX *SEMGetBufferImage(int bufInd, int ifFFT, int &imType, int &rowBytes, int &sizeX,
   int &sizeY);
 bool DLL_IM_EX SEMIsBufferImageValid(void *array, int imType, int rowBytes, int sizeX, int sizeY,
@@ -696,6 +698,7 @@ public:
   GetSetMember(int, NoExceptionHandler);
   BOOL GetDummyInstance();
   SetMember(BOOL, DummyInstance);
+  GetSetMember(BOOL, Unattended);
   GetSetMember(BOOL, NoCameras);
   GetSetMember(BOOL, ImageWithStageToolMove);
   GetSetMember(bool, AppExiting);
@@ -1048,6 +1051,7 @@ private:
   bool mMinimizedStartup;      // Flag that it is starting minimized
   int mNoExceptionHandler;     // Flag to not set up exception handler or not allow MS box
   BOOL mDummyInstance;         // Flag for second dummy instance
+  BOOL mUnattended;            // Flag that no one is present to dismiss a modal
   CString mSysSubpath;         // Remainder of command line arguments
   CString mArgPlugDir;         // Plugin directory by command line argument
   BOOL mNoCameras;             // Flag for no cameras

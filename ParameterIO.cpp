@@ -4478,6 +4478,8 @@ int CParameterIO::ReadProperties(CString strFileName)
         mWinApp->SetStartupInfo(itemInt[1] != 0);
       else if (MatchNoCase("NoExceptionHandler"))
         mWinApp->SetNoExceptionHandler(itemInt[1]);
+      else if (MatchNoCase("UnattendedMode"))
+        mWinApp->SetUnattended(itemInt[1] != 0);
       else if (MatchNoCase("CatalaseAxisLengths")) {
         mWinApp->mProcessImage->SetShortCatalaseNM(itemFlt[1]);
         mWinApp->mProcessImage->SetLongCatalaseNM(itemFlt[2]);

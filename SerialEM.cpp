@@ -836,6 +836,7 @@ CSerialEMApp::CSerialEMApp()
   mMinimizedStartup = false;
   mNoExceptionHandler = 0;
   mDummyInstance = false;
+  mUnattended = FALSE;
   mNoCameras = false;
   mComModuleInited = false;
   mEnableExternalPython = false;
@@ -1058,6 +1059,8 @@ BOOL CSerialEMApp::InitInstance()
         }
       } else if (mSysSubpath.Find("/Minimized") == 0) {
         mMinimizedStartup = true;
+      } else if (mSysSubpath.Find("/Unattended") == 0) {
+        mUnattended = TRUE;
       } else if (mSysSubpath.Find("/#") == 0) {
       } else
         break;
@@ -3937,6 +3940,85 @@ CString DLL_IM_EX SEMLastNoBoxMessage()
   return ((CSerialEMApp *)AfxGetApp())->mTSController->GetLastNoBoxMessage();
 }
 
+// Whether the program is running with no one present to dismiss a modal dialog.
+// Set by the /Unattended command line switch or the UnattendedMode property.
+BOOL DLL_IM_EX SEMUnattendedMode()
+{
+  CSerialEMApp *app = (CSerialEMApp *)AfxGetApp();
+  return app ? app->GetUnattended() : FALSE;
+}
+
+// Return what the default button of a message box of this type would give, i.e. what
+// pressing Enter on it would return
+static int SEMDefaultBoxReturn(UINT nType)
+{
+  UINT which = nType & MB_DEFMASK;
+  switch (nType & MB_TYPEMASK) {
+  case MB_OKCANCEL:
+    return which == MB_DEFBUTTON2 ? IDCANCEL : IDOK;
+  case MB_YESNO:
+    return which == MB_DEFBUTTON2 ? IDNO : IDYES;
+  case MB_YESNOCANCEL:
+    return which == MB_DEFBUTTON3 ? IDCANCEL : (which == MB_DEFBUTTON2 ? IDNO : IDYES);
+  case MB_RETRYCANCEL:
+    return which == MB_DEFBUTTON2 ? IDCANCEL : IDRETRY;
+  case MB_ABORTRETRYIGNORE:
+    return which == MB_DEFBUTTON3 ? IDIGNORE : (which == MB_DEFBUTTON2 ? IDRETRY :
+      IDABORT);
+  default:
+    return IDOK;
+  }
+}
+
+// Drop-in replacement for AfxMessageBox.  When someone is at the keyboard this is
+// AfxMessageBox, unchanged.  In unattended mode it writes the text to the log instead
+// and returns what the default button would have returned, so that a run with no one
+// present cannot stop on a modal dialog.  It is safe to call at any point in startup,
+// including before the main window or the log window exist.
+int DLL_IM_EX SEMAfxMessageBox(LPCTSTR lpszText, UINT nType, UINT nIDHelp)
+{
+  CSerialEMApp *app = (CSerialEMApp *)AfxGetApp();
+  CString message, report, assumed;
+  int ind, retval;
+  if (!app || !app->GetUnattended())
+    return AfxMessageBox(lpszText, nType, nIDHelp);
+
+  retval = SEMDefaultBoxReturn(nType);
+  message = lpszText;
+
+  // Make sure there is a \r before at least one \n in a row, as TSMessageBox does
+  for (ind = 0; ind < message.GetLength(); ind++) {
+    if (message.GetAt(ind) == '\n' && (!ind || (message.GetAt(ind - 1) != '\r' &&
+      message.GetAt(ind - 1) != '\n'))) {
+      message.Insert(ind, '\r');
+      ind++;
+    }
+  }
+  report = "\r\nUNATTENDED: DIALOG SUPPRESSED WITH THIS MESSAGE:\r\n" + message;
+
+  // Say what was assumed, but only where there was actually a choice to make
+  if ((nType & MB_TYPEMASK) != MB_OK) {
+    assumed.Format("\r\nUNATTENDED: no one was asked; the answer was taken to be %s",
+      retval == IDOK ? "OK" : (retval == IDYES ? "Yes" : (retval == IDNO ? "No" :
+        (retval == IDCANCEL ? "Cancel" : (retval == IDRETRY ? "Retry" :
+          (retval == IDABORT ? "Abort" : "Ignore"))))));
+    report += assumed;
+  }
+  report += "\r\n* * * * * * * * * * * * * * * * * *\r\n";
+
+  // Before the main window exists there is nowhere to log to; the debugger and a
+  // console, if the program was started from one, are all there is
+  if (!app->m_pMainWnd) {
+    OutputDebugString((LPCTSTR)report);
+    fprintf(stderr, "%s", (LPCTSTR)report);
+    fflush(stderr);
+    return retval;
+  }
+  app->SetNextLogColorStyle(ERROR_COLOR_IND, 1);
+  app->AppendToLog(report, LOG_OPEN_IF_CLOSED);
+  return retval;
+}
+
 // Return an image from a specified buffer number, or NULL if the number is out of
 // or there is no image there.  Return the type (an MRC mode) bytes per line and size
 void DLL_IM_EX *SEMGetBufferImage(int bufInd, int ifFFT, int &imType, int &rowBytes,
@@ -4864,8 +4946,18 @@ void CSerialEMApp::AppendToLog(CString inString, int inAction, int lineFlags)
 
   if (inAction == MESSAGE_ONLY ||
     (!mLogWindow && inAction == LOG_MESSAGE_IF_CLOSED)) {
-      AfxMessageBox(inString, MB_EXCLAME);
-      return;
+      // With no one present, a message box here would hang the run, so open the
+      // log and put it there instead
+      if (!mUnattended) {
+        AfxMessageBox(inString, MB_EXCLAME);
+        return;
+      }
+      if (!mLogWindow && m_pMainWnd)
+        OnFileOpenlog();
+      if (!mLogWindow) {
+        OutputDebugString((LPCTSTR)inString);
+        return;
+      }
   }
 
   if (!mLogWindow) {
